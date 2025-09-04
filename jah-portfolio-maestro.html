@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAH - Arquitecto de Ecosistemas Digitales & IA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00FFA3;
+            --dark: #0A0A0A;
+            --gray: #1A1A1A;
+            --light-gray: #333;
+            --text: #E0E0E0;
+            --accent: #FF6B35;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--gray) 100%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), #00D4AA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            color: var(--text);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Services */
+        .services {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--light-gray);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .service-description {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .competencias {
+            margin-bottom: 1.5rem;
+        }
+
+        .competencias h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .competencias ul {
+            list-style: none;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .competencias li {
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .competencias li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .logros {
+            background: rgba(0, 255, 163, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .logros h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .logros ul {
+            list-style: none;
+            font-size: 0.85rem;
+        }
+
+        .logros li {
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .logros li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Services Extended */
+        .services-extended {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .service-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .service-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .service-item:hover {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .service-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 80px 0;
+            background: var(--gray);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--light-gray);
+            transition: transform 0.3s, border-color 0.3s;
+            text-align: center;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .pricing-header {
+            margin-bottom: 2rem;
+        }
+
+        .pricing-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .period {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .roi-section {
+            text-align: center;
+            background: rgba(0, 255, 163, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--primary);
+        }
+
+        .roi-section h3 {
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .roi-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+        }
+
+        .roi-stat {
+            text-align: center;
+        }
+
+        .roi-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .roi-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, var(--primary), #00D4AA);
+            padding: 60px 0;
+            text-align: center;
+            color: var(--dark);
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--dark);
+            color: var(--primary);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--dark);
+            border: 2px solid var(--dark);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--gray);
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">JAH</div>
+            <ul class="nav-links">
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#inversion">Inversión</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>JAH</h1>
+            <p class="subtitle">Arquitecto de Ecosistemas Digitales & IA</p>
+            <p>Transformación digital con intención real. Donde la tecnología acompaña la diversidad humana.</p>
+            
+            <div class="metrics">
+                <div class="metric">
+                    <span class="metric-number">150+</span>
+                    <span class="metric-label">Proyectos Completados</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-number">98%</span>
+                    <span class="metric-label">Tasa de Éxito</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-number">5M+</span>
+                    <span class="metric-label">Usuarios Beneficiados</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-number">12+</span>
+                    <span class="metric-label">Años de Experiencia</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" id="servicios">
+        <div class="container">
+            <h2 class="section-title">Áreas de Especialización</h2>
+            
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="service-icon">🏛️</div>
+                    <h3 class="service-title">Consultoría Gubernamental y Transformación Digital</h3>
+                    <p class="service-description">Especialista en diseñar e implementar soluciones para gobiernos municipales, estatales y organismos públicos, combinando auditoría técnica, estrategia normativa y despliegue tecnológico.</p>
+                    
+                    <div class="competencias">
+                        <h4>Competencias clave:</h4>
+                        <ul>
+                            <li>Auditorías integrales de plataformas y procesos con planes de acción medibles</li>
+                            <li>Implementación de control interno y administración de riesgos</li>
+                            <li>Optimización de procesos catastrales y de gestión territorial con SIG</li>
+                            <li>Evaluación y rediseño de programas presupuestarios e indicadores</li>
+                            <li>Capacitación de servidores públicos en accesibilidad y transparencia</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="logros">
+                        <h4>Logros destacados:</h4>
+                        <ul>
+                            <li>Modernización de sistemas catastrales y de pagos en ayuntamientos</li>
+                            <li>Dashboards de control para obras públicas y programas sociales</li>
+                            <li>Procesos de entrega–recepción con continuidad y cumplimiento normativo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🌐</div>
+                    <h3 class="service-title">Arquitectura de Ecosistemas Digitales</h3>
+                    <p class="service-description">Diseño de sistemas modulares que integran tecnología, narrativa y activación emocional, con separación clara entre capas rituales y comerciales.</p>
+                    
+                    <div class="competencias">
+                        <h4>Competencias clave:</h4>
+                        <ul>
+                            <li>Creación de núcleos digitales como CO•RA, con activación por intención</li>
+                            <li>Integración de satélites comerciales que sostienen el núcleo sin comprometerlo</li>
+                            <li>Diseño de flujos reproducibles y escalables para múltiples entornos</li>
+                            <li>Implementación de seguridad multi‑capa y agentes inteligentes locales</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="logros">
+                        <h4>Logros destacados:</h4>
+                        <ul>
+                            <li>Desarrollo del CO•RA Ecosistema Cognitivo Inclusivo</li>
+                            <li>Orquestadores locales para sincronización, despliegue y monitoreo</li>
+                            <li>Estructuras de revisión cíclica y cierre simbólico para proyectos creativos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">♿</div>
+                    <h3 class="service-title">Accesibilidad y Experiencia de Usuario</h3>
+                    <p class="service-description">Experto en WCAG 2.1 AA y diseño minimalista, semántico y accesible, con enfoque en inclusión real.</p>
+                    
+                    <div class="competencias">
+                        <h4>Competencias clave:</h4>
+                        <ul>
+                            <li>Auditorías de accesibilidad con reportes y planes de mejora</li>
+                            <li>Diseño de interfaces limpias y responsivas</li>
+                            <li>Integración de accesibilidad desde la fase de arquitectura</li>
+                            <li>Capacitación de equipos en buenas prácticas de UX inclusivo</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="logros">
+                        <h4>Logros destacados:</h4>
+                        <ul>
+                            <li>+50 sitios auditados con 100% de cumplimiento normativo</li>
+                            <li>Formación de equipos de desarrollo y diseño en accesibilidad avanzada</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">📈</div>
+                    <h3 class="service-title">Estrategia y Campañas Digitales</h3>
+                    <p class="service-description">Fusión de evidencia técnica y narrativa persuasiva para generar impacto en audiencias clave.</p>
+                    
+                    <div class="competencias">
+                        <h4>Competencias clave:</h4>
+                        <ul>
+                            <li>Diseño de campañas para sector público y privado</li>
+                            <li>Creación de mensajes con base en datos y storytelling</li>
+                            <li>Integración de métricas y analítica para medir impacto</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="logros">
+                        <h4>Logros destacados:</h4>
+                        <ul>
+                            <li>Campañas de difusión de servicios públicos con alto nivel de interacción</li>
+                            <li>Estrategias de comunicación que aumentaron la adopción de plataformas digitales</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h3 class="service-title">Desarrollo Web y Automatización</h3>
+                    <p class="service-description">Construcción de soluciones web y agentes inteligentes que optimizan procesos y mejoran la presentación de servicios.</p>
+                    
+                    <div class="competencias">
+                        <h4>Competencias clave:</h4>
+                        <ul>
+                            <li>Desarrollo HTML/CSS/JS profesional con frameworks modernos</li>
+                            <li>Integración de APIs y servicios de terceros</li>
+                            <li>Automatización de despliegues y sincronización de entornos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="logros">
+                        <h4>Logros destacados:</h4>
+                        <ul>
+                            <li>Portafolio maestro integrado con pipeline de publicación en GitHub Pages y Netlify</li>
+                            <li>Generadores de catálogos y plantillas para creación rápida de páginas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-extended" id="servicios-ampliados">
+        <div class="container">
+            <h2 class="section-title">Catálogo Completo de Servicios</h2>
+            
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="service-icon">🏛️</div>
+                    <h3 class="service-title">Consultoría Gubernamental Avanzada</h3>
+                    <div class="service-list">
+                        <div class="service-item">Evaluación de Programas Presupuestarios (PAE)</div>
+                        <div class="service-item">Actualización de Bandos Municipales</div>
+                        <div class="service-item">Modernización de sistemas catastrales y de cobro</div>
+                        <div class="service-item">Control interno y administración de riesgos</div>
+                        <div class="service-item">Procesos de entrega-recepción</div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <h3 class="service-title">Desarrollo y Tecnología</h3>
+                    <div class="service-list">
+                        <div class="service-item">Software a medida (web, escritorio, móvil)</div>
+                        <div class="service-item">Automatización de procesos administrativos</div>
+                        <div class="service-item">Integración de APIs y sistemas</div>
+                        <div class="service-item">Dashboards interactivos y reportes</div>
+                        <div class="service-item">Migración y modernización de sistemas</div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3 class="service-title">Análisis de Datos y Geoestadística</h3>
+                    <div class="service-list">
+                        <div class="service-item">Análisis electoral y mapas de calor</div>
+                        <div class="service-item">Estudios de beneficiarios de programas sociales</div>
+                        <div class="service-item">Procesamiento de datos geoespaciales</div>
+                        <div class="service-item">Modelos predictivos y forecasting</div>
+                        <div class="service-item">Visualización de datos complejos</div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🔒</div>
+                    <h3 class="service-title">Seguridad y Protección</h3>
+                    <div class="service-list">
+                        <div class="service-item">Sistemas CCTV y videovigilancia</div>
+                        <div class="service-item">Políticas de seguridad informática</div>
+                        <div class="service-item">Auditorías de seguridad integral</div>
+                        <div class="service-item">Protección de infraestructura crítica</div>
+                        <div class="service-item">Planes de continuidad de negocio</div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🎨</div>
+                    <h3 class="service-title">Diseño y Multimedia</h3>
+                    <div class="service-list">
+                        <div class="service-item">Diseño gráfico profesional</div>
+                        <div class="service-item">Diseño web accesible y responsivo</div>
+                        <div class="service-item">Producción audiovisual</div>
+                        <div class="service-item">Campañas publicitarias integrales</div>
+                        <div class="service-item">Identidad corporativa y branding</div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🎓</div>
+                    <h3 class="service-title">Capacitación y Formación</h3>
+                    <div class="service-list">
+                        <div class="service-item">Accesibilidad web (WCAG 2.1 AA)</div>
+                        <div class="service-item">Análisis de datos y SIG</div>
+                        <div class="service-item">Seguridad informática</div>
+                        <div class="service-item">Productividad y gestión de proyectos</div>
+                        <div class="service-item">Transformación digital</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#contacto" class="btn btn-primary" style="padding: 1rem 2rem; background: var(--primary); color: var(--dark); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s;">Solicitar Cotización Personalizada</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="inversion">
+        <div class="container">
+            <h2 class="section-title">Inversión en Transformación Digital</h2>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Auditoría Express</h3>
+                        <div class="price">$500-800 USD</div>
+                        <div class="period">2-3 días entrega</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Diagnóstico completo de sistemas</li>
+                        <li>Plan de acción específico</li>
+                        <li>Recomendaciones priorizadas</li>
+                        <li>Reporte ejecutivo</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-header">
+                        <h3>Consultoría Especializada</h3>
+                        <div class="price">$75-100 USD</div>
+                        <div class="period">por hora</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Asesoría técnica directa</li>
+                        <li>Implementación guiada</li>
+                        <li>Resolución de problemas</li>
+                        <li>Capacitación en tiempo real</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Proyectos Completos</h3>
+                        <div class="price">$2K-50K USD</div>
+                        <div class="period">según alcance</div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Desarrollo web completo</li>
+                        <li>Sistemas de gestión</li>
+                        <li>Modernización catastral</li>
+                        <li>Control interno gubernamental</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="roi-section">
+                <h3>Retorno de Inversión Comprobado</h3>
+                <div class="roi-stats">
+                    <div class="roi-stat">
+                        <span class="roi-number">300%</span>
+                        <span class="roi-label">ROI Promedio</span>
+                    </div>
+                    <div class="roi-stat">
+                        <span class="roi-number">60%</span>
+                        <span class="roi-label">Reducción Costos</span>
+                    </div>
+                    <div class="roi-stat">
+                        <span class="roi-number">90 días</span>
+                        <span class="roi-label">Tiempo Recuperación</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="contacto">
+        <div class="container">
+            <h2>¿Listo para transformar tu ecosistema digital?</h2>
+            <p>Inversión inteligente en tecnología que acompaña tu crecimiento.</p>
+            <div class="cta-buttons">
+                <a href="mailto:jah@ecosistema.digital" class="btn btn-primary">Solicitar Cotización</a>
+                <a href="https://calendly.com/jah-consultor" class="btn btn-secondary">Consulta Gratuita</a>
+            </div>
+            <div style="margin-top: 2rem; opacity: 0.9;">
+                <p><strong>Meta 2025:</strong> $500,000 USD en proyectos de transformación digital</p>
+                <p><strong>Financiamiento disponible:</strong> INADEM, CORFO, fondos internacionales</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Proyectos Destacados</h3>
+                    <a href="https://co-ra.netlify.app">CO•RA Ecosistema</a>
+                    <a href="https://co-ra.netlify.app/portfolio">Portfolio Empresarial</a>
+                    <a href="https://github.com/ente56298">GitHub</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Servicios</h3>
+                    <a href="#servicios">Consultoría Gubernamental</a>
+                    <a href="#servicios">Ecosistemas Digitales</a>
+                    <a href="#servicios">Accesibilidad</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <a href="mailto:jah@ecosistema.digital">jah@ecosistema.digital</a>
+                    <a href="tel:+52">+52 (Disponible)</a>
+                    <a href="https://linkedin.com/in/jah-digital">LinkedIn</a>
+                </div>
+            </div>
+            <p>&copy; 2024 JAH - Arquitecto de Ecosistemas Digitales & IA. Intención real, no optimización.</p>
+        </div>
+    </footer>
+</body>
+</html>

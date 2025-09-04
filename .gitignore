@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.env
+*.session
+*.session-journal
+__pycache__/
+*.pyc
+*.zip
+dist/
+.vscode/
+*.log
