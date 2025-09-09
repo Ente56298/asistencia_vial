@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiles CO•RA Ciudad - Directorio de Talento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .header {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .stats-overview {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #00d4ff;
+            border-color: #00d4ff;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 400px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .profile-info h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-role {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .profile-locations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .location-tag {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .awards-section {
+            margin: 1rem 0;
+        }
+
+        .awards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .award-item {
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .award-count {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .award-type {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+        }
+
+        .total-score {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(45deg, #ffd700, #ffb347);
+            color: #000;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .profile-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin: 1rem 0;
+        }
+
+        .collaboration-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-active { background: #00ff00; }
+        .status-busy { background: #ffd700; }
+        .status-offline { background: #ff6b6b; }
+
+        .connect-btn {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .connect-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .leaderboard h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .top-profiles {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .top-profile {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            min-width: 120px;
+        }
+
+        .rank-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        @media (max-width: 768px) {
+            .stats-overview {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .profiles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Profiles CO•RA Ciudad</h1>
+        <p>Directorio vivo de creadores, innovadores y comunidades</p>
+    </div>
+
+    <div class="stats-overview">
+        <div class="stat">
+            <div class="stat-number">2,847</div>
+            <div class="stat-label">Perfiles Activos</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">156</div>
+            <div class="stat-label">Ciudades</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">12,394</div>
+            <div class="stat-label">Reconocimientos</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">89</div>
+            <div class="stat-label">Países</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="leaderboard">
+            <h3>🏆 Top Creadores del Mes</h3>
+            <div class="top-profiles">
+                <div class="top-profile">
+                    <div class="rank-number">1</div>
+                    <div>JAH Studio</div>
+                    <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">247 puntos</div>
+                </div>
+                <div class="top-profile">
+                    <div class="rank-number">2</div>
+                    <div>Distrito Alpha</div>
+                    <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">198 puntos</div>
+                </div>
+                <div class="top-profile">
+                    <div class="rank-number">3</div>
+                    <div>Omega Labs</div>
+                    <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">176 puntos</div>
+                </div>
+            </div>
+        </div>
+
+        <input type="text" class="search-bar" placeholder="Buscar creadores, ubicaciones o especialidades..." id="searchInput">
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="creador">Creadores</button>
+            <button class="filter-btn" data-filter="estudio">Estudios</button>
+            <button class="filter-btn" data-filter="comunidad">Comunidades</button>
+            <button class="filter-btn" data-filter="activo">En Línea</button>
+        </div>
+
+        <div class="profiles-grid" id="profilesGrid">
+            <!-- Los perfiles se generarán dinámicamente -->
+        </div>
+    </div>
+
+    <script>
+        const profiles = [
+            {
+                name: "JAH Studio",
+                role: "Arquitecto de Experiencias Espirituales",
+                avatar: "J",
+                locations: ["Madrid", "Barcelona", "México DF"],
+                awards: { DOTD: 45, EOTM: 12, COTY: 3, PCA: 28, MOTD: 15 },
+                total: 247,
+                description: "Especialista en corredores inmersivos y experiencias de transformación personal.",
+                status: "active",
+                type: "creador"
+            },
+            {
+                name: "Distrito Alpha Collective",
+                role: "Comunidad de Innovación Urbana",
+                avatar: "Α",
+                locations: ["Londres", "Berlín", "Tokio"],
+                awards: { DOTD: 38, EOTM: 8, COTY: 2, PCA: 22, MOTD: 12 },
+                total: 198,
+                description: "Colectivo enfocado en diseño urbano digital y espacios colaborativos.",
+                status: "active",
+                type: "comunidad"
+            },
+            {
+                name: "Omega Labs",
+                role: "Laboratorio de Experiencias Finales",
+                avatar: "Ω",
+                locations: ["San Francisco", "Singapur", "Ámsterdam"],
+                awards: { DOTD: 32, EOTM: 6, COTY: 4, PCA: 18, MOTD: 8 },
+                total: 176,
+                description: "Especialistas en experiencias de completitud y cierre de ciclos.",
+                status: "busy",
+                type: "estudio"
+            },
+            {
+                name: "Luciérnaga Collective",
+                role: "Guías Digitales Especializados",
+                avatar: "✨",
+                locations: ["Buenos Aires", "Lima", "Bogotá"],
+                awards: { DOTD: 28, EOTM: 9, COTY: 1, PCA: 31, MOTD: 6 },
+                total: 164,
+                description: "Red de asistentes AI especializados en acompañamiento personalizado.",
+                status: "active",
+                type: "comunidad"
+            },
+            {
+                name: "Bienestar Digital Studio",
+                role: "Arquitectos de Salud Preventiva",
+                avatar: "💚",
+                locations: ["Copenhague", "Helsinki", "Estocolmo"],
+                awards: { DOTD: 24, EOTM: 7, COTY: 2, PCA: 19, MOTD: 11 },
+                total: 152,
+                description: "Especialistas en evaluaciones integrales y optimización del bienestar.",
+                status: "active",
+                type: "estudio"
+            },
+            {
+                name: "Conexión Urbana",
+                role: "Facilitadores de Comunidad",
+                avatar: "🌐",
+                locations: ["São Paulo", "Río de Janeiro", "Montevideo"],
+                awards: { DOTD: 19, EOTM: 5, COTY: 1, PCA: 25, MOTD: 4 },
+                total: 134,
+                description: "Expertos en construcción de redes sociales y colaboración comunitaria.",
+                status: "offline",
+                type: "comunidad"
+            }
+        ];
+
+        function renderProfiles(filteredProfiles = profiles) {
+            const grid = document.getElementById('profilesGrid');
+            grid.innerHTML = '';
+
+            filteredProfiles.forEach(profile => {
+                const statusClass = `status-${profile.status}`;
+                const statusText = profile.status === 'active' ? 'En línea' : 
+                                 profile.status === 'busy' ? 'Ocupado' : 'Desconectado';
+
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+                card.innerHTML = `
+                    <div class="total-score">${profile.total}</div>
+                    <div class="profile-header">
+                        <div class="profile-avatar">${profile.avatar}</div>
+                        <div class="profile-info">
+                            <h3>${profile.name}</h3>
+                            <div class="profile-role">${profile.role}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-locations">
+                        ${profile.locations.map(loc => `<span class="location-tag">${loc}</span>`).join('')}
+                    </div>
+                    
+                    <div class="profile-description">${profile.description}</div>
+                    
+                    <div class="awards-section">
+                        <div class="awards-grid">
+                            <div class="award-item">
+                                <div class="award-count">${profile.awards.DOTD}</div>
+                                <div class="award-type">DOTD</div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-count">${profile.awards.EOTM}</div>
+                                <div class="award-type">EOTM</div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-count">${profile.awards.COTY}</div>
+                                <div class="award-type">COTY</div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-count">${profile.awards.PCA}</div>
+                                <div class="award-type">PCA</div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-count">${profile.awards.MOTD}</div>
+                                <div class="award-type">MOTD</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="collaboration-status">
+                        <div class="status-indicator">
+                            <div class="status-dot ${statusClass}"></div>
+                            ${statusText}
+                        </div>
+                        <button class="connect-btn" onclick="connectWith('${profile.name}')">Conectar</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function setupFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const filter = btn.dataset.filter;
+                    let filtered = profiles;
+                    
+                    if (filter === 'activo') {
+                        filtered = profiles.filter(p => p.status === 'active');
+                    } else if (filter !== 'all') {
+                        filtered = profiles.filter(p => p.type === filter);
+                    }
+                    
+                    renderProfiles(filtered);
+                });
+            });
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const filtered = profiles.filter(profile => 
+                    profile.name.toLowerCase().includes(query) ||
+                    profile.role.toLowerCase().includes(query) ||
+                    profile.locations.some(loc => loc.toLowerCase().includes(query)) ||
+                    profile.description.toLowerCase().includes(query)
+                );
+                renderProfiles(filtered);
+            });
+        }
+
+        function connectWith(profileName) {
+            alert(`🌟 ¡Solicitud de conexión enviada a ${profileName}! Te notificaremos cuando respondan.`);
+        }
+
+        // Inicializar
+        renderProfiles();
+        setupFilters();
+        setupSearch();
+    </script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distrito Bienestar CO•RA - Evaluación Integral</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #ffffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .evaluation-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #ffd700, #ffb347);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .evaluation-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .evaluation-card:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cognitive-icon { background: linear-gradient(45deg, #ff6b6b, #ff4757); }
+        .physical-icon { background: linear-gradient(45deg, #00d4ff, #0099cc); }
+        .social-icon { background: linear-gradient(45deg, #ffd700, #ffb347); }
+        .spiritual-icon { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-metrics {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .metric {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+        }
+
+        .process-section {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 5rem 2rem;
+        }
+
+        .process-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        .dashboard-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .dashboard-metric {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .metric-name {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+
+        .firefly-guide {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffd700, #ffb347);
+            border-radius: 50%;
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .evaluation-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Distrito Bienestar CO•RA</h1>
+            <p class="hero-subtitle">Evaluación integral de tu ciudadanía digital en un solo día. Más de 100 métricas cognitivas, sociales y espirituales para optimizar tu experiencia en la ciudad.</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Métricas Evaluadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Dimensiones Clave</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Día de Evaluación</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Seguimiento Continuo</div>
+                </div>
+            </div>
+
+            <button class="cta-button" onclick="startEvaluation()">Iniciar Mi Evaluación Integral</button>
+        </div>
+    </section>
+
+    <section class="evaluation-section">
+        <h2 class="section-title">Evaluación en 4 Dimensiones</h2>
+        
+        <div class="evaluation-grid">
+            <div class="evaluation-card">
+                <div class="card-icon cognitive-icon">🧠</div>
+                <h3 class="card-title">Bienestar Cognitivo</h3>
+                <p class="card-description">Análisis profundo de patrones de pensamiento, capacidad de aprendizaje, creatividad y procesamiento de información en entornos digitales.</p>
+                <div class="card-metrics">
+                    <span class="metric">Atención</span>
+                    <span class="metric">Memoria</span>
+                    <span class="metric">Creatividad</span>
+                </div>
+            </div>
+
+            <div class="evaluation-card">
+                <div class="card-icon physical-icon">💪</div>
+                <h3 class="card-title">Bienestar Físico Digital</h3>
+                <p class="card-description">Evaluación de ergonomía digital, patrones de movimiento, salud visual y equilibrio entre mundo físico y virtual.</p>
+                <div class="card-metrics">
+                    <span class="metric">Postura</span>
+                    <span class="metric">Visión</span>
+                    <span class="metric">Movimiento</span>
+                </div>
+            </div>
+
+            <div class="evaluation-card">
+                <div class="card-icon social-icon">🤝</div>
+                <h3 class="card-title">Bienestar Social</h3>
+                <p class="card-description">Análisis de conexiones comunitarias, colaboración, comunicación efectiva y construcción de relaciones significativas.</p>
+                <div class="card-metrics">
+                    <span class="metric">Conexión</span>
+                    <span class="metric">Colaboración</span>
+                    <span class="metric">Empatía</span>
+                </div>
+            </div>
+
+            <div class="evaluation-card">
+                <div class="card-icon spiritual-icon">✨</div>
+                <h3 class="card-title">Bienestar Espiritual</h3>
+                <p class="card-description">Exploración de propósito, valores, crecimiento personal y conexión con algo más grande que uno mismo.</p>
+                <div class="card-metrics">
+                    <span class="metric">Propósito</span>
+                    <span class="metric">Valores</span>
+                    <span class="metric">Trascendencia</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-preview">
+            <h3 style="text-align: center; margin-bottom: 1rem;">Vista Previa: Tu Dashboard Personal</h3>
+            <div class="dashboard-grid">
+                <div class="dashboard-metric">
+                    <div class="metric-value">94</div>
+                    <div class="metric-name">Índice Cognitivo</div>
+                </div>
+                <div class="dashboard-metric">
+                    <div class="metric-value">87</div>
+                    <div class="metric-name">Bienestar Físico</div>
+                </div>
+                <div class="dashboard-metric">
+                    <div class="metric-value">91</div>
+                    <div class="metric-name">Conexión Social</div>
+                </div>
+                <div class="dashboard-metric">
+                    <div class="metric-value">89</div>
+                    <div class="metric-name">Crecimiento Espiritual</div>
+                </div>
+                <div class="dashboard-metric">
+                    <div class="metric-value">12</div>
+                    <div class="metric-name">Distritos Visitados</div>
+                </div>
+                <div class="dashboard-metric">
+                    <div class="metric-value">156</div>
+                    <div class="metric-name">Conexiones Activas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="process-section">
+        <div class="process-container">
+            <h2 class="section-title">Proceso de Evaluación Integral</h2>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Evaluación Completa</h3>
+                    <p class="step-description">Sesión inmersiva de 4 horas que incluye navegación por todos los distritos, interacciones con la comunidad y experiencias personalizadas.</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Análisis Personalizado</h3>
+                    <p class="step-description">Tu luciérnaga-asistente procesa todos los datos y genera un perfil integral único con insights profundos sobre tu ciudadanía digital.</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Plan de Acción</h3>
+                    <p class="step-description">Recibe recomendaciones específicas, rutas optimizadas por la ciudad y un plan de crecimiento personalizado para maximizar tu bienestar.</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Seguimiento Continuo</h3>
+                    <p class="step-description">Monitoreo en tiempo real de tu progreso con ajustes dinámicos y nuevas oportunidades de crecimiento según evoluciona tu perfil.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="firefly-guide" onclick="showGuideMessage()">🌟</div>
+
+    <script>
+        function startEvaluation() {
+            // Simular inicio de evaluación
+            alert("🌟 ¡Excelente! Tu luciérnaga-guía te acompañará en esta evaluación integral. Prepárate para descubrir aspectos únicos de tu ciudadanía digital.");
+            
+            // Aquí se integraría con el sistema de evaluación real
+            console.log("Iniciando evaluación integral del ciudadano...");
+        }
+
+        function showGuideMessage() {
+            const messages = [
+                "🌟 ¡Hola! Soy tu guía personal en este distrito. Esta evaluación te ayudará a optimizar tu experiencia en CO•RA Ciudad.",
+                "💡 Cada métrica que medimos está diseñada para potenciar tu bienestar y crecimiento personal.",
+                "🎯 Al final tendrás un mapa personalizado de oportunidades y conexiones en toda la ciudad.",
+                "✨ ¿Sabías que los ciudadanos que completan esta evaluación reportan 40% más satisfacción en sus experiencias?"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            alert(randomMessage);
+        }
+
+        // Animaciones y efectos interactivos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efecto parallax suave en el hero
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.hero-section');
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            });
+
+            // Animación de aparición de las tarjetas
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Aplicar animación a las tarjetas
+            document.querySelectorAll('.evaluation-card, .process-step').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

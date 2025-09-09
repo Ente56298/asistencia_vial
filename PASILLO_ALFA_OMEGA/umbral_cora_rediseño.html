@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Umbral de Ciudadanía Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        .umbral-container {
+            height: 100vh;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(0, 212, 255, 0.05) 0%, #000 70%);
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .firefly-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ffd700, #ffb347);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .content-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 2s ease forwards;
+        }
+
+        .mantra {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 2s ease 0.5s forwards;
+        }
+
+        .intention-field {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 2s ease 1s forwards;
+            transition: all 0.3s ease;
+        }
+
+        .intention-field:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .intention-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .portals {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 2s ease 1.5s forwards;
+        }
+
+        .portal {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, transparent 30%, rgba(0, 212, 255, 0.1) 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .portal:hover::before {
+            opacity: 1;
+        }
+
+        .portal:hover {
+            transform: translateY(-10px) scale(1.1);
+            border-color: #00d4ff;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .portal-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .portal-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .firefly-guide {
+            position: absolute;
+            bottom: 3rem;
+            right: 3rem;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffd700, #ffb347);
+            border-radius: 50%;
+            cursor: pointer;
+            animation: pulse 3s infinite;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .welcome-message {
+            position: absolute;
+            bottom: 6rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            max-width: 300px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .welcome-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ambient-sound {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ambient-sound:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .mantra { font-size: 1.2rem; }
+            .portals { flex-direction: column; align-items: center; }
+            .portal { width: 100px; height: 100px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="umbral-container">
+        <div class="stars" id="stars"></div>
+        <div class="firefly-cursor" id="fireflyCursor"></div>
+        
+        <div class="content-center">
+            <div class="logo">CO•RA</div>
+            <div class="mantra">Escribe con intención.<br>Campo de intención auténtica.</div>
+            
+            <input type="text" class="intention-field" placeholder="¿Cuál es tu intención al entrar a CO•RA?" id="intentionInput">
+            
+            <div class="portals">
+                <div class="portal" onclick="enterPortal('pasillo')">
+                    <div class="portal-icon">🌟</div>
+                    <div class="portal-label">Pasillo</div>
+                </div>
+                
+                <div class="portal" onclick="enterPortal('bienestar')">
+                    <div class="portal-icon">💚</div>
+                    <div class="portal-label">Bienestar</div>
+                </div>
+                
+                <div class="portal" onclick="enterPortal('comunidad')">
+                    <div class="portal-icon">👥</div>
+                    <div class="portal-label">Comunidad</div>
+                </div>
+                
+                <div class="portal" onclick="enterPortal('arte')">
+                    <div class="portal-icon">🎨</div>
+                    <div class="portal-label">Arte</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="firefly-guide" onclick="showGuide()">✨</div>
+        
+        <div class="welcome-message" id="welcomeMessage">
+            <p>🌟 ¡Hola! Soy tu luciérnaga guía. Bienvenido al umbral de CO•RA Ciudad. ¿Listo para explorar?</p>
+        </div>
+
+        <div class="ambient-sound" onclick="toggleSound()">
+            <span id="soundIcon">🔊</span> Ambiente
+        </div>
+    </div>
+
+    <script>
+        // Crear estrellas
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Cursor luciérnaga
+        function initFireflyCursor() {
+            const cursor = document.getElementById('fireflyCursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX - 10 + 'px';
+                cursor.style.top = e.clientY - 10 + 'px';
+            });
+        }
+
+        // Portales
+        function enterPortal(type) {
+            const messages = {
+                pasillo: "🌟 Iniciando viaje por el Pasillo Alfa y Omega...",
+                bienestar: "💚 Accediendo al Distrito de Bienestar...",
+                comunidad: "👥 Conectando con la Comunidad CO•RA...",
+                arte: "🎨 Entrando al Distrito Arte..."
+            };
+            
+            alert(messages[type]);
+            // Aquí se integraría con los módulos reales
+        }
+
+        // Guía luciérnaga
+        function showGuide() {
+            const message = document.getElementById('welcomeMessage');
+            message.classList.toggle('show');
+            
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 5000);
+        }
+
+        // Campo de intención
+        document.getElementById('intentionInput').addEventListener('input', function(e) {
+            if (e.target.value.length > 0) {
+                e.target.style.borderColor = '#ffd700';
+                e.target.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.3)';
+            } else {
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                e.target.style.boxShadow = 'none';
+            }
+        });
+
+        // Sonido ambiente
+        let soundEnabled = true;
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            icon.textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        // Efectos de entrada
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                showGuide();
+            }, 3000);
+        });
+
+        // Inicializar
+        createStars();
+        initFireflyCursor();
+    </script>
+</body>
+</html>

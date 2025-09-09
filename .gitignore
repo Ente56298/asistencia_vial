@@ -1,0 +1,23 @@
+# Archivos temporales
+*.tmp
+*.log
+*.cache
+
+# Backups
+backup*/
+*.bak
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Credenciales
+*credentials*
+*password*
+*.key
+*.pem
+
+# Archivos de desarrollo
+node_modules/
+.env
+.vscode/settings.json
