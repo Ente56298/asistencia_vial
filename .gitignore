@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Archivos temporales
 *.tmp
 *.log
@@ -21,3 +22,16 @@ Thumbs.db
 node_modules/
 .env
 .vscode/settings.json
+=======
+node_modules/
+.next/
+.env
+*.session
+*.session-journal
+__pycache__/
+*.pyc
+*.zip
+dist/
+.vscode/
+*.log
+>>>>>>> fcd49eaab62b51bdd0cc42f3bf328e3dd0cefc51
