@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 CO•RA Security Gateway</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle, #000000, #1a0033);
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .security-panel {
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #ff0000;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 50px #ff0000;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 50px #ff0000; }
+            50% { box-shadow: 0 0 100px #ff0000; }
+        }
+        .security-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: rotate 3s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .access-denied {
+            color: #ff0000;
+            font-size: 2rem;
+            margin: 20px 0;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        .security-message {
+            color: #ffffff;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+        .auth-required {
+            background: rgba(255,0,0,0.2);
+            border: 2px solid #ff0000;
+            color: #ffffff;
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .auth-required:hover {
+            background: rgba(255,0,0,0.4);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="security-panel">
+        <div class="security-icon">🔒</div>
+        <div class="access-denied">ACCESO RESTRINGIDO</div>
+        <div class="security-message">
+            ESPACIO CO•RA PROTEGIDO<br>
+            PROTOCOLOS DE SEGURIDAD ACTIVOS<br>
+            AUTENTICACIÓN REQUERIDA
+        </div>
+        <button class="auth-required" onclick="requestAccess()">
+            🛡️ SOLICITAR ACCESO AUTORIZADO
+        </button>
+        <div style="margin-top: 30px; font-size: 0.9rem; color: #888;">
+            Sistema de Protección Dimensional Activo<br>
+            Filtros Cuánticos | Encriptación Hash | Aislamiento Completo
+        </div>
+    </div>
+
+    <script>
+        function requestAccess() {
+            // Verificación de autenticación
+            const authorized = confirm('¿Tienes autorización para acceder al espacio CO•RA?');
+            if (authorized) {
+                // Redireccionar a evaluación del núcleo
+                window.location.href = 'welcome/index.html';
+            } else {
+                alert('🚫 ACCESO DENEGADO - Autorización requerida');
+            }
+        }
+
+        // Protección adicional
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+                alert('🔒 HERRAMIENTAS DE DESARROLLO BLOQUEADAS');
+            }
+        });
+
+        // Bloqueo de clic derecho
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            alert('🛡️ MENÚ CONTEXTUAL DESHABILITADO');
+        });
+    </script>
+</body>
+</html>

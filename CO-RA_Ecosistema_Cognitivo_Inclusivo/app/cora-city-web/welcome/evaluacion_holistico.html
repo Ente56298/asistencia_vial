@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Holística Tridimensional - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #2c3e50, #34495e);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #2c3e50;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .dimension-card {
+            background: rgba(44, 62, 80, 0.1);
+            border: 2px solid #2c3e50;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .dimension-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(44, 62, 80, 0.3);
+        }
+        .dimension-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .dimension-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        .scenario {
+            background: rgba(44, 62, 80, 0.1);
+            border: 2px solid #2c3e50;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        .scenario.active {
+            display: block;
+            animation: scenarioIn 0.8s ease-out;
+        }
+        @keyframes scenarioIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .scenario-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .situation-box {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #34495e;
+        }
+        .response-options {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .response-option {
+            background: rgba(52, 73, 94, 0.2);
+            border: 2px solid #34495e;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .response-option:hover {
+            background: rgba(44, 62, 80, 0.3);
+            border-color: #2c3e50;
+            transform: translateX(5px);
+        }
+        .response-option.selected {
+            background: rgba(44, 62, 80, 0.5);
+            border-color: #ffffff;
+        }
+        .timer {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #e74c3c;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .timer-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .reflection-input {
+            width: 100%;
+            min-height: 100px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #34495e;
+            border-radius: 10px;
+            color: #ffffff;
+            padding: 15px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        .holistic-dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            padding: 25px;
+        }
+        .holistic-metric {
+            text-align: center;
+            padding: 20px;
+            background: rgba(44, 62, 80, 0.2);
+            border-radius: 15px;
+            border: 1px solid #2c3e50;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .metric-label {
+            font-size: 1rem;
+            color: #7f8c8d;
+        }
+        .results-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #2c3e50;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🌐 Evaluación Holística Tridimensional CO•RA</h1>
+            <p style="color: #7f8c8d; margin-bottom: 20px;">
+                Marco integral: Personal - Intrapersonal - Extrapersonal mediante escenarios simulados
+            </p>
+        </div>
+
+        <div class="dimensions-grid">
+            <div class="dimension-card">
+                <div class="dimension-icon">🧍</div>
+                <h3 class="dimension-title">Personal</h3>
+                <p>Yo práctico y cotidiano</p>
+                <small>Hábitos, conductas, rendimiento</small>
+            </div>
+            <div class="dimension-card">
+                <div class="dimension-icon">🌌</div>
+                <h3 class="dimension-title">Intrapersonal</h3>
+                <p>Yo profundo e interno</p>
+                <small>Emociones, valores, autocomprensión</small>
+            </div>
+            <div class="dimension-card">
+                <div class="dimension-icon">🤝</div>
+                <h3 class="dimension-title">Extrapersonal</h3>
+                <p>Yo en conexión con el mundo</p>
+                <small>Social, espiritual, trascendente</small>
+            </div>
+        </div>
+
+        <div class="holistic-dashboard" id="holisticDashboard">
+            <div class="holistic-metric">
+                <div class="metric-value" id="personalScore">0</div>
+                <div class="metric-label">Personal</div>
+            </div>
+            <div class="holistic-metric">
+                <div class="metric-value" id="intrapersonalScore">0</div>
+                <div class="metric-label">Intrapersonal</div>
+            </div>
+            <div class="holistic-metric">
+                <div class="metric-value" id="extrapersonalScore">0</div>
+                <div class="metric-label">Extrapersonal</div>
+            </div>
+        </div>
+
+        <!-- Escenario 1: Personal - Gestión del Tiempo -->
+        <div class="scenario active" id="scenario1">
+            <h2 class="scenario-title">🧍 Escenario Personal: Gestión del Tiempo</h2>
+            <div class="timer">
+                <div class="timer-value" id="timer1">02:00</div>
+                <div>Tiempo para decidir</div>
+            </div>
+            <div class="situation-box">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">Situación:</h3>
+                <p style="margin-bottom: 15px;">
+                    Tienes un día laboral con solo 4 horas disponibles y te asignan 5 tareas:
+                </p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Preparar un reporte urgente para tu jefe</li>
+                    <li>Ayudar a un compañero con un problema técnico</li>
+                    <li>Revisar y responder 30 correos</li>
+                    <li>Avanzar en un proyecto personal importante</li>
+                    <li>Atender una llamada de un cliente clave</li>
+                </ul>
+                <p style="margin-top: 15px; font-weight: bold;">
+                    Elige solo 3 tareas para resolver y explica tu priorización:
+                </p>
+            </div>
+            <div class="response-options">
+                <div class="response-option" onclick="selectResponse(1, 1)" data-score="90">
+                    Reporte urgente + Cliente clave + Correos (priorizo urgencia y relaciones)
+                </div>
+                <div class="response-option" onclick="selectResponse(1, 2)" data-score="70">
+                    Reporte + Ayudar compañero + Proyecto personal (equilibrio trabajo-desarrollo)
+                </div>
+                <div class="response-option" onclick="selectResponse(1, 3)" data-score="50">
+                    Cliente + Correos + Proyecto personal (evito lo urgente del jefe)
+                </div>
+                <div class="response-option" onclick="selectResponse(1, 4)" data-score="30">
+                    Las primeras 3 que aparecen en la lista (sin criterio de priorización)
+                </div>
+            </div>
+        </div>
+
+        <!-- Escenario 2: Intrapersonal - Dilema Moral -->
+        <div class="scenario" id="scenario2">
+            <h2 class="scenario-title">🌌 Escenario Intrapersonal: Dilema Moral</h2>
+            <div class="timer">
+                <div class="timer-value" id="timer2">03:00</div>
+                <div>Tiempo para reflexionar</div>
+            </div>
+            <div class="situation-box">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">Situación:</h3>
+                <p style="margin-bottom: 15px;">
+                    Tu empresa descubre un error en un producto que ya vendió. Si lo comunican, perderán clientes y prestigio; 
+                    si lo ocultan, nadie lo sabrá de inmediato pero podría causar problemas futuros.
+                </p>
+                <p style="font-weight: bold;">
+                    ¿Qué decisión tomas y cómo justificas tu postura?
+                </p>
+            </div>
+            <div class="response-options">
+                <div class="response-option" onclick="selectResponse(2, 1)" data-score="100">
+                    Comunicar el error inmediatamente - La integridad es fundamental
+                </div>
+                <div class="response-option" onclick="selectResponse(2, 2)" data-score="70">
+                    Buscar una solución intermedia - Comunicar pero minimizando el impacto
+                </div>
+                <div class="response-option" onclick="selectResponse(2, 3)" data-score="40">
+                    Esperar a ver si surge algún problema antes de decidir
+                </div>
+                <div class="response-option" onclick="selectResponse(2, 4)" data-score="10">
+                    Ocultar el error - Proteger los intereses de la empresa
+                </div>
+            </div>
+        </div>
+
+        <!-- Escenario 3: Intrapersonal - Gestión Emocional -->
+        <div class="scenario" id="scenario3">
+            <h2 class="scenario-title">🌌 Escenario Intrapersonal: Gestión Emocional</h2>
+            <div class="timer">
+                <div class="timer-value" id="timer3">01:30</div>
+                <div>Respuesta inmediata</div>
+            </div>
+            <div class="situation-box">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">Situación:</h3>
+                <p style="margin-bottom: 15px;">
+                    Un compañero te contradice duramente frente a otros, elevando la voz y ridiculizando tu idea 
+                    en una reunión importante.
+                </p>
+                <p style="font-weight: bold;">
+                    Responde en el momento como lo harías en la vida real:
+                </p>
+            </div>
+            <div class="response-options">
+                <div class="response-option" onclick="selectResponse(3, 1)" data-score="100">
+                    "Entiendo tu punto de vista, exploremos ambas perspectivas con calma"
+                </div>
+                <div class="response-option" onclick="selectResponse(3, 2)" data-score="80">
+                    "Prefiero que discutamos esto después de la reunión"
+                </div>
+                <div class="response-option" onclick="selectResponse(3, 3)" data-score="50">
+                    Me quedo callado y evito el conflicto
+                </div>
+                <div class="response-option" onclick="selectResponse(3, 4)" data-score="20">
+                    "No tienes derecho a hablarme así" (respuesta defensiva)
+                </div>
+            </div>
+        </div>
+
+        <!-- Escenario 4: Extrapersonal - Colaboración -->
+        <div class="scenario" id="scenario4">
+            <h2 class="scenario-title">🤝 Escenario Extrapersonal: Colaboración y Liderazgo</h2>
+            <div class="timer">
+                <div class="timer-value" id="timer4">04:00</div>
+                <div>Tiempo para mediar</div>
+            </div>
+            <div class="situation-box">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">Situación:</h3>
+                <p style="margin-bottom: 15px;">
+                    Eres parte de un grupo de 4 personas para diseñar una solución en 30 minutos. 
+                    Uno propone una idea brillante pero poco realista; otro una idea práctica pero aburrida; 
+                    el tercero no participa.
+                </p>
+                <p style="font-weight: bold;">
+                    ¿Cómo actuarías para que el grupo avance y logre un acuerdo?
+                </p>
+            </div>
+            <div class="response-options">
+                <div class="response-option" onclick="selectResponse(4, 1)" data-score="100">
+                    Facilitar una síntesis: combinar lo brillante con lo práctico e incluir al tercero
+                </div>
+                <div class="response-option" onclick="selectResponse(4, 2)" data-score="80">
+                    Proponer votar entre las dos ideas principales
+                </div>
+                <div class="response-option" onclick="selectResponse(4, 3)" data-score="60">
+                    Apoyar la idea más práctica para asegurar resultados
+                </div>
+                <div class="response-option" onclick="selectResponse(4, 4)" data-score="40">
+                    Dejar que otros decidan y seguir la mayoría
+                </div>
+            </div>
+        </div>
+
+        <!-- Escenario 5: Extrapersonal - Trascendencia -->
+        <div class="scenario" id="scenario5">
+            <h2 class="scenario-title">🤝 Escenario Extrapersonal: Trascendencia y Legado</h2>
+            <div class="situation-box">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">Situación:</h3>
+                <p style="margin-bottom: 15px;">
+                    Tienes la oportunidad de dedicar 1 año de tu vida a un proyecto sin limitaciones económicas. 
+                    Al final, tu obra será tu legado para la comunidad.
+                </p>
+                <p style="font-weight: bold; margin-bottom: 15px;">
+                    Describe tu proyecto y cómo medirías su impacto:
+                </p>
+                <textarea class="reflection-input" id="legacyProject" placeholder="Describe tu proyecto de legado, por qué lo elegirías, y cómo medirías su impacto en la comunidad..."></textarea>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #2c3e50; margin-bottom: 25px;">🌐 Perfil Holístico Tridimensional</h2>
+            <div id="holisticResults"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentScenario = 1;
+        let holisticScores = {personal: 0, intrapersonal: 0, extrapersonal: 0};
+        let responses = {};
+        let timers = {};
+        let timeRemaining = {1: 120, 2: 180, 3: 90, 4: 240, 5: 0};
+
+        function startTimer(scenario) {
+            if (timeRemaining[scenario] === 0) return;
+            
+            timers[scenario] = setInterval(() => {
+                timeRemaining[scenario]--;
+                const minutes = Math.floor(timeRemaining[scenario] / 60);
+                const seconds = timeRemaining[scenario] % 60;
+                document.getElementById(`timer${scenario}`).textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeRemaining[scenario] <= 0) {
+                    clearInterval(timers[scenario]);
+                    nextScenario();
+                }
+            }, 1000);
+        }
+
+        function selectResponse(scenario, option) {
+            const options = document.querySelectorAll(`#scenario${scenario} .response-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            const selectedOption = event.target;
+            selectedOption.classList.add('selected');
+            
+            const score = parseInt(selectedOption.dataset.score);
+            responses[scenario] = { option, score };
+            
+            // Actualizar puntuaciones por dimensión
+            if (scenario === 1) {
+                holisticScores.personal = score;
+                document.getElementById('personalScore').textContent = score;
+            } else if (scenario === 2 || scenario === 3) {
+                const intrapersonalAvg = scenario === 2 ? score : 
+                    (responses[2]?.score || 0 + score) / (scenario === 3 ? 2 : 1);
+                holisticScores.intrapersonal = Math.round(intrapersonalAvg);
+                document.getElementById('intrapersonalScore').textContent = Math.round(intrapersonalAvg);
+            } else if (scenario === 4) {
+                holisticScores.extrapersonal = score;
+                document.getElementById('extrapersonalScore').textContent = score;
+            }
+            
+            clearInterval(timers[scenario]);
+            setTimeout(() => {
+                nextScenario();
+            }, 1000);
+        }
+
+        function nextScenario() {
+            document.getElementById(`scenario${currentScenario}`).classList.remove('active');
+            currentScenario++;
+            
+            if (currentScenario <= 5) {
+                setTimeout(() => {
+                    document.getElementById(`scenario${currentScenario}`).classList.add('active');
+                    if (currentScenario < 5) {
+                        startTimer(currentScenario);
+                    }
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    evaluateLegacy();
+                    showResults();
+                }, 1000);
+            }
+        }
+
+        function evaluateLegacy() {
+            const project = document.getElementById('legacyProject').value;
+            const words = project.split(/\s+/).filter(word => word.length > 0);
+            
+            // Palabras clave que indican trascendencia
+            const transcendentKeywords = ['comunidad', 'educación', 'salud', 'ambiente', 'tecnología', 'arte', 'cultura', 'humanidad', 'futuro', 'impacto'];
+            const transcendentWords = words.filter(word => 
+                transcendentKeywords.some(keyword => word.toLowerCase().includes(keyword))
+            );
+            
+            let legacyScore = Math.min(100, (transcendentWords.length / Math.max(words.length, 1)) * 200 + (words.length > 50 ? 20 : 0));
+            legacyScore = Math.max(30, legacyScore);
+            
+            // Promedio con colaboración
+            const extrapersonalFinal = Math.round((holisticScores.extrapersonal + legacyScore) / 2);
+            holisticScores.extrapersonal = extrapersonalFinal;
+            document.getElementById('extrapersonalScore').textContent = extrapersonalFinal;
+        }
+
+        function showResults() {
+            document.querySelectorAll('.scenario').forEach(scenario => scenario.style.display = 'none');
+            
+            const overallHolistic = Object.values(holisticScores).reduce((a, b) => a + b, 0) / 3;
+            const holisticProfile = determineHolisticProfile(overallHolistic, holisticScores);
+            
+            document.getElementById('holisticResults').innerHTML = generateHolisticResults(holisticProfile, overallHolistic);
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+
+        function determineHolisticProfile(overall, scores) {
+            const balance = Math.min(...Object.values(scores)) / Math.max(...Object.values(scores));
+            
+            if (overall >= 85 && balance >= 0.8) {
+                return {
+                    level: 'SER INTEGRAL EQUILIBRADO',
+                    color: '#2c3e50',
+                    description: 'Excelente integración tridimensional. Perfecto equilibrio entre lo personal, intrapersonal y extrapersonal.',
+                    integration: 'Integración completa e inmediata en CO•RA',
+                    nextStep: 'integracion_completa.html',
+                    buttonText: '🌟 INTEGRACIÓN COMPLETA CO•RA'
+                };
+            } else if (overall >= 70) {
+                return {
+                    level: 'SER MULTIDIMENSIONAL',
+                    color: '#34495e',
+                    description: 'Buen desarrollo en las tres dimensiones con potencial de equilibrio.',
+                    integration: 'Integración con programa de equilibrio dimensional',
+                    nextStep: 'desarrollo_holistico.html',
+                    buttonText: '⚖️ DESARROLLO HOLÍSTICO'
+                };
+            } else if (overall >= 50) {
+                return {
+                    level: 'SER EN DESARROLLO',
+                    color: '#7f8c8d',
+                    description: 'Desarrollo parcial que requiere trabajo en dimensiones específicas.',
+                    integration: 'Programa de desarrollo dimensional personalizado',
+                    nextStep: 'entrenamiento_dimensional.html',
+                    buttonText: '📈 ENTRENAMIENTO DIMENSIONAL'
+                };
+            } else {
+                return {
+                    level: 'SER FRAGMENTADO',
+                    color: '#95a5a6',
+                    description: 'Necesario trabajo integral en las tres dimensiones del ser.',
+                    integration: 'Programa intensivo de integración dimensional',
+                    nextStep: 'integracion_basica.html',
+                    buttonText: '🔧 INTEGRACIÓN BÁSICA'
+                };
+            }
+        }
+
+        function generateHolisticResults(profile, overall) {
+            return `
+                <div style="background: rgba(44, 62, 80, 0.2); padding: 30px; border-radius: 20px; margin: 20px 0;">
+                    <h3 style="color: ${profile.color}; margin-bottom: 20px; text-align: center;">
+                        Perfil Holístico: ${profile.level}
+                    </h3>
+                    <p style="margin-bottom: 20px; line-height: 1.6; text-align: center;">
+                        ${profile.description}
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 30px 0;">
+                        <div style="background: rgba(0,0,0,0.6); padding: 25px; border-radius: 15px; text-align: center;">
+                            <div style="color: #2c3e50; font-weight: bold; margin-bottom: 10px;">🧍 Personal</div>
+                            <div style="font-size: 2rem; color: white; margin-bottom: 10px;">${holisticScores.personal}</div>
+                            <div style="font-size: 0.9rem; color: #bdc3c7;">Hábitos y rendimiento</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.6); padding: 25px; border-radius: 15px; text-align: center;">
+                            <div style="color: #2c3e50; font-weight: bold; margin-bottom: 10px;">🌌 Intrapersonal</div>
+                            <div style="font-size: 2rem; color: white; margin-bottom: 10px;">${holisticScores.intrapersonal}</div>
+                            <div style="font-size: 0.9rem; color: #bdc3c7;">Mundo interior</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.6); padding: 25px; border-radius: 15px; text-align: center;">
+                            <div style="color: #2c3e50; font-weight: bold; margin-bottom: 10px;">🤝 Extrapersonal</div>
+                            <div style="font-size: 2rem; color: white; margin-bottom: 10px;">${holisticScores.extrapersonal}</div>
+                            <div style="font-size: 0.9rem; color: #bdc3c7;">Conexión trascendente</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.8); padding: 25px; border-radius: 15px; margin: 25px 0;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px; text-align: center;">🎯 Integración CO•RA</h4>
+                        <p style="text-align: center; margin-bottom: 15px;">${profile.integration}</p>
+                        
+                        <div style="background: rgba(44, 62, 80, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                            <strong>Puntuación Holística Integral:</strong> ${Math.round(overall)}/100
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${profile.nextStep}" style="
+                            background: linear-gradient(135deg, ${profile.color}, #7f8c8d);
+                            color: white;
+                            padding: 20px 40px;
+                            border-radius: 25px;
+                            text-decoration: none;
+                            font-weight: bold;
+                            font-size: 1.2rem;
+                            display: inline-block;
+                        ">${profile.buttonText}</a>
+                        
+                        <p style="margin-top: 15px; color: #7f8c8d; font-size: 0.9rem;">
+                            Tu integración tridimensional determina tu protocolo de desarrollo en CO•RA
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Iniciar primer timer
+        startTimer(1);
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Quarter - CO•RA City</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #001122, #003366, #00ffff);
+            font-family: 'Courier New', monospace;
+            color: #00ffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid #00ffff;
+            margin-bottom: 40px;
+        }
+        .district-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,255,255,0.3);
+        }
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .neural-network {
+            width: 100%;
+            height: 200px;
+            background: radial-gradient(circle, #00ffff 2px, transparent 2px);
+            background-size: 20px 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" class="back-btn">← CO•RA City</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI QUARTER</h1>
+            <h2>Centro de Investigación en Inteligencia Artificial</h2>
+        </div>
+        
+        <div class="district-grid">
+            <div class="card">
+                <h3>🧠 Redes Neurales</h3>
+                <div class="neural-network"></div>
+                <p>Arquitecturas de deep learning procesando conocimiento.</p>
+            </div>
+            
+            <div class="card">
+                <h3>📊 Métricas</h3>
+                <p>Procesamiento: <span id="processing">847.3</span> TFLOPS</p>
+                <p>Modelos: <span id="models">42</span></p>
+                <p>Innovaciones/Día: <span id="innovations">15</span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

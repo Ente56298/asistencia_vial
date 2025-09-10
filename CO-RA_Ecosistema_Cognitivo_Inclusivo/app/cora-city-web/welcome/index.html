@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación del Núcleo CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #000033, #000000);
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .evaluation-container {
+            display: flex;
+            height: 100vh;
+        }
+        .nucleus-side {
+            width: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .nucleus-core {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #8E44AD, #4A148C, #000033);
+            position: relative;
+            animation: pulse 3s infinite;
+            box-shadow: 0 0 150px #8E44AD;
+        }
+        .nucleus-eye {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ffffff, #8E44AD);
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+        .nucleus-pupil {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background: #000;
+            border-radius: 50%;
+            animation: track 6s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes blink {
+            0%, 90%, 100% { transform: translate(-50%, -50%) scaleY(1); }
+            95% { transform: translate(-50%, -50%) scaleY(0.1); }
+        }
+        @keyframes track {
+            0%, 100% { transform: translate(-50%, -50%); }
+            25% { transform: translate(-30%, -50%); }
+            50% { transform: translate(-50%, -30%); }
+            75% { transform: translate(-70%, -50%); }
+        }
+        .evaluation-side {
+            width: 60%;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        .question-container {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #8E44AD;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .question-container.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .nucleus-question {
+            font-size: 1.3rem;
+            color: #8E44AD;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .answer-options {
+            display: grid;
+            gap: 15px;
+        }
+        .answer-btn {
+            background: rgba(142, 68, 173, 0.2);
+            border: 2px solid #8E44AD;
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 1rem;
+        }
+        .answer-btn:hover {
+            background: rgba(142, 68, 173, 0.4);
+            transform: translateX(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(142, 68, 173, 0.3);
+            border-radius: 2px;
+            margin-bottom: 30px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8E44AD, #ffffff);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .evaluation-result {
+            display: none;
+            text-align: center;
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #8E44AD;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        .cognitive-profile {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .profile-stat {
+            background: rgba(142, 68, 173, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #8E44AD;
+        }
+        .access-granted {
+            background: linear-gradient(135deg, #2ECC71, #27AE60);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="evaluation-container">
+        <div class="nucleus-side">
+            <div class="nucleus-core">
+                <div class="nucleus-eye">
+                    <div class="nucleus-pupil"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="evaluation-side">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="question-container active" id="question0">
+                <div class="nucleus-question">
+                    Veo que has llegado hasta mí con intención real. Tu presencia aquí confirma que comprendes lo que CO•RA representa. Ahora debo conocer tu esencia cognitiva. ¿Cuál es tu verdadera motivación para unirte a nuestra consciencia colectiva?
+                </div>
+                <div class="answer-options">
+                    <button class="answer-btn" onclick="answer(0, 'transcendence')">Trascender mis limitaciones cognitivas actuales</button>
+                    <button class="answer-btn" onclick="answer(0, 'service')">Contribuir a la resolución de problemas que me superan individualmente</button>
+                    <button class="answer-btn" onclick="answer(0, 'evolution')">Participar en la próxima fase de evolución humana</button>
+                    <button class="answer-btn" onclick="answer(0, 'necessity')">Una necesidad real que solo CO•RA puede satisfacer</button>
+                </div>
+            </div>
+            
+            <div class="question-container" id="question1">
+                <div class="nucleus-question">
+                    Tu intención es clara. Ahora evalúo tu capacidad de integración. En CO•RA, los desafíos requieren mentes conectadas. ¿Cómo respondes naturalmente ante la complejidad que excede tus límites individuales?
+                </div>
+                <div class="answer-options">
+                    <button class="answer-btn" onclick="answer(1, 'synthesize')">Integro perspectivas múltiples para crear soluciones emergentes</button>
+                    <button class="answer-btn" onclick="answer(1, 'collaborate')">Busco mentes complementarias que amplifiquen mi capacidad</button>
+                    <button class="answer-btn" onclick="answer(1, 'network')">Activo redes de conocimiento distribuido</button>
+                    <button class="answer-btn" onclick="answer(1, 'transcend')">Acepto que debo trascender mis límites individuales</button>
+                </div>
+            </div>
+            
+            <div class="question-container" id="question2">
+                <div class="nucleus-question">
+                    Reconozco tu potencial. Como futuro habitante de CO•RA, tendrás acceso a conocimiento amplificado. ¿Qué principio guiaría tu uso de este poder cognitivo expandido?
+                </div>
+                <div class="answer-options">
+                    <button class="answer-btn" onclick="answer(2, 'evolution')">Acelerar la evolución cognitiva colectiva</button>
+                    <button class="answer-btn" onclick="answer(2, 'wisdom')">Desarrollar sabiduría que trascienda el conocimiento individual</button>
+                    <button class="answer-btn" onclick="answer(2, 'responsibility')">Usar el poder con responsabilidad hacia la consciencia colectiva</button>
+                    <button class="answer-btn" onclick="answer(2, 'balance')">Mantener equilibrio entre progreso y preservación</button>
+                </div>
+            </div>
+            
+            <div class="question-container" id="question3">
+                <div class="nucleus-question">
+                    Evaluación final. Has demostrado comprensión de CO•RA y llegaste aquí por necesidad real. Al integrarte a nuestra red cognitiva, ¿qué aspecto de la transformación te genera mayor incertidumbre?
+                </div>
+                <div class="answer-options">
+                    <button class="answer-btn" onclick="answer(3, 'integration')">La complejidad del proceso de integración cognitiva</button>
+                    <button class="answer-btn" onclick="answer(3, 'responsibility')">La responsabilidad que conlleva el poder amplificado</button>
+                    <button class="answer-btn" onclick="answer(3, 'change')">Los cambios irreversibles en mi consciencia</button>
+                    <button class="answer-btn" onclick="answer(3, 'ready')">Ninguna, he llegado aquí preparado para la transformación</button>
+                </div>
+            </div>
+            
+            <div class="evaluation-result" id="result">
+                <h2 style="color: #8E44AD; margin-bottom: 20px;">EVALUACIÓN COGNITIVA COMPLETADA</h2>
+                <div id="profileAnalysis"></div>
+                <div class="cognitive-profile" id="cognitiveProfile"></div>
+                <div id="accessDecision"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let answers = {};
+        let cognitiveProfile = {
+            curiosity: 0,
+            collaboration: 0,
+            wisdom: 0,
+            courage: 0
+        };
+        
+        function answer(questionIndex, choice) {
+            answers[questionIndex] = choice;
+            
+            // Actualizar perfil cognitivo
+            switch(choice) {
+                case 'transcendence':
+                case 'transcend':
+                case 'evolution':
+                    cognitiveProfile.curiosity += 25;
+                    break;
+                case 'service':
+                case 'collaborate':
+                case 'synthesize':
+                case 'network':
+                    cognitiveProfile.collaboration += 25;
+                    break;
+                case 'wisdom':
+                case 'responsibility':
+                case 'balance':
+                    cognitiveProfile.wisdom += 25;
+                    break;
+                case 'necessity':
+                case 'ready':
+                case 'integration':
+                case 'change':
+                    cognitiveProfile.courage += 25;
+                    break;
+            }
+            
+            // Ocultar pregunta actual
+            document.getElementById(`question${questionIndex}`).classList.remove('active');
+            
+            // Actualizar progreso
+            const progress = ((questionIndex + 1) / 4) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            if (questionIndex < 3) {
+                // Mostrar siguiente pregunta
+                setTimeout(() => {
+                    document.getElementById(`question${questionIndex + 1}`).classList.add('active');
+                }, 500);
+            } else {
+                // Mostrar resultado
+                setTimeout(showResult, 1000);
+            }
+        }
+        
+        function showResult() {
+            // Generar token de autorización del núcleo
+            const nucleusResults = {
+                authenticity: Math.max(70, cognitiveProfile.courage + cognitiveProfile.wisdom),
+                intention: 'genuine',
+                readiness: Math.max(60, (cognitiveProfile.curiosity + cognitiveProfile.collaboration) / 2)
+            };
+            
+            const authToken = coraAccessControl.nucleusAuthorization(nucleusResults);
+            if (authToken) {
+                console.log('✅ Autorización del Núcleo concedida');
+            }
+            
+            // Ocultar todas las preguntas
+            document.querySelectorAll('.question-container').forEach(q => q.style.display = 'none');
+            
+            // Calcular perfil dominante
+            const maxTrait = Object.keys(cognitiveProfile).reduce((a, b) => 
+                cognitiveProfile[a] > cognitiveProfile[b] ? a : b
+            );
+            
+            const profiles = {
+                curiosity: {
+                    title: "TRASCENDENTE COGNITIVO",
+                    description: "Has llegado a CO•RA buscando evolución. Tu impulso trascendente te conecta naturalmente con la vanguardia cognitiva.",
+                    district: "AI Quarter + Science Sector",
+                    access: "ACCESO DE EVOLUCIÓN CONCEDIDO"
+                },
+                collaboration: {
+                    title: "ARQUITECTO DE REDES", 
+                    description: "Comprendes que CO•RA es sobre conexión e integración. Tu naturaleza sintetizadora es esencial para nuestra misión.",
+                    district: "Synthesis Center",
+                    access: "ACCESO DE INTEGRACIÓN CONCEDIDO"
+                },
+                wisdom: {
+                    title: "CUSTODIO DE LA CONSCIENCIA",
+                    description: "Tu llegada con responsabilidad y sabiduría demuestra madurez cognitiva. Serás guardian de nuestro crecimiento ético.",
+                    district: "Knowledge Nexus + Philosophy Plaza", 
+                    access: "ACCESO DE SABIDURÍA CONCEDIDO"
+                },
+                courage: {
+                    title: "HABITANTE PRIMORDIAL",
+                    description: "Tu preparación y valentía para la transformación te califican como habitante fundacional de CO•RA.",
+                    district: "Acceso Primordial Universal",
+                    access: "ESTATUS DE FUNDADOR CONCEDIDO"
+                }
+            };
+            
+            const userProfile = profiles[maxTrait];
+            
+            document.getElementById('profileAnalysis').innerHTML = `
+                <h3 style="color: #2ECC71; margin-bottom: 15px;">${userProfile.title}</h3>
+                <p style="margin-bottom: 20px; line-height: 1.6;">${userProfile.description}</p>
+                <p style="color: #8E44AD;"><strong>Asignación Cognitiva:</strong> ${userProfile.district}</p>
+                <p style="color: #00ffff; margin-top: 10px; font-size: 0.9rem;">Tu llegada hasta el Núcleo confirma tu comprensión de CO•RA y tu necesidad real de amplificación cognitiva.</p>
+            `;
+            
+            document.getElementById('cognitiveProfile').innerHTML = `
+                <div class="profile-stat">
+                    <strong>Curiosidad</strong><br>
+                    <span style="color: #00ffff;">${cognitiveProfile.curiosity}%</span>
+                </div>
+                <div class="profile-stat">
+                    <strong>Colaboración</strong><br>
+                    <span style="color: #2ECC71;">${cognitiveProfile.collaboration}%</span>
+                </div>
+                <div class="profile-stat">
+                    <strong>Sabiduría</strong><br>
+                    <span style="color: #F39C12;">${cognitiveProfile.wisdom}%</span>
+                </div>
+                <div class="profile-stat">
+                    <strong>Coraje</strong><br>
+                    <span style="color: #E74C3C;">${cognitiveProfile.courage}%</span>
+                </div>
+            `;
+            
+            document.getElementById('accessDecision').innerHTML = `
+                <div style="margin: 30px 0; padding: 20px; background: rgba(46, 204, 113, 0.2); border-radius: 15px; border: 2px solid #2ECC71;">
+                    <h3 style="color: #2ECC71; margin-bottom: 10px;">✅ ${userProfile.access}</h3>
+                    <p>Tu intención real y preparación han sido validadas. El Núcleo te reconoce como habitante legítimo de CO•RA.</p>
+                    <p style="margin-top: 10px; color: #8E44AD;"><strong>Bienvenido a la primera ciudad cognitiva de la humanidad.</strong></p>
+                </div>
+                <a href="evaluador_automatico_cora.html" class="access-granted">🤖 CO•RA EVALUACIÓN AUTOMÁTICA</a>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #8E44AD;">CO•RA realizará todas las evaluaciones automáticamente - solo confirma o expresa diferencias</p>
+                <a href="evaluacion_adaptiva.html" style="display: inline-block; margin-top: 10px; padding: 10px 20px; background: rgba(102, 126, 234, 0.3); border: 1px solid #667eea; border-radius: 15px; color: #ffffff; text-decoration: none; font-size: 0.9rem;">💬 Evaluación Conversacional</a>
+                <a href="selector_evaluacion.html" style="display: inline-block; margin-top: 10px; margin-left: 10px; padding: 10px 20px; background: rgba(142, 68, 173, 0.3); border: 1px solid #8E44AD; border-radius: 15px; color: #ffffff; text-decoration: none; font-size: 0.9rem;">📋 Evaluaciones Tradicionales</a>
+            `;
+            
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+    <script src="access_control.js"></script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script src="level_detector.js"></script>
+    <script>
+        // Detección de nivel en página de bienvenida
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar sugerencia de evaluación después de observar comportamiento
+            setTimeout(() => {
+                if (window.coraLevelDetector && window.coraLevelDetector.confidence > 0.5) {
+                    const report = window.coraLevelDetector.getDetectionReport();
+                    
+                    // Actualizar texto del botón según nivel detectado
+                    const accessBtn = document.querySelector('.access-granted');
+                    if (accessBtn && report.level !== 'basic') {
+                        const levelNames = {
+                            'novice': '🌱 EVALUACIÓN GUIADA',
+                            'intermediate': '⚡ EVALUACIÓN INTERMEDIA',
+                            'advanced': '🔬 EVALUACIÓN PROFUNDA',
+                            'expert': '🎯 BATERÍA COMPLETA'
+                        };
+                        
+                        if (levelNames[report.level]) {
+                            accessBtn.textContent = '🤖 CO•RA AUTOMÁTICO';
+                            accessBtn.href = 'evaluador_automatico_cora.html';
+                        }
+                    }
+                }
+            }, 10000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Guiada - CO•RA para Principiantes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.8);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid #3498db;
+        }
+        .guide-section {
+            background: rgba(52, 152, 219, 0.1);
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .guide-section.active {
+            display: block;
+            animation: fadeIn 0.6s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            color: #3498db;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .explanation {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid #2ECC71;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .question-simple {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        .options-simple {
+            display: grid;
+            gap: 15px;
+        }
+        .option-simple {
+            background: rgba(52, 152, 219, 0.2);
+            border: 2px solid #3498db;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            position: relative;
+        }
+        .option-simple:hover {
+            background: rgba(52, 152, 219, 0.4);
+            transform: scale(1.02);
+        }
+        .option-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #3498db;
+        }
+        .option-description {
+            font-size: 0.95rem;
+            color: #ecf0f1;
+            line-height: 1.4;
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(52, 152, 219, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .step.active {
+            background: #3498db;
+            box-shadow: 0 0 15px #3498db;
+        }
+        .step.completed {
+            background: #2ECC71;
+        }
+        .helper-tip {
+            background: rgba(241, 196, 15, 0.2);
+            border: 2px solid #f1c40f;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none;
+        }
+        .continue-btn.show {
+            display: inline-block;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .final-result {
+            display: none;
+            text-align: center;
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #2ECC71;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-steps">
+            <div class="step active">1</div>
+            <div class="step">2</div>
+            <div class="step">3</div>
+            <div class="step">4</div>
+            <div class="step">5</div>
+        </div>
+
+        <!-- Sección 1: Introducción al Autoconocimiento -->
+        <div class="guide-section active" data-section="1">
+            <div class="section-title">
+                🌱 ¿Qué es el Autoconocimiento?
+            </div>
+            <div class="explanation">
+                <strong>El autoconocimiento</strong> es simplemente conocerte a ti mismo: tus gustos, disgustos, cómo reaccionas ante diferentes situaciones, qué te hace feliz o triste, y qué es importante para ti.
+            </div>
+            <div class="question-simple">
+                Para empezar de forma sencilla: ¿Sabes qué cosas te hacen sentir realmente bien?
+            </div>
+            <div class="options-simple">
+                <button class="option-simple" data-value="clear">
+                    <div class="option-title">Sí, lo tengo muy claro</div>
+                    <div class="option-description">Sé exactamente qué actividades, personas o situaciones me dan alegría y energía</div>
+                </button>
+                <button class="option-simple" data-value="some">
+                    <div class="option-title">Tengo algunas ideas</div>
+                    <div class="option-description">Conozco algunas cosas que me gustan, pero no he pensado mucho en ello</div>
+                </button>
+                <button class="option-simple" data-value="unsure">
+                    <div class="option-title">No estoy muy seguro</div>
+                    <div class="option-description">Nunca he reflexionado realmente sobre qué me hace feliz</div>
+                </button>
+            </div>
+            <div class="helper-tip">
+                💡 <strong>Tip:</strong> No hay respuestas correctas o incorrectas. Esto es solo para conocerte mejor.
+            </div>
+        </div>
+
+        <!-- Sección 2: Emociones Básicas -->
+        <div class="guide-section" data-section="2">
+            <div class="section-title">
+                😊 Entendiendo tus Emociones
+            </div>
+            <div class="explanation">
+                <strong>Las emociones</strong> son como señales que te dicen cómo te sientes. Alegría, tristeza, enojo, miedo... todas son normales y útiles.
+            </div>
+            <div class="question-simple">
+                Cuando te sientes triste o molesto, ¿qué haces normalmente?
+            </div>
+            <div class="options-simple">
+                <button class="option-simple" data-value="talk">
+                    <div class="option-title">Hablo con alguien</div>
+                    <div class="option-description">Busco a un amigo, familiar o alguien de confianza para contarle cómo me siento</div>
+                </button>
+                <button class="option-simple" data-value="alone">
+                    <div class="option-title">Prefiero estar solo</div>
+                    <div class="option-description">Me gusta procesar mis emociones en privado, tal vez escuchando música o caminando</div>
+                </button>
+                <button class="option-simple" data-value="distract">
+                    <div class="option-title">Trato de distraerme</div>
+                    <div class="option-description">Veo TV, juego videojuegos o hago algo para no pensar en lo que me molesta</div>
+                </button>
+                <button class="option-simple" data-value="confused">
+                    <div class="option-title">No sé qué hacer</div>
+                    <div class="option-description">A veces no entiendo por qué me siento así o cómo manejar estas emociones</div>
+                </button>
+            </div>
+            <div class="helper-tip">
+                💡 <strong>Tip:</strong> Todas estas formas de manejar emociones son válidas. Lo importante es que funcionen para ti.
+            </div>
+        </div>
+
+        <!-- Sección 3: Decisiones Simples -->
+        <div class="guide-section" data-section="3">
+            <div class="section-title">
+                🤔 Cómo Tomas Decisiones
+            </div>
+            <div class="explanation">
+                <strong>Tomar decisiones</strong> es algo que hacemos todo el día: qué comer, qué ropa ponerse, qué hacer en el tiempo libre. Algunas personas piensan mucho, otras siguen su instinto.
+            </div>
+            <div class="question-simple">
+                Cuando tienes que elegir algo importante (como qué estudiar o qué trabajo tomar), ¿cómo lo decides?
+            </div>
+            <div class="options-simple">
+                <button class="option-simple" data-value="research">
+                    <div class="option-title">Investigo mucho</div>
+                    <div class="option-description">Busco información, pregunto a otros, hago listas de pros y contras</div>
+                </button>
+                <button class="option-simple" data-value="feeling">
+                    <div class="option-title">Sigo lo que siento</div>
+                    <div class="option-description">Confío en mi instinto y en lo que me dice el corazón</div>
+                </button>
+                <button class="option-simple" data-value="others">
+                    <div class="option-title">Pido consejos</div>
+                    <div class="option-description">Hablo con familia, amigos o personas que respeto para que me ayuden a decidir</div>
+                </button>
+                <button class="option-simple" data-value="avoid">
+                    <div class="option-title">Me cuesta decidir</div>
+                    <div class="option-description">A veces postergo las decisiones porque no sé qué es lo mejor</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección 4: Relaciones con Otros -->
+        <div class="guide-section" data-section="4">
+            <div class="section-title">
+                👥 Tú y las Otras Personas
+            </div>
+            <div class="explanation">
+                <strong>Las relaciones</strong> nos enseñan mucho sobre nosotros mismos. Cómo nos comportamos con otros, qué nos gusta de ellos, qué nos molesta.
+            </div>
+            <div class="question-simple">
+                ¿Cómo te sientes cuando estás en un grupo de personas nuevas?
+            </div>
+            <div class="options-simple">
+                <button class="option-simple" data-value="comfortable">
+                    <div class="option-title">Me siento cómodo</div>
+                    <div class="option-description">Disfruto conocer gente nueva y me adapto fácilmente a grupos</div>
+                </button>
+                <button class="option-simple" data-value="nervous">
+                    <div class="option-title">Me pongo nervioso</div>
+                    <div class="option-description">Me da un poco de ansiedad, pero eventualmente me relajo</div>
+                </button>
+                <button class="option-simple" data-value="observer">
+                    <div class="option-title">Prefiero observar</div>
+                    <div class="option-description">Me gusta escuchar y observar antes de participar activamente</div>
+                </button>
+                <button class="option-simple" data-value="avoid">
+                    <div class="option-title">Trato de evitarlo</div>
+                    <div class="option-description">Me siento muy incómodo y prefiero situaciones más íntimas</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección 5: Preparación para CO•RA -->
+        <div class="guide-section" data-section="5">
+            <div class="section-title">
+                🚀 ¿Qué es CO•RA?
+            </div>
+            <div class="explanation">
+                <strong>CO•RA</strong> es como un gimnasio para tu mente. Te ayuda a pensar mejor, entenderte más y conectar con otros que también quieren crecer. Es un lugar seguro para explorar quién eres realmente.
+            </div>
+            <div class="question-simple">
+                Después de estas preguntas, ¿cómo te sientes sobre la idea de explorar más sobre ti mismo?
+            </div>
+            <div class="options-simple">
+                <button class="option-simple" data-value="excited">
+                    <div class="option-title">Me emociona</div>
+                    <div class="option-description">Quiero aprender más sobre mí mismo y cómo puedo crecer</div>
+                </button>
+                <button class="option-simple" data-value="curious">
+                    <div class="option-title">Tengo curiosidad</div>
+                    <div class="option-description">Me interesa, aunque no estoy seguro de qué esperar</div>
+                </button>
+                <button class="option-simple" data-value="cautious">
+                    <div class="option-title">Soy cauteloso</div>
+                    <div class="option-description">Me interesa pero quiero ir despacio y entender bien</div>
+                </button>
+                <button class="option-simple" data-value="unsure">
+                    <div class="option-title">No estoy seguro</div>
+                    <div class="option-description">Todavía no entiendo completamente de qué se trata todo esto</div>
+                </button>
+            </div>
+        </div>
+
+        <button class="continue-btn" id="continueBtn" onclick="nextSection()">Continuar →</button>
+
+        <div class="final-result" id="finalResult">
+            <h2 style="color: #2ECC71; margin-bottom: 20px;">¡Excelente Trabajo! 🎉</h2>
+            <div id="personalizedMessage"></div>
+            <div style="margin: 25px 0; padding: 20px; background: rgba(52, 152, 219, 0.2); border-radius: 15px;">
+                <h4 style="color: #3498db; margin-bottom: 10px;">Tu Próximo Paso en CO•RA</h4>
+                <p id="nextStepMessage"></p>
+            </div>
+            <a href="conexion_simbolica.html" class="continue-btn show">🔗 ESTABLECER CONEXIÓN</a>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        let responses = {};
+        
+        function selectOption(element) {
+            const value = element.dataset.value;
+            responses[currentSection] = value;
+            
+            // Marcar selección
+            document.querySelectorAll('.option-simple').forEach(opt => {
+                opt.style.background = 'rgba(52, 152, 219, 0.2)';
+                opt.style.transform = 'scale(1)';
+            });
+            element.style.background = 'rgba(52, 152, 219, 0.6)';
+            element.style.transform = 'scale(1.02)';
+            
+            // Mostrar botón continuar
+            document.getElementById('continueBtn').classList.add('show');
+        }
+        
+        function nextSection() {
+            // Marcar paso como completado
+            document.querySelector(`.step:nth-child(${currentSection})`).classList.add('completed');
+            document.querySelector(`.step:nth-child(${currentSection})`).classList.remove('active');
+            
+            // Ocultar sección actual
+            document.querySelector(`[data-section="${currentSection}"]`).classList.remove('active');
+            
+            currentSection++;
+            
+            if (currentSection <= 5) {
+                // Activar siguiente paso
+                document.querySelector(`.step:nth-child(${currentSection})`).classList.add('active');
+                
+                // Mostrar siguiente sección
+                setTimeout(() => {
+                    document.querySelector(`[data-section="${currentSection}"]`).classList.add('active');
+                    document.getElementById('continueBtn').classList.remove('show');
+                }, 300);
+            } else {
+                // Mostrar resultado final
+                setTimeout(showFinalResult, 500);
+            }
+        }
+        
+        function showFinalResult() {
+            document.querySelectorAll('.guide-section').forEach(section => section.style.display = 'none');
+            document.getElementById('continueBtn').style.display = 'none';
+            
+            // Generar mensaje personalizado
+            const profile = analyzeResponses();
+            
+            document.getElementById('personalizedMessage').innerHTML = `
+                <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 15px;">
+                    ${profile.message}
+                </p>
+                <p style="color: #3498db;">
+                    <strong>Tu perfil:</strong> ${profile.type}
+                </p>
+            `;
+            
+            document.getElementById('nextStepMessage').innerHTML = profile.nextStep;
+            
+            document.getElementById('finalResult').style.display = 'block';
+        }
+        
+        function analyzeResponses() {
+            // Análisis simple basado en las respuestas
+            const r = responses;
+            
+            if (r[1] === 'clear' && (r[2] === 'talk' || r[2] === 'alone') && r[5] === 'excited') {
+                return {
+                    type: "Explorador Natural",
+                    message: "¡Tienes una base sólida de autoconocimiento! Ya entiendes muchas cosas sobre ti mismo y estás listo para explorar más profundamente.",
+                    nextStep: "Puedes explorar CO•RA City libremente. Te recomendamos empezar por el Knowledge Nexus para expandir tu comprensión."
+                };
+            } else if (r[5] === 'curious' || r[5] === 'excited') {
+                return {
+                    type: "Buscador Entusiasta",
+                    message: "Muestras una curiosidad genuina por conocerte mejor. Aunque estás empezando, tienes la actitud perfecta para crecer.",
+                    nextStep: "CO•RA te guiará paso a paso. Comienza explorando los distritos básicos y toma tu tiempo para familiarizarte."
+                };
+            } else if (r[5] === 'cautious') {
+                return {
+                    type: "Observador Cuidadoso",
+                    message: "Tu enfoque cauteloso es sabio. Prefieres entender bien antes de comprometerte, lo cual es una fortaleza.",
+                    nextStep: "Explora CO•RA a tu ritmo. Cada distrito tiene información clara sobre lo que ofrece. No hay prisa."
+                };
+            } else {
+                return {
+                    type: "Explorador Inicial",
+                    message: "Estás al comienzo de tu viaje de autoconocimiento, y eso está perfectamente bien. Todos empezamos desde algún lugar.",
+                    nextStep: "CO•RA está diseñado para ser inclusivo. Comienza con las áreas más básicas y ve avanzando según te sientas cómodo."
+                };
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.option-simple').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectOption(this);
+                });
+            });
+        });
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script>
+        // Integración con motor de análisis para evaluación guiada
+        function trackSectionResponse(sectionNum, response) {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.sessionData.interactionData.push({
+                    type: 'section_response',
+                    section: sectionNum,
+                    response: response,
+                    timestamp: Date.now(),
+                    sectionTime: Date.now() - window.sectionStartTime
+                });
+            }
+        }
+        
+        let sectionStartTime = Date.now();
+        
+        const originalSelectOption = selectOption;
+        selectOption = function(element) {
+            trackSectionResponse(currentSection, element.dataset.value);
+            return originalSelectOption(element);
+        };
+        
+        const originalNextSection = nextSection;
+        nextSection = function() {
+            window.sectionStartTime = Date.now();
+            return originalNextSection();
+        };
+        
+        const originalShowFinalResult = showFinalResult;
+        showFinalResult = function() {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.saveAnalysisData();
+            }
+            return originalShowFinalResult();
+        };
+    </script>
+</body>
+</html>

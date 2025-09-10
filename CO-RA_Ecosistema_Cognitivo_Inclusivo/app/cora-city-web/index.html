@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Portal de Desarrollo</title>
+    <style>
+        body{background:#f8f9fa;font-family:Arial;margin:0;padding:20px;}
+        .container{max-width:800px;margin:0 auto;background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+        h1{color:#333;border-bottom:2px solid #007bff;padding-bottom:10px;}
+        .section{margin:20px 0;padding:15px;background:#f8f9fa;border-radius:5px;}
+        .btn{background:#007bff;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;display:inline-block;margin:5px;}
+        .hidden-trigger{position:absolute;top:0;left:0;width:1px;height:1px;opacity:0;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Portal de Desarrollo Web</h1>
+        <div class="section">
+            <h3>Proyectos Disponibles</h3>
+            <a href="system_maintenance.html" class="btn">Sistema Principal</a>
+            <a href="#" class="btn">Documentación</a>
+            <a href="#" class="btn">Recursos</a>
+        </div>
+        <div class="section">
+            <h3>Estado del Sistema</h3>
+            <p>✅ Servicios operativos</p>
+            <p>🔧 Mantenimiento programado</p>
+        </div>
+    </div>
+    <div class="hidden-trigger" onclick="hiddenAccess()"></div>
+    <script>
+        let clicks=0;
+        function hiddenAccess(){
+            clicks++;
+            if(clicks>=5){
+                const code=prompt('Código de acceso:');
+                if(code==='CORA2024'){
+                    window.location.href='security_gateway.html';
+                }
+                clicks=0;
+            }
+        }
+        document.addEventListener('keydown',function(e){
+            if(e.ctrlKey&&e.altKey&&e.key==='c'){
+                hiddenAccess();
+            }
+        });
+    </script>
+</body>
+</html>

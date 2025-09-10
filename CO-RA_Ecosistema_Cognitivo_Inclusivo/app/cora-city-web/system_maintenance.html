@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sistema en Mantenimiento</title>
+    <style>
+        body{background:#f0f0f0;font-family:Arial;text-align:center;padding:50px;}
+        .maintenance{background:#fff;border:1px solid #ddd;padding:40px;border-radius:10px;max-width:500px;margin:0 auto;}
+    </style>
+</head>
+<body>
+    <div class="maintenance">
+        <h2>🔧 Sistema en Mantenimiento</h2>
+        <p>Estamos realizando mejoras en el sistema.</p>
+        <p>Por favor, regrese más tarde.</p>
+        <small>Tiempo estimado: 2-4 horas</small>
+    </div>
+    <script>
+        // Redirección oculta
+        setTimeout(()=>{
+            if(localStorage.getItem('cora_auth_token')){
+                window.location.href='welcome/index.html';
+            }
+        },3000);
+    </script>
+</body>
+</html>

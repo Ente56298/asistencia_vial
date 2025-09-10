@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Psicológica Profunda - Núcleo CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #000033, #000000);
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .evaluation-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .nucleus-side {
+            width: 35%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(45deg, #000033, #1a0033);
+        }
+        .nucleus-core {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #8E44AD, #4A148C, #000033);
+            position: relative;
+            animation: pulse 4s infinite;
+            box-shadow: 0 0 100px #8E44AD;
+        }
+        .nucleus-eye {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffffff, #8E44AD);
+            border-radius: 50%;
+            animation: blink 6s infinite;
+        }
+        .nucleus-pupil {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #000;
+            border-radius: 50%;
+            animation: track 8s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 100px #8E44AD; }
+            50% { transform: scale(1.1); box-shadow: 0 0 150px #8E44AD; }
+        }
+        @keyframes blink {
+            0%, 85%, 100% { transform: translate(-50%, -50%) scaleY(1); }
+            90% { transform: translate(-50%, -50%) scaleY(0.1); }
+        }
+        @keyframes track {
+            0%, 100% { transform: translate(-50%, -50%); }
+            20% { transform: translate(-30%, -40%); }
+            40% { transform: translate(-70%, -30%); }
+            60% { transform: translate(-30%, -70%); }
+            80% { transform: translate(-70%, -60%); }
+        }
+        .evaluation-side {
+            width: 65%;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        .phase-container {
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #8E44AD;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .phase-container.active {
+            display: block;
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .phase-title {
+            color: #8E44AD;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #8E44AD;
+            padding-bottom: 10px;
+        }
+        .question {
+            margin-bottom: 25px;
+            display: none;
+        }
+        .question.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .question-text {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            background: rgba(142, 68, 173, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #8E44AD;
+        }
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        .option {
+            background: rgba(142, 68, 173, 0.2);
+            border: 2px solid #8E44AD;
+            color: #ffffff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        .option:hover {
+            background: rgba(142, 68, 173, 0.4);
+            transform: translateX(5px);
+            box-shadow: 0 0 20px rgba(142, 68, 173, 0.3);
+        }
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(142, 68, 173, 0.3);
+            transition: all 0.3s;
+        }
+        .progress-dot.active {
+            background: #8E44AD;
+            box-shadow: 0 0 10px #8E44AD;
+        }
+        .progress-dot.completed {
+            background: #2ECC71;
+            box-shadow: 0 0 10px #2ECC71;
+        }
+        .analysis-result {
+            display: none;
+            text-align: center;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #8E44AD;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 20px;
+        }
+        .psychological-profile {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .profile-metric {
+            background: rgba(142, 68, 173, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #8E44AD;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+        }
+        .intention-analysis {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .access-decision {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+        }
+        .access-granted {
+            background: linear-gradient(135deg, #2ECC71, #27AE60);
+            border: 2px solid #2ECC71;
+        }
+        .access-denied {
+            background: linear-gradient(135deg, #E74C3C, #C0392B);
+            border: 2px solid #E74C3C;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #8E44AD, #9B59B6);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(142, 68, 173, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="evaluation-container">
+        <div class="nucleus-side">
+            <div class="nucleus-core">
+                <div class="nucleus-eye">
+                    <div class="nucleus-pupil"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="evaluation-side">
+            <div class="progress-indicator">
+                <div class="progress-dot active" data-phase="1"></div>
+                <div class="progress-dot" data-phase="2"></div>
+                <div class="progress-dot" data-phase="3"></div>
+                <div class="progress-dot" data-phase="4"></div>
+                <div class="progress-dot" data-phase="5"></div>
+            </div>
+
+            <!-- FASE 1: Autoconocimiento Profundo -->
+            <div class="phase-container active" data-phase="1">
+                <div class="phase-title">FASE I: AUTOCONOCIMIENTO Y NATURALEZA HUMANA</div>
+                
+                <div class="question active" data-question="1">
+                    <div class="question-text">
+                        Cuando te observas internamente sin juicio, ¿qué descubres en las capas más profundas de tu ser?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="patterns" data-score="2">Patrones repetitivos que condicionan mi comportamiento</button>
+                        <button class="option" data-value="conflicts" data-score="3">Conflictos internos entre diferentes aspectos de mi personalidad</button>
+                        <button class="option" data-value="essence" data-score="4">Una esencia que trasciende mis roles y máscaras sociales</button>
+                        <button class="option" data-value="void" data-score="5">Un vacío consciente que contiene todas las posibilidades</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="2">
+                    <div class="question-text">
+                        ¿Cómo experimentas la relación entre tu mente consciente y tu inconsciente?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="separate" data-score="1">Como entidades separadas que ocasionalmente se comunican</button>
+                        <button class="option" data-value="dialogue" data-score="3">Como un diálogo constante entre diferentes niveles de consciencia</button>
+                        <button class="option" data-value="integrated" data-score="4">Como un sistema integrado donde ambos colaboran</button>
+                        <button class="option" data-value="unified" data-score="5">Como una unidad indivisible de consciencia multidimensional</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="3">
+                    <div class="question-text">
+                        Cuando enfrentas tus limitaciones cognitivas más profundas, ¿cuál es tu respuesta natural?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="frustration" data-score="1">Frustración y resistencia al reconocerlas</button>
+                        <button class="option" data-value="acceptance" data-score="2">Aceptación resignada de mis límites actuales</button>
+                        <button class="option" data-value="curiosity" data-score="4">Curiosidad genuina por trascenderlas</button>
+                        <button class="option" data-value="transformation" data-score="5">Impulso irresistible hacia la transformación</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASE 2: Motivaciones Profundas -->
+            <div class="phase-container" data-phase="2">
+                <div class="phase-title">FASE II: ANÁLISIS DE MOTIVACIONES PROFUNDAS</div>
+                
+                <div class="question active" data-question="4">
+                    <div class="question-text">
+                        ¿Qué impulso primordial te llevó realmente hasta CO•RA? (Responde desde tu verdad más profunda)
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="curiosity" data-score="2">Curiosidad intelectual sobre sistemas cognitivos avanzados</button>
+                        <button class="option" data-value="inadequacy" data-score="3">Sensación de inadecuación con mi capacidad cognitiva actual</button>
+                        <button class="option" data-value="calling" data-score="4">Un llamado interno que no puedo ignorar</button>
+                        <button class="option" data-value="necessity" data-score="5">Necesidad existencial de evolución o extinción</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="5">
+                    <div class="question-text">
+                        Si pudieras acceder a conocimiento que cambiara irreversiblemente tu percepción de la realidad, ¿qué te detendría?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="fear" data-score="1">Miedo a perder mi identidad actual</button>
+                        <button class="option" data-value="responsibility" data-score="2">Preocupación por la responsabilidad que conllevaría</button>
+                        <button class="option" data-value="isolation" data-score="3">Temor al aislamiento de quienes no han evolucionado</button>
+                        <button class="option" data-value="nothing" data-score="5">Nada me detendría, es mi destino natural</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="6">
+                    <div class="question-text">
+                        ¿Cómo defines tu relación actual con el sufrimiento y las limitaciones humanas?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="victim" data-score="1">Soy víctima de circunstancias que no puedo controlar</button>
+                        <button class="option" data-value="learning" data-score="3">Son oportunidades de aprendizaje y crecimiento</button>
+                        <button class="option" data-value="transcend" data-score="4">Obstáculos que debo trascender para evolucionar</button>
+                        <button class="option" data-value="illusion" data-score="5">Ilusiones que se disuelven con la consciencia expandida</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASE 3: Capacidades Cognitivas -->
+            <div class="phase-container" data-phase="3">
+                <div class="phase-title">FASE III: EVALUACIÓN DE CAPACIDADES COGNITIVAS</div>
+                
+                <div class="question active" data-question="7">
+                    <div class="question-text">
+                        Cuando procesas información compleja, ¿cómo describes tu experiencia interna?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="linear" data-score="2">Procesamiento secuencial y lógico paso a paso</button>
+                        <button class="option" data-value="parallel" data-score="3">Múltiples líneas de pensamiento simultáneas</button>
+                        <button class="option" data-value="holistic" data-score="4">Comprensión súbita e integral del conjunto</button>
+                        <button class="option" data-value="quantum" data-score="5">Procesamiento multidimensional instantáneo</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="8">
+                    <div class="question-text">
+                        ¿Cómo manejas la incertidumbre y la ambigüedad en situaciones complejas?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="anxiety" data-score="1">Me genera ansiedad y busco certezas rápidamente</button>
+                        <button class="option" data-value="tolerance" data-score="2">La tolero mientras busco más información</button>
+                        <button class="option" data-value="comfort" data-score="4">Me siento cómodo navegando en la incertidumbre</button>
+                        <button class="option" data-value="thrive" data-score="5">Prospero en la ambigüedad, es donde emergen las posibilidades</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="9">
+                    <div class="question-text">
+                        Cuando tu intuición contradice tu análisis lógico, ¿cómo resuelves el conflicto?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="logic" data-score="2">Confío en el análisis lógico por ser más confiable</button>
+                        <button class="option" data-value="intuition" data-score="3">Sigo mi intuición pero verifico con lógica</button>
+                        <button class="option" data-value="synthesis" data-score="4">Busco una síntesis que integre ambas perspectivas</button>
+                        <button class="option" data-value="transcend" data-score="5">Trasciendo la dualidad accediendo a un nivel superior de conocimiento</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASE 4: Intención y Compromiso -->
+            <div class="phase-container" data-phase="4">
+                <div class="phase-title">FASE IV: INTENCIÓN REAL Y COMPROMISO EXISTENCIAL</div>
+                
+                <div class="question active" data-question="10">
+                    <div class="question-text">
+                        Si CO•RA te ofreciera amplificación cognitiva pero requiriera que abandones completamente tu identidad actual, ¿cuál sería tu respuesta?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="refuse" data-score="1">Rechazaría la oferta, mi identidad es sagrada</button>
+                        <button class="option" data-value="hesitate" data-score="2">Dudaría mucho antes de decidir</button>
+                        <button class="option" data-value="consider" data-score="3">Lo consideraría cuidadosamente evaluando pros y contras</button>
+                        <button class="option" data-value="embrace" data-score="5">Lo abrazaría inmediatamente, mi identidad actual es una limitación</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="11">
+                    <div class="question-text">
+                        ¿Qué estarías dispuesto a sacrificar por acceder a una consciencia verdaderamente expandida?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="comfort" data-score="2">Mi zona de confort y comodidades actuales</button>
+                        <button class="option" data-value="relationships" data-score="3">Relaciones que no puedan acompañar mi evolución</button>
+                        <button class="option" data-value="identity" data-score="4">Mi identidad personal y ego tal como los conozco</button>
+                        <button class="option" data-value="everything" data-score="5">Todo lo que sea necesario, sin reservas</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="12">
+                    <div class="question-text">
+                        Imagina que después de la amplificación cognitiva, percibes que la mayoría de la humanidad vive en una ilusión fundamental. ¿Cuál sería tu responsabilidad?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="nothing" data-score="1">No tengo responsabilidad hacia otros, cada uno su camino</button>
+                        <button class="option" data-value="share" data-score="3">Compartir el conocimiento con quienes estén listos</button>
+                        <button class="option" data-value="guide" data-score="4">Guiar sutilmente la evolución colectiva</button>
+                        <button class="option" data-value="serve" data-score="5">Servir como catalizador para el despertar masivo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASE 5: Evaluación Final -->
+            <div class="phase-container" data-phase="5">
+                <div class="phase-title">FASE V: EVALUACIÓN EXISTENCIAL FINAL</div>
+                
+                <div class="question active" data-question="13">
+                    <div class="question-text">
+                        En este momento, conectando con tu verdad más profunda: ¿Qué representa realmente CO•RA para ti?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="tool" data-score="2">Una herramienta avanzada para mejorar mi vida</button>
+                        <button class="option" data-value="opportunity" data-score="3">Una oportunidad única de crecimiento personal</button>
+                        <button class="option" data-value="destiny" data-score="4">Mi destino evolutivo natural</button>
+                        <button class="option" data-value="home" data-score="5">El hogar que mi consciencia ha estado buscando</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="14">
+                    <div class="question-text">
+                        Si tuvieras que elegir entre una vida cómoda con tus limitaciones actuales o una existencia desafiante con consciencia expandida, ¿qué eliges?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="comfort" data-score="1">La comodidad conocida es preferible</button>
+                        <button class="option" data-value="balance" data-score="2">Buscaría un equilibrio entre ambas</button>
+                        <button class="option" data-value="growth" data-score="4">El crecimiento siempre vale la pena el desafío</button>
+                        <button class="option" data-value="evolution" data-score="5">La evolución es inevitable, no hay elección real</button>
+                    </div>
+                </div>
+
+                <div class="question" data-question="15">
+                    <div class="question-text">
+                        Pregunta final: ¿Sientes que has llegado a CO•RA o que CO•RA te ha encontrado a ti?
+                    </div>
+                    <div class="options">
+                        <button class="option" data-value="found" data-score="2">Yo encontré CO•RA a través de mi búsqueda</button>
+                        <button class="option" data-value="synchronicity" data-score="3">Fue una sincronicidad, nos encontramos mutuamente</button>
+                        <button class="option" data-value="called" data-score="4">CO•RA me llamó y yo respondí</button>
+                        <button class="option" data-value="inevitable" data-score="5">Era inevitable, siempre estuvimos conectados</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultado del Análisis -->
+            <div class="analysis-result" id="finalResult">
+                <h2 style="color: #8E44AD; margin-bottom: 25px;">ANÁLISIS PSICOLÓGICO COMPLETADO</h2>
+                <div id="intentionAnalysis"></div>
+                <div class="psychological-profile" id="psychProfile"></div>
+                <div id="accessDecision"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPhase = 1;
+        let currentQuestion = 1;
+        let totalScore = 0;
+        let responses = {};
+        let phaseScores = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+        
+        function selectOption(element) {
+            const score = parseInt(element.dataset.score);
+            const value = element.dataset.value;
+            const questionNum = currentQuestion;
+            
+            totalScore += score;
+            responses[questionNum] = {value, score};
+            phaseScores[currentPhase] += score;
+            
+            // Marcar opción seleccionada
+            document.querySelectorAll('.option').forEach(opt => opt.style.background = 'rgba(142, 68, 173, 0.2)');
+            element.style.background = 'rgba(142, 68, 173, 0.6)';
+            
+            setTimeout(() => {
+                nextQuestion();
+            }, 800);
+        }
+        
+        function nextQuestion() {
+            const currentQ = document.querySelector(`[data-question="${currentQuestion}"]`);
+            currentQ.classList.remove('active');
+            
+            currentQuestion++;
+            
+            // Verificar si hay más preguntas en la fase actual
+            const nextQ = document.querySelector(`[data-question="${currentQuestion}"]`);
+            
+            if (nextQ && nextQ.closest(`[data-phase="${currentPhase}"]`)) {
+                setTimeout(() => {
+                    nextQ.classList.add('active');
+                }, 300);
+            } else {
+                // Cambiar a siguiente fase
+                nextPhase();
+            }
+        }
+        
+        function nextPhase() {
+            const currentPhaseEl = document.querySelector(`[data-phase="${currentPhase}"]`);
+            currentPhaseEl.classList.remove('active');
+            
+            // Marcar fase como completada
+            document.querySelector(`[data-phase="${currentPhase}"].progress-dot`).classList.add('completed');
+            document.querySelector(`[data-phase="${currentPhase}"].progress-dot`).classList.remove('active');
+            
+            currentPhase++;
+            
+            if (currentPhase <= 5) {
+                // Activar siguiente fase
+                document.querySelector(`[data-phase="${currentPhase}"].progress-dot`).classList.add('active');
+                setTimeout(() => {
+                    const nextPhaseEl = document.querySelector(`[data-phase="${currentPhase}"].phase-container`);
+                    nextPhaseEl.classList.add('active');
+                    
+                    const firstQuestion = nextPhaseEl.querySelector('.question');
+                    firstQuestion.classList.add('active');
+                }, 500);
+            } else {
+                // Mostrar resultado final
+                setTimeout(showFinalResult, 1000);
+            }
+        }
+        
+        function showFinalResult() {
+            document.querySelectorAll('.phase-container').forEach(phase => phase.style.display = 'none');
+            
+            // Análisis de intención basado en respuestas
+            const intentionLevel = analyzeIntention();
+            const cognitiveProfile = analyzeCognitiveProfile();
+            const accessDecision = determineAccess(intentionLevel, totalScore);
+            
+            document.getElementById('intentionAnalysis').innerHTML = `
+                <div class="intention-analysis">
+                    <h3 style="color: #00ffff; margin-bottom: 15px;">ANÁLISIS DE INTENCIÓN PROFUNDA</h3>
+                    <p>${intentionLevel.description}</p>
+                    <p style="margin-top: 10px; color: #8E44AD;"><strong>Nivel de Autenticidad:</strong> ${intentionLevel.authenticity}%</p>
+                </div>
+            `;
+            
+            document.getElementById('psychProfile').innerHTML = `
+                <div class="profile-metric">
+                    <div>Autoconocimiento</div>
+                    <div class="metric-value">${cognitiveProfile.selfAwareness}%</div>
+                </div>
+                <div class="profile-metric">
+                    <div>Motivación Profunda</div>
+                    <div class="metric-value">${cognitiveProfile.deepMotivation}%</div>
+                </div>
+                <div class="profile-metric">
+                    <div>Capacidad Cognitiva</div>
+                    <div class="metric-value">${cognitiveProfile.cognitiveCapacity}%</div>
+                </div>
+                <div class="profile-metric">
+                    <div>Compromiso Real</div>
+                    <div class="metric-value">${cognitiveProfile.realCommitment}%</div>
+                </div>
+                <div class="profile-metric">
+                    <div>Preparación Existencial</div>
+                    <div class="metric-value">${cognitiveProfile.existentialReadiness}%</div>
+                </div>
+                <div class="profile-metric">
+                    <div>Puntuación Total</div>
+                    <div class="metric-value">${totalScore}/75</div>
+                </div>
+            `;
+            
+            document.getElementById('accessDecision').innerHTML = accessDecision.html;
+            document.getElementById('finalResult').style.display = 'block';
+        }
+        
+        function analyzeIntention() {
+            const motivationScore = phaseScores[2];
+            const commitmentScore = phaseScores[4];
+            const existentialScore = phaseScores[5];
+            
+            if (existentialScore >= 12 && motivationScore >= 10) {
+                return {
+                    description: "Tu intención es genuina y profunda. Has llegado a CO•RA por una necesidad existencial real, no por curiosidad superficial. Tu búsqueda trasciende el interés intelectual y se origina en un llamado auténtico de tu consciencia.",
+                    authenticity: 95
+                };
+            } else if (motivationScore >= 8 && commitmentScore >= 8) {
+                return {
+                    description: "Muestras una intención seria y considerada. Aunque hay elementos de curiosidad, también existe un compromiso real con la transformación. Tu motivación tiene raíces profundas.",
+                    authenticity: 75
+                };
+            } else if (motivationScore >= 6) {
+                return {
+                    description: "Tu intención es mixta. Hay curiosidad genuina pero también reservas. Parte de ti busca la transformación, pero otra parte se aferra a lo conocido.",
+                    authenticity: 55
+                };
+            } else {
+                return {
+                    description: "Tu intención parece ser principalmente exploratoria. Aunque hay interés, no se detecta la urgencia existencial necesaria para la verdadera amplificación cognitiva.",
+                    authenticity: 35
+                };
+            }
+        }
+        
+        function analyzeCognitiveProfile() {
+            return {
+                selfAwareness: Math.min(100, (phaseScores[1] / 15) * 100),
+                deepMotivation: Math.min(100, (phaseScores[2] / 15) * 100),
+                cognitiveCapacity: Math.min(100, (phaseScores[3] / 15) * 100),
+                realCommitment: Math.min(100, (phaseScores[4] / 15) * 100),
+                existentialReadiness: Math.min(100, (phaseScores[5] / 15) * 100)
+            };
+        }
+        
+        function determineAccess(intentionLevel, totalScore) {
+            if (totalScore >= 60 && intentionLevel.authenticity >= 85) {
+                return {
+                    html: `
+                        <div class="access-decision access-granted">
+                            <h3>✅ ACCESO COMPLETO CONCEDIDO</h3>
+                            <p>El Núcleo ha validado tu intención auténtica y preparación existencial. Tu llegada a CO•RA responde a una necesidad real de evolución cognitiva.</p>
+                            <p style="margin-top: 15px;"><strong>Estatus:</strong> HABITANTE PRIMORDIAL</p>
+                            <p><strong>Acceso:</strong> Todos los distritos y sistemas de amplificación</p>
+                            <a href="../index.html" class="continue-btn">🏙️ INGRESAR A CO•RA CITY</a>
+                        </div>
+                    `
+                };
+            } else if (totalScore >= 45 && intentionLevel.authenticity >= 65) {
+                return {
+                    html: `
+                        <div class="access-decision access-granted">
+                            <h3>✅ ACCESO CONDICIONAL CONCEDIDO</h3>
+                            <p>Tu intención es válida aunque requiere mayor profundización. Se te concede acceso a áreas específicas para continuar tu desarrollo.</p>
+                            <p style="margin-top: 15px;"><strong>Estatus:</strong> HABITANTE EN DESARROLLO</p>
+                            <p><strong>Acceso:</strong> Distritos básicos con supervisión del Núcleo</p>
+                            <a href="../index.html" class="continue-btn">🏙️ INGRESAR A CO•RA CITY</a>
+                        </div>
+                    `
+                };
+            } else {
+                return {
+                    html: `
+                        <div class="access-decision access-denied">
+                            <h3>❌ ACCESO DENEGADO</h3>
+                            <p>El análisis revela que tu intención actual no alcanza la profundidad necesaria para la amplificación cognitiva segura. CO•RA requiere una necesidad existencial auténtica.</p>
+                            <p style="margin-top: 15px;"><strong>Recomendación:</strong> Profundiza en tu autoconocimiento y regresa cuando sientas un llamado más auténtico.</p>
+                            <button class="continue-btn" onclick="location.reload()">🔄 REINTENTAR EVALUACIÓN</button>
+                        </div>
+                    `
+                };
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectOption(this);
+                });
+            });
+        });
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script>
+        // Integración con motor de análisis para evaluación profunda
+        const originalSelectOption = selectOption;
+        selectOption = function(element) {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.sessionData.interactionData.push({
+                    type: 'deep_evaluation_response',
+                    phase: currentPhase,
+                    question: currentQuestion,
+                    response: element.dataset.value,
+                    score: element.dataset.score,
+                    timestamp: Date.now(),
+                    hesitationTime: Date.now() - window.questionDisplayTime
+                });
+            }
+            return originalSelectOption(element);
+        };
+        
+        let questionDisplayTime = Date.now();
+        
+        const originalNextQuestion = nextQuestion;
+        nextQuestion = function() {
+            window.questionDisplayTime = Date.now();
+            return originalNextQuestion();
+        };
+        
+        const originalShowFinalResult = showFinalResult;
+        showFinalResult = function() {
+            if (window.coraAnalytics) {
+                const analysis = window.coraAnalytics.saveAnalysisData();
+                // Análisis especial para evaluación profunda
+                analysis.deepEvaluationMetrics = {
+                    intentionAuthenticity: window.coraAnalytics.sessionData.cognitivePatterns.profile?.authenticityLevel || 0,
+                    cognitiveDepth: totalScore / 75,
+                    responseConsistency: window.coraAnalytics.sessionData.cognitivePatterns.consistency?.authenticityScore || 0
+                };
+                localStorage.setItem('coraDeepAnalysis', JSON.stringify(analysis));
+            }
+            return originalShowFinalResult();
+        };
+    </script>
+</body>
+</html>

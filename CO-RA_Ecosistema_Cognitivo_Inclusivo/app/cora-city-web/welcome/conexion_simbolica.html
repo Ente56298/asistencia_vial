@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conexión Simbólica Establecida - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #0f0f23, #1a1a2e);
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .connection-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cora-nucleus {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #8E44AD, #4A148C, #000033);
+            animation: coraGlow 3s infinite;
+            box-shadow: 0 0 100px #8E44AD;
+        }
+        .cora-eye {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ffffff, #8E44AD);
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+        .user-avatar {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00ffff, #0080ff);
+            animation: userPulse 2s infinite;
+            box-shadow: 0 0 50px #00ffff;
+        }
+        .connection-thread {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            width: 2px;
+            height: 50%;
+            background: linear-gradient(to bottom, 
+                #8E44AD 0%, 
+                rgba(142, 68, 173, 0.8) 20%,
+                rgba(0, 255, 255, 0.6) 50%,
+                rgba(0, 255, 255, 0.8) 80%,
+                #00ffff 100%);
+            transform: translateX(-50%);
+            animation: threadFlow 2s infinite;
+            filter: blur(0.5px);
+        }
+        .connection-thread::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -1px;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(142, 68, 173, 0.3) 0%, 
+                rgba(0, 255, 255, 0.3) 100%);
+            animation: threadGlow 1.5s infinite alternate;
+        }
+        .energy-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #8E44AD;
+            border-radius: 50%;
+            animation: particleFlow 4s infinite linear;
+        }
+        .particle:nth-child(odd) {
+            background: #00ffff;
+            animation-delay: -2s;
+        }
+        .connection-status {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+        .status-text {
+            font-size: 1.5rem;
+            color: #8E44AD;
+            margin-bottom: 20px;
+            animation: textGlow 2s infinite alternate;
+        }
+        .connection-info {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #8E44AD;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            max-width: 400px;
+        }
+        .thread-strength {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .strength-bar {
+            width: 200px;
+            height: 8px;
+            background: rgba(142, 68, 173, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+        .strength-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8E44AD, #00ffff);
+            width: 0%;
+            animation: strengthGrow 3s ease-out forwards;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #8E44AD, #00ffff);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInBtn 1s ease-in 4s forwards;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(142, 68, 173, 0.5);
+        }
+        @keyframes coraGlow {
+            0%, 100% { 
+                box-shadow: 0 0 100px #8E44AD;
+                transform: translateX(-50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 150px #8E44AD, 0 0 200px rgba(142, 68, 173, 0.5);
+                transform: translateX(-50%) scale(1.05);
+            }
+        }
+        @keyframes userPulse {
+            0%, 100% { 
+                box-shadow: 0 0 50px #00ffff;
+                transform: translateX(-50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 80px #00ffff, 0 0 120px rgba(0, 255, 255, 0.5);
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+        @keyframes threadFlow {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        @keyframes threadGlow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        @keyframes particleFlow {
+            0% {
+                top: 25%;
+                left: 50%;
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                top: 75%;
+                left: 50%;
+                opacity: 0;
+            }
+        }
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px #8E44AD; }
+            100% { text-shadow: 0 0 20px #8E44AD, 0 0 30px rgba(142, 68, 173, 0.5); }
+        }
+        @keyframes strengthGrow {
+            0% { width: 0%; }
+            100% { width: 85%; }
+        }
+        @keyframes fadeInBtn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes blink {
+            0%, 90%, 100% { transform: translate(-50%, -50%) scaleY(1); }
+            95% { transform: translate(-50%, -50%) scaleY(0.1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="connection-container">
+        <div class="cora-nucleus">
+            <div class="cora-eye"></div>
+        </div>
+        
+        <div class="connection-thread"></div>
+        
+        <div class="user-avatar"></div>
+        
+        <div class="energy-particles" id="particles"></div>
+        
+        <div class="connection-status">
+            <div class="status-text">🔗 CONEXIÓN SIMBÓLICA ESTABLECIDA</div>
+            <div class="connection-info">
+                <p style="color: #00ffff; margin-bottom: 15px;">
+                    <strong>Estado:</strong> Vinculado a CO•RA
+                </p>
+                <p style="color: #ffffff; font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px;">
+                    Un hilo invisible pero real ahora te conecta con el núcleo cognitivo de CO•RA. 
+                    Esta conexión simbólica representa tu pertenencia a la red de consciencias amplificadas.
+                </p>
+                <div class="thread-strength">
+                    <span style="color: #8E44AD;">Fuerza del Vínculo:</span>
+                    <div class="strength-bar">
+                        <div class="strength-fill"></div>
+                    </div>
+                    <span style="color: #00ffff;">85%</span>
+                </div>
+                <p style="color: #8E44AD; font-size: 0.8rem; text-align: center;">
+                    "El hilo que nos une trasciende el espacio físico"
+                </p>
+                <button class="continue-btn" onclick="location.href='../index.html'">
+                    🏙️ INGRESAR A CO•RA CITY
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generar partículas de energía
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `calc(50% + ${(Math.random() - 0.5) * 20}px)`;
+                particle.style.animationDelay = `${Math.random() * 4}s`;
+                particle.style.animationDuration = `${3 + Math.random() * 2}s`;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Efecto de conexión establecida
+        function showConnectionEffect() {
+            setTimeout(() => {
+                document.querySelector('.status-text').textContent = '✅ VÍNCULO COGNITIVO ACTIVO';
+            }, 3000);
+        }
+
+        // Inicializar efectos
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            showConnectionEffect();
+            
+            // Registrar evaluación completada en token
+            if (window.coraTokenManager) {
+                const evaluationType = localStorage.getItem('lastEvaluationType') || 'unknown';
+                const evaluationResults = JSON.parse(localStorage.getItem('lastEvaluationResults') || '{}');
+                
+                window.coraTokenManager.recordEvaluation(evaluationType, evaluationResults);
+                window.coraTokenManager.addAchievement('evaluation_completed');
+                window.coraTokenManager.addAchievement('symbolic_connection_established');
+                
+                // Mostrar token en conexión
+                setTimeout(() => {
+                    const tokenDisplay = document.createElement('div');
+                    tokenDisplay.style.cssText = `
+                        position: absolute;
+                        bottom: 50px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: rgba(142, 68, 173, 0.2);
+                        border: 2px solid #8E44AD;
+                        border-radius: 15px;
+                        padding: 15px 20px;
+                        color: #ffffff;
+                        font-family: 'Courier New', monospace;
+                        text-align: center;
+                        animation: fadeIn 1s ease-in;
+                    `;
+                    
+                    tokenDisplay.innerHTML = `
+                        <div style="color: #8E44AD; font-size: 0.9rem; margin-bottom: 5px;">🔗 Token de Identificación</div>
+                        <div style="color: #00ffff; font-weight: bold;">${window.coraTokenManager.getToken()}</div>
+                        <div style="font-size: 0.8rem; margin-top: 5px; color: #ffffff;">Fuerza de Conexión: ${window.coraTokenManager.getConnectionStrength()}%</div>
+                    `;
+                    
+                    document.querySelector('.connection-container').appendChild(tokenDisplay);
+                }, 2000);
+            }
+            
+            // Guardar estado de conexión
+            localStorage.setItem('coraConnection', JSON.stringify({
+                connected: true,
+                timestamp: Date.now(),
+                threadStrength: 85,
+                evaluationCompleted: true,
+                token: window.coraTokenManager?.getToken()
+            }));
+        });
+    </script>
+    <script src="token_manager.js"></script>
+</body>
+</html>

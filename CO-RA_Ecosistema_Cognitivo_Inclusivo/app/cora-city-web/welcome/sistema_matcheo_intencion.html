@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Matcheo por Intención - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #0f0f23, #1a1a2e);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #16213e;
+            position: relative;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title {
+            color: #4a90e2;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+        }
+        .unificador {
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+            position: relative;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.1), rgba(22, 33, 62, 0.3));
+            border-radius: 50%;
+            border: 3px solid #4a90e2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 3s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(74, 144, 226, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(74, 144, 226, 0.6); }
+        }
+        .chispa {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            animation: floatToCenter 4s ease-in-out infinite;
+        }
+        .chispa-intencion {
+            background: radial-gradient(circle, #f39c12, #e67e22);
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.8);
+            top: 20%;
+            left: 10%;
+        }
+        .rayo {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            animation: rayoToCenter 3s ease-in-out infinite;
+        }
+        .rayo-necesidad {
+            background: radial-gradient(circle, #9b59b6, #8e44ad);
+            box-shadow: 0 0 15px rgba(155, 89, 182, 0.8);
+            top: 70%;
+            right: 15%;
+        }
+        @keyframes floatToCenter {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 80px) scale(1.2); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        @keyframes rayoToCenter {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-80px, -60px) scale(1.3); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        .simbolo-fusion {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #f39c12, #9b59b6, #4a90e2);
+            border-radius: 50%;
+            animation: fusion 2s ease-in-out infinite;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        @keyframes fusion {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+        .intencion-form {
+            background: rgba(74, 144, 226, 0.1);
+            border: 2px solid #4a90e2;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .tipo-usuario {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .usuario-card {
+            background: rgba(0,0,0,0.6);
+            border: 3px solid;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .usuario-intencion {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+        }
+        .usuario-necesidad {
+            border-color: #9b59b6;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
+        }
+        .usuario-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .usuario-card.selected {
+            border-width: 5px;
+            transform: scale(1.05);
+        }
+        .energia-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .usuario-card:hover .energia-visual {
+            opacity: 1;
+        }
+        .particulas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .particula {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+            animation: particleFloat 3s infinite;
+        }
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+        }
+        .input-intencion {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #4a90e2;
+            border-radius: 15px;
+            color: #ffffff;
+            padding: 20px;
+            font-size: 1.1rem;
+            resize: vertical;
+            text-align: center;
+        }
+        .codigo-color {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 10px auto;
+            border: 3px solid #ffffff;
+            animation: colorShift 4s infinite;
+        }
+        @keyframes colorShift {
+            0% { background: #f39c12; }
+            25% { background: #9b59b6; }
+            50% { background: #4a90e2; }
+            75% { background: #27ae60; }
+            100% { background: #f39c12; }
+        }
+        .matcheo-btn {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .matcheo-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.4);
+        }
+        .proceso-matcheo {
+            display: none;
+            text-align: center;
+            margin: 40px 0;
+        }
+        .conexion-establecida {
+            display: none;
+            background: rgba(39, 174, 96, 0.2);
+            border: 3px solid #27ae60;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">⚡ Sistema de Matcheo por Intención CO•RA</h1>
+            <p style="color: #74b9ff; margin-bottom: 20px;">
+                Unificador energético donde intenciones y necesidades se encuentran sin identidad, solo esencia pura
+            </p>
+        </div>
+
+        <!-- Visualización del Unificador -->
+        <div class="unificador">
+            <div class="chispa chispa-intencion"></div>
+            <div class="rayo rayo-necesidad"></div>
+            <div class="simbolo-fusion">⚡</div>
+        </div>
+
+        <!-- Selección de Tipo de Usuario -->
+        <div class="tipo-usuario">
+            <div class="usuario-card usuario-intencion" onclick="selectUserType('intencion')">
+                <div class="energia-visual">
+                    <div class="particulas">
+                        <div class="particula" style="top: 20%; left: 30%; animation-delay: 0s; color: #f39c12;"></div>
+                        <div class="particula" style="top: 60%; left: 70%; animation-delay: 1s; color: #e67e22;"></div>
+                        <div class="particula" style="top: 40%; left: 50%; animation-delay: 2s; color: #f39c12;"></div>
+                    </div>
+                </div>
+                <h2 style="color: #f39c12; margin-bottom: 20px;">✨ Usuario Intención</h2>
+                <div style="font-size: 4rem; margin: 20px 0;">💫</div>
+                <p style="line-height: 1.6; margin-bottom: 15px;">
+                    <strong>Proyectas una CHISPA</strong><br>
+                    Sin contenido exterior, solo conocimiento interior puro
+                </p>
+                <p style="font-size: 0.9rem; color: #f39c12;">
+                    Tu esencia se eleva como luz dorada hacia el unificador
+                </p>
+            </div>
+
+            <div class="usuario-card usuario-necesidad" onclick="selectUserType('necesidad')">
+                <div class="energia-visual">
+                    <div class="particulas">
+                        <div class="particula" style="top: 25%; left: 40%; animation-delay: 0.5s; color: #9b59b6;"></div>
+                        <div class="particula" style="top: 55%; left: 60%; animation-delay: 1.5s; color: #8e44ad;"></div>
+                        <div class="particula" style="top: 35%; left: 20%; animation-delay: 2.5s; color: #9b59b6;"></div>
+                    </div>
+                </div>
+                <h2 style="color: #9b59b6; margin-bottom: 20px;">⚡ Usuario Necesidad</h2>
+                <div style="font-size: 4rem; margin: 20px 0;">🔮</div>
+                <p style="line-height: 1.6; margin-bottom: 15px;">
+                    <strong>Envías un RAYO</strong><br>
+                    Energía directa que busca completarse en el unificador
+                </p>
+                <p style="font-size: 0.9rem; color: #9b59b6;">
+                    Tu necesidad se manifiesta como energía violeta hacia el centro
+                </p>
+            </div>
+        </div>
+
+        <!-- Formulario de Intención -->
+        <div class="intencion-form" id="intencionForm" style="display: none;">
+            <h3 id="formTitle" style="color: #4a90e2; margin-bottom: 25px;">Proyecta tu Esencia</h3>
+            
+            <div style="margin: 30px 0;">
+                <p style="margin-bottom: 15px;" id="formInstruction">
+                    Describe tu intención pura, sin nombres, sin identidad, solo la esencia de lo que buscas proyectar:
+                </p>
+                <textarea id="intencionInput" class="input-intencion" placeholder="Ej: Busco compartir conocimiento sobre sanación energética... / Necesito guía para desarrollar mi intuición..."></textarea>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h4 style="color: #4a90e2; margin-bottom: 15px;">Tu Código de Color Energético:</h4>
+                <div class="codigo-color" id="codigoColor"></div>
+                <p style="font-size: 0.9rem; color: #74b9ff;">
+                    Este código representa tu vibración energética en el unificador
+                </p>
+            </div>
+
+            <button class="matcheo-btn" onclick="iniciarMatcheo()">
+                🌌 PROYECTAR AL UNIFICADOR
+            </button>
+        </div>
+
+        <!-- Proceso de Matcheo -->
+        <div class="proceso-matcheo" id="procesoMatcheo">
+            <h3 style="color: #4a90e2; margin-bottom: 25px;">🔄 Buscando Resonancia Energética...</h3>
+            
+            <div style="margin: 30px 0;">
+                <div style="width: 200px; height: 200px; margin: 0 auto; position: relative;">
+                    <div style="width: 100%; height: 100%; border: 3px solid #4a90e2; border-radius: 50%; animation: spin 2s linear infinite;"></div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">⚡</div>
+                </div>
+            </div>
+            
+            <p style="color: #74b9ff; line-height: 1.6;">
+                El unificador está analizando patrones energéticos...<br>
+                Buscando complementariedad vibracional...<br>
+                <span id="matcheoStatus">Procesando...</span>
+            </p>
+        </div>
+
+        <!-- Conexión Establecida -->
+        <div class="conexion-establecida" id="conexionEstablecida">
+            <h3 style="color: #27ae60; margin-bottom: 25px;">✅ Conexión Energética Establecida</h3>
+            
+            <div style="margin: 30px 0;">
+                <div style="font-size: 5rem; margin: 20px 0;">🌟</div>
+                <p style="line-height: 1.8; margin-bottom: 20px;">
+                    <strong>Se ha formado un símbolo energético único</strong><br>
+                    Tu esencia ha encontrado su complemento vibracional
+                </p>
+                
+                <div style="background: rgba(0,0,0,0.6); border-radius: 15px; padding: 25px; margin: 25px 0;">
+                    <h4 style="color: #27ae60; margin-bottom: 15px;">🔮 Símbolo de Conexión:</h4>
+                    <div id="simboloConexion" style="font-size: 4rem; margin: 15px 0;">⚡🌟⚡</div>
+                    <p style="color: #74b9ff; font-size: 0.9rem;">
+                        Este símbolo codificado representa la unión de intenciones complementarias
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h4 style="color: #27ae60; margin-bottom: 15px;">🎯 Próximos Pasos:</h4>
+                <div style="text-align: left; max-width: 500px; margin: 0 auto;">
+                    <p style="margin: 10px 0;">✨ Ambas energías han sido sincronizadas</p>
+                    <p style="margin: 10px 0;">🔄 El intercambio energético puede comenzar</p>
+                    <p style="margin: 10px 0;">🌌 La identidad permanece protegida</p>
+                    <p style="margin: 10px 0;">⚡ Solo la intención pura se manifiesta</p>
+                </div>
+            </div>
+
+            <button class="matcheo-btn" onclick="iniciarIntercambio()">
+                🌟 INICIAR INTERCAMBIO ENERGÉTICO
+            </button>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0;">
+            <a href="evaluacion_integral_completa.html" class="matcheo-btn" style="background: linear-gradient(135deg, #7f8c8d, #95a5a6);">
+                🏠 VOLVER AL INICIO
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let userType = null;
+        let intencionData = {};
+
+        function selectUserType(type) {
+            userType = type;
+            
+            // Limpiar selecciones previas
+            document.querySelectorAll('.usuario-card').forEach(card => card.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Mostrar formulario
+            document.getElementById('intencionForm').style.display = 'block';
+            
+            // Personalizar formulario según tipo
+            if (type === 'intencion') {
+                document.getElementById('formTitle').textContent = '✨ Proyecta tu Chispa Interior';
+                document.getElementById('formInstruction').textContent = 
+                    'Describe tu intención pura, el conocimiento interior que deseas compartir, sin identidad, solo esencia:';
+                document.getElementById('intencionInput').placeholder = 
+                    'Ej: Busco compartir sabiduría sobre sanación energética y crecimiento espiritual...';
+            } else {
+                document.getElementById('formTitle').textContent = '⚡ Proyecta tu Rayo de Necesidad';
+                document.getElementById('formInstruction').textContent = 
+                    'Describe tu necesidad energética, lo que buscas recibir para completarte, sin identidad, solo esencia:';
+                document.getElementById('intencionInput').placeholder = 
+                    'Ej: Necesito guía para desarrollar mi intuición y conectar con mi propósito de vida...';
+            }
+            
+            // Generar código de color único
+            generateColorCode();
+        }
+
+        function generateColorCode() {
+            const colors = ['#f39c12', '#9b59b6', '#4a90e2', '#27ae60', '#e74c3c', '#1abc9c'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.getElementById('codigoColor').style.background = randomColor;
+        }
+
+        function iniciarMatcheo() {
+            const intencion = document.getElementById('intencionInput').value;
+            
+            if (!intencion.trim()) {
+                alert('Por favor describe tu intención o necesidad energética');
+                return;
+            }
+            
+            // Guardar datos
+            intencionData = {
+                type: userType,
+                intention: intencion,
+                colorCode: document.getElementById('codigoColor').style.background,
+                timestamp: new Date().toISOString(),
+                energySignature: generateEnergySignature(intencion)
+            };
+            
+            // Ocultar formulario y mostrar proceso
+            document.getElementById('intencionForm').style.display = 'none';
+            document.getElementById('procesoMatcheo').style.display = 'block';
+            
+            // Simular proceso de matcheo
+            simulateMatchingProcess();
+        }
+
+        function generateEnergySignature(text) {
+            // Generar firma energética basada en la intención
+            const words = text.toLowerCase().split(' ');
+            const energyWords = words.filter(word => 
+                ['amor', 'luz', 'sanación', 'crecimiento', 'sabiduría', 'paz', 'armonía', 'equilibrio', 'intuición', 'propósito'].includes(word)
+            );
+            return energyWords.length > 0 ? energyWords.join('-') : 'energia-neutra';
+        }
+
+        function simulateMatchingProcess() {
+            const statusElement = document.getElementById('matcheoStatus');
+            const messages = [
+                'Analizando patrones vibratorios...',
+                'Buscando resonancia complementaria...',
+                'Evaluando compatibilidad energética...',
+                'Sincronizando frecuencias...',
+                'Estableciendo conexión simbólica...'
+            ];
+            
+            let messageIndex = 0;
+            const interval = setInterval(() => {
+                statusElement.textContent = messages[messageIndex];
+                messageIndex++;
+                
+                if (messageIndex >= messages.length) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        establishConnection();
+                    }, 2000);
+                }
+            }, 1500);
+        }
+
+        function establishConnection() {
+            // Ocultar proceso y mostrar conexión
+            document.getElementById('procesoMatcheo').style.display = 'none';
+            document.getElementById('conexionEstablecida').style.display = 'block';
+            
+            // Generar símbolo único de conexión
+            const simbolos = ['⚡🌟⚡', '🔮✨🔮', '💫⚡💫', '🌟🔥🌟', '✨💎✨'];
+            const simboloAleatorio = simbolos[Math.floor(Math.random() * simbolos.length)];
+            document.getElementById('simboloConexion').textContent = simboloAleatorio;
+            
+            // Guardar conexión establecida
+            localStorage.setItem('coraConnection', JSON.stringify({
+                ...intencionData,
+                connectionSymbol: simboloAleatorio,
+                connectionEstablished: new Date().toISOString()
+            }));
+        }
+
+        function iniciarIntercambio() {
+            alert('🌟 Intercambio energético iniciado. El sistema CO•RA facilitará la conexión manteniendo el anonimato total.');
+            
+            // Redirigir a sala de intercambio energético (próximo desarrollo)
+            // window.location.href = 'sala_intercambio_energetico.html';
+        }
+
+        // Animación CSS para el spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

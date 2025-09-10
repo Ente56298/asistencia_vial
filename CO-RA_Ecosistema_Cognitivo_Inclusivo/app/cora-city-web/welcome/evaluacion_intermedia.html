@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Intermedia - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.85);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid #667eea;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #a8b3f0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .section {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .section.active {
+            display: block;
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            color: #667eea;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .question {
+            margin-bottom: 25px;
+            display: none;
+        }
+        .question.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .question-text {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            background: rgba(168, 179, 240, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+        .option {
+            background: rgba(102, 126, 234, 0.2);
+            border: 2px solid #667eea;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .option:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: translateX(5px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 3px;
+            margin-bottom: 25px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none;
+        }
+        .continue-btn.show {
+            display: inline-block;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result {
+            display: none;
+            text-align: center;
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .profile-card {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #667eea;
+        }
+        .profile-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #a8b3f0;
+        }
+        .recommendation {
+            background: rgba(46, 204, 113, 0.2);
+            border: 2px solid #2ECC71;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🧠 Evaluación Intermedia CO•RA</h1>
+            <p class="subtitle">Para usuarios con conocimiento moderado de autoconocimiento</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Sección 1: Autoconocimiento Intermedio -->
+        <div class="section active" data-section="1">
+            <div class="section-title">
+                🔍 Autoconocimiento Intermedio
+            </div>
+            
+            <div class="question active" data-question="1">
+                <div class="question-text">
+                    ¿Puedes identificar patrones específicos en tu comportamiento que se repiten en diferentes situaciones?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="basic" data-score="2">Identifico algunos patrones básicos</button>
+                    <button class="option" data-value="clear" data-score="3">Veo patrones claros y puedo predecir mis reacciones</button>
+                    <button class="option" data-value="deep" data-score="4">Comprendo patrones profundos y sus orígenes</button>
+                    <button class="option" data-value="transform" data-score="5">Puedo transformar conscientemente estos patrones</button>
+                </div>
+            </div>
+
+            <div class="question" data-question="2">
+                <div class="question-text">
+                    Cuando experimentas emociones intensas, ¿qué nivel de consciencia tienes sobre ellas?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="reactive" data-score="2">Me doy cuenta después de reaccionar</button>
+                    <button class="option" data-value="aware" data-score="3">Soy consciente mientras las experimento</button>
+                    <button class="option" data-value="observe" data-score="4">Puedo observarlas sin ser arrastrado por ellas</button>
+                    <button class="option" data-value="integrate" data-score="5">Las integro como información valiosa</button>
+                </div>
+            </div>
+
+            <div class="question" data-question="3">
+                <div class="question-text">
+                    ¿Cómo describes tu relación con tus pensamientos?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="identified" data-score="2">Generalmente me identifico con mis pensamientos</button>
+                    <button class="option" data-value="separate" data-score="3">A veces puedo separarme de ellos</button>
+                    <button class="option" data-value="observer" data-score="4">Puedo observarlos como un testigo</button>
+                    <button class="option" data-value="director" data-score="5">Dirijo conscientemente mi proceso de pensamiento</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 2: Procesamiento Cognitivo -->
+        <div class="section" data-section="2">
+            <div class="section-title">
+                ⚡ Procesamiento Cognitivo
+            </div>
+            
+            <div class="question active" data-question="4">
+                <div class="question-text">
+                    Cuando enfrentas un problema complejo, ¿cuál es tu enfoque natural?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="linear" data-score="2">Análisis paso a paso y lógico</button>
+                    <button class="option" data-value="multiple" data-score="3">Considero múltiples perspectivas</button>
+                    <button class="option" data-value="systemic" data-score="4">Veo conexiones sistémicas y patrones</button>
+                    <button class="option" data-value="intuitive" data-score="5">Integro lógica e intuición fluidamente</button>
+                </div>
+            </div>
+
+            <div class="question" data-question="5">
+                <div class="question-text">
+                    ¿Cómo manejas la información contradictoria o ambigua?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="uncomfortable" data-score="2">Me genera incomodidad, busco claridad</button>
+                    <button class="option" data-value="tolerate" data-score="3">Puedo tolerarla temporalmente</button>
+                    <button class="option" data-value="explore" data-score="4">La exploro como fuente de aprendizaje</button>
+                    <button class="option" data-value="synthesize" data-score="5">Sintetizo nuevas comprensiones desde la paradoja</button>
+                </div>
+            </div>
+
+            <div class="question" data-question="6">
+                <div class="question-text">
+                    ¿Qué tan consciente eres de tus procesos de toma de decisiones?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="automatic" data-score="2">Muchas decisiones son automáticas</button>
+                    <button class="option" data-value="deliberate" data-score="3">Soy deliberado en decisiones importantes</button>
+                    <button class="option" data-value="metacognitive" data-score="4">Observo cómo tomo decisiones</button>
+                    <button class="option" data-value="optimized" data-score="5">Optimizo conscientemente mi proceso decisorio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 3: Motivación y Propósito -->
+        <div class="section" data-section="3">
+            <div class="section-title">
+                🎯 Motivación y Propósito
+            </div>
+            
+            <div class="question active" data-question="7">
+                <div class="question-text">
+                    ¿Qué tan claro tienes tu propósito o dirección en la vida?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="searching" data-score="2">Estoy buscando mi propósito</button>
+                    <button class="option" data-value="emerging" data-score="3">Tengo una dirección general emergente</button>
+                    <button class="option" data-value="clear" data-score="4">Tengo claridad sobre mi propósito</button>
+                    <button class="option" data-value="aligned" data-score="5">Vivo alineado con mi propósito profundo</button>
+                </div>
+            </div>
+
+            <div class="question" data-question="8">
+                <div class="question-text">
+                    ¿Cómo te relacionas con el crecimiento personal?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="occasional" data-score="2">Es algo que hago ocasionalmente</button>
+                    <button class="option" data-value="regular" data-score="3">Es parte regular de mi vida</button>
+                    <button class="option" data-value="priority" data-score="4">Es una prioridad constante</button>
+                    <button class="option" data-value="essence" data-score="5">Es la esencia de mi existencia</button>
+                </div>
+            </div>
+
+            <div class="question" data-question="9">
+                <div class="question-text">
+                    ¿Qué te motiva más profundamente?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="achievement" data-score="2">Lograr metas personales</button>
+                    <button class="option" data-value="contribution" data-score="3">Contribuir a algo mayor que yo</button>
+                    <button class="option" data-value="understanding" data-score="4">Comprender la naturaleza de la realidad</button>
+                    <button class="option" data-value="evolution" data-score="5">Participar en la evolución de la consciencia</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 4: Preparación para CO•RA -->
+        <div class="section" data-section="4">
+            <div class="section-title">
+                🚀 Preparación para Amplificación Cognitiva
+            </div>
+            
+            <div class="question active" data-question="10">
+                <div class="question-text">
+                    ¿Cómo te sientes ante la posibilidad de expandir significativamente tu capacidad cognitiva?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="curious" data-score="2">Curioso pero con algunas reservas</button>
+                    <button class="option" data-value="excited" data-score="3">Emocionado por las posibilidades</button>
+                    <button class="option" data-value="ready" data-score="4">Preparado y comprometido</button>
+                    <button class="option" data-value="destined" data-score="5">Siento que es mi destino natural</button>
+                </div>
+            </div>
+
+            <div class="question" data-question="11">
+                <div class="question-text">
+                    ¿Qué esperas obtener de la experiencia CO•RA?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="improvement" data-score="2">Mejoras en mi capacidad de pensamiento</button>
+                    <button class="option" data-value="integration" data-score="3">Mayor integración de mis capacidades</button>
+                    <button class="option" data-value="transcendence" data-score="4">Trascender mis limitaciones actuales</button>
+                    <button class="option" data-value="transformation" data-score="5">Transformación fundamental de mi ser</button>
+                </div>
+            </div>
+
+            <div class="question" data-question="12">
+                <div class="question-text">
+                    ¿Cómo manejas actualmente los desafíos que exceden tu capacidad individual?
+                </div>
+                <div class="options">
+                    <button class="option" data-value="struggle" data-score="2">Lucho hasta encontrar una solución</button>
+                    <button class="option" data-value="seek" data-score="3">Busco ayuda y recursos externos</button>
+                    <button class="option" data-value="collaborate" data-score="4">Colaboro para crear soluciones emergentes</button>
+                    <button class="option" data-value="transcend" data-score="5">Los uso como catalizadores para trascender límites</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="continue-btn" id="continueBtn" onclick="nextQuestion()">Continuar →</button>
+
+        <div class="result" id="result">
+            <h2 style="color: #667eea; margin-bottom: 20px;">Evaluación Intermedia Completada</h2>
+            <div id="profileAnalysis"></div>
+            <div class="profile-grid" id="profileGrid"></div>
+            <div id="recommendation"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        let currentQuestion = 1;
+        let totalScore = 0;
+        let responses = {};
+        let sectionScores = {1: 0, 2: 0, 3: 0, 4: 0};
+        
+        function selectOption(element) {
+            const score = parseInt(element.dataset.score);
+            const value = element.dataset.value;
+            
+            totalScore += score;
+            responses[currentQuestion] = {value, score};
+            sectionScores[currentSection] += score;
+            
+            // Marcar selección
+            document.querySelectorAll('.option').forEach(opt => opt.style.background = 'rgba(102, 126, 234, 0.2)');
+            element.style.background = 'rgba(102, 126, 234, 0.6)';
+            
+            // Mostrar botón continuar
+            document.getElementById('continueBtn').classList.add('show');
+        }
+        
+        function nextQuestion() {
+            // Ocultar pregunta actual
+            document.querySelector(`[data-question="${currentQuestion}"]`).classList.remove('active');
+            
+            currentQuestion++;
+            
+            // Actualizar progreso
+            const progress = ((currentQuestion - 1) / 12) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Verificar si hay más preguntas en la sección actual
+            const nextQ = document.querySelector(`[data-question="${currentQuestion}"]`);
+            
+            if (nextQ && nextQ.closest(`[data-section="${currentSection}"]`)) {
+                // Mostrar siguiente pregunta en la misma sección
+                setTimeout(() => {
+                    nextQ.classList.add('active');
+                    document.getElementById('continueBtn').classList.remove('show');
+                }, 300);
+            } else {
+                // Cambiar a siguiente sección
+                nextSection();
+            }
+        }
+        
+        function nextSection() {
+            // Ocultar sección actual
+            document.querySelector(`[data-section="${currentSection}"]`).classList.remove('active');
+            
+            currentSection++;
+            
+            if (currentSection <= 4) {
+                // Mostrar siguiente sección
+                setTimeout(() => {
+                    const nextSec = document.querySelector(`[data-section="${currentSection}"]`);
+                    nextSec.classList.add('active');
+                    
+                    const firstQuestion = nextSec.querySelector('.question');
+                    firstQuestion.classList.add('active');
+                    
+                    document.getElementById('continueBtn').classList.remove('show');
+                }, 500);
+            } else {
+                // Mostrar resultado final
+                setTimeout(showResult, 1000);
+            }
+        }
+        
+        function showResult() {
+            document.querySelectorAll('.section').forEach(section => section.style.display = 'none');
+            document.getElementById('continueBtn').style.display = 'none';
+            
+            // Analizar perfil
+            const profile = analyzeProfile();
+            
+            document.getElementById('profileAnalysis').innerHTML = `
+                <h3 style="color: #667eea; margin-bottom: 15px;">${profile.type}</h3>
+                <p style="line-height: 1.6; margin-bottom: 20px;">${profile.description}</p>
+            `;
+            
+            document.getElementById('profileGrid').innerHTML = `
+                <div class="profile-card">
+                    <div>Autoconocimiento</div>
+                    <div class="profile-value">${Math.round((sectionScores[1] / 15) * 100)}%</div>
+                </div>
+                <div class="profile-card">
+                    <div>Procesamiento Cognitivo</div>
+                    <div class="profile-value">${Math.round((sectionScores[2] / 15) * 100)}%</div>
+                </div>
+                <div class="profile-card">
+                    <div>Motivación y Propósito</div>
+                    <div class="profile-value">${Math.round((sectionScores[3] / 15) * 100)}%</div>
+                </div>
+                <div class="profile-card">
+                    <div>Preparación CO•RA</div>
+                    <div class="profile-value">${Math.round((sectionScores[4] / 15) * 100)}%</div>
+                </div>
+                <div class="profile-card">
+                    <div>Puntuación Total</div>
+                    <div class="profile-value">${totalScore}/60</div>
+                </div>
+            `;
+            
+            document.getElementById('recommendation').innerHTML = `
+                <div class="recommendation">
+                    <h4 style="color: #2ECC71; margin-bottom: 15px;">🎯 Tu Camino en CO•RA</h4>
+                    <p>${profile.recommendation}</p>
+                    <p style="margin-top: 15px; color: #667eea;"><strong>Siguiente paso:</strong> ${profile.nextStep}</p>
+                    <a href="${profile.nextUrl}" class="continue-btn show" style="margin-top: 15px;">${profile.buttonText}</a>
+                </div>
+            `;
+            
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        function analyzeProfile() {
+            const avgScore = totalScore / 12;
+            
+            if (avgScore >= 4.5) {
+                return {
+                    type: "EXPLORADOR COGNITIVO AVANZADO",
+                    description: "Demuestras un nivel excepcional de autoconocimiento y preparación cognitiva. Estás listo para experiencias profundas de amplificación.",
+                    recommendation: "Tu perfil indica preparación para técnicas avanzadas de amplificación cognitiva. Puedes acceder a evaluaciones más profundas y sistemas especializados.",
+                    nextStep: "Evaluación psicológica profunda para acceso completo",
+                    nextUrl: "evaluacion_completa.html",
+                    buttonText: "🧠 BATERÍA COMPLETA"
+                };
+            } else if (avgScore >= 3.5) {
+                return {
+                    type: "BUSCADOR COGNITIVO PREPARADO",
+                    description: "Tienes una base sólida de autoconocimiento y motivación clara. Estás preparado para la mayoría de experiencias CO•RA.",
+                    recommendation: "Puedes acceder a sistemas intermedios y avanzados de CO•RA. Te beneficiarías de una evaluación de salud mental para personalizar tu experiencia.",
+                    nextStep: "Evaluación MHQ para optimizar tu experiencia",
+                    nextUrl: "evaluacion_completa.html",
+                    buttonText: "📊 BATERÍA PSICOLÓGICA"
+                };
+            } else if (avgScore >= 2.5) {
+                return {
+                    type: "EXPLORADOR EN DESARROLLO",
+                    description: "Muestras potencial significativo con áreas específicas para desarrollar. CO•RA puede ayudarte a fortalecer tu base cognitiva.",
+                    recommendation: "Acceso a sistemas básicos e intermedios de CO•RA con enfoque en desarrollo de capacidades identificadas como áreas de crecimiento.",
+                    nextStep: "Exploración directa de CO•RA City con orientación",
+                    nextUrl: "conexion_simbolica.html",
+                    buttonText: "🔗 ESTABLECER CONEXIÓN"
+                };
+            } else {
+                return {
+                    type: "BUSCADOR INICIAL",
+                    description: "Estás en las etapas iniciales de desarrollo cognitivo consciente. CO•RA te proporcionará las herramientas fundamentales.",
+                    recommendation: "Comenzar con sistemas básicos de CO•RA y herramientas de desarrollo de autoconocimiento antes de avanzar a técnicas más complejas.",
+                    nextStep: "Desarrollo guiado en CO•RA City",
+                    nextUrl: "conexion_simbolica.html",
+                    buttonText: "🔗 ESTABLECER CONEXIÓN"
+                };
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectOption(this);
+                });
+            });
+        });
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script>
+        // Integración con motor de análisis para evaluación intermedia
+        const originalSelectOption = selectOption;
+        selectOption = function(element) {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.sessionData.interactionData.push({
+                    type: 'intermediate_response',
+                    section: currentSection,
+                    question: currentQuestion,
+                    response: element.dataset.value,
+                    score: element.dataset.score,
+                    timestamp: Date.now()
+                });
+            }
+            return originalSelectOption(element);
+        };
+        
+        const originalShowResult = showResult;
+        showResult = function() {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.saveAnalysisData();
+            }
+            return originalShowResult();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# Protección CO•RA - Ocultación Máxima
+RewriteEngine On
+
+# Bloquear acceso directo a archivos CO•RA
+RewriteRule ^welcome/evaluador_automatico_cora\.html$ - [F,L]
+RewriteRule ^welcome/cora_auto_evaluator\.js$ - [F,L]
+RewriteRule ^cognitive_amplifier\.py$ - [F,L]
+RewriteRule ^knowledge_sources\.json$ - [F,L]
+
+# Redireccionar intentos de acceso
+RewriteCond %{REQUEST_URI} !^/security_gateway\.html$
+RewriteCond %{REQUEST_URI} !^/system_maintenance\.html$
+RewriteCond %{REQUEST_URI} !^/index\.html$
+RewriteCond %{HTTP_REFERER} !security_gateway\.html
+RewriteRule ^welcome/ /system_maintenance.html [R=302,L]
+
+# Ocultar directorios
+Options -Indexes
+
+# Proteger archivos de configuración
+<Files "*.json">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.py">
+    Order Allow,Deny
+    Deny from all
+</Files>

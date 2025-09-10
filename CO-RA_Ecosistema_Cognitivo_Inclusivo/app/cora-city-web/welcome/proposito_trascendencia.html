@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propósito y Trascendencia - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #8e44ad, #9b59b6, #bb8fce);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #8e44ad;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title {
+            color: #bb8fce;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(187, 143, 206, 0.5);
+        }
+        .filosofia-section {
+            background: rgba(142, 68, 173, 0.1);
+            border: 2px solid #8e44ad;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .balance-visual {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+            margin: 40px 0;
+        }
+        .lado-necesidad {
+            background: rgba(231, 76, 60, 0.2);
+            border: 3px solid #e74c3c;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .lado-trascendencia {
+            background: rgba(39, 174, 96, 0.2);
+            border: 3px solid #27ae60;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .balanza {
+            font-size: 4rem;
+            color: #bb8fce;
+            animation: balance 3s ease-in-out infinite;
+        }
+        @keyframes balance {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        .proposito-test {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .pregunta-proposito {
+            background: rgba(142, 68, 173, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #bb8fce;
+        }
+        .respuesta-options {
+            display: grid;
+            gap: 12px;
+            margin: 15px 0;
+        }
+        .respuesta-option {
+            background: rgba(187, 143, 206, 0.2);
+            border: 2px solid #bb8fce;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .respuesta-option:hover {
+            background: rgba(142, 68, 173, 0.3);
+            border-color: #8e44ad;
+        }
+        .respuesta-option.selected {
+            background: rgba(142, 68, 173, 0.5);
+            border-color: #ffffff;
+        }
+        .nivel-trascendencia {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .nivel-card {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #7f8c8d;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .nivel-1 { border-color: #e74c3c; }
+        .nivel-2 { border-color: #f39c12; }
+        .nivel-3 { border-color: #f1c40f; }
+        .nivel-4 { border-color: #2ecc71; }
+        .nivel-5 { border-color: #9b59b6; }
+        .nivel-card.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(187, 143, 206, 0.6);
+        }
+        .contribucion-universal {
+            background: rgba(39, 174, 96, 0.1);
+            border: 2px solid #27ae60;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .contribucion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .contribucion-item {
+            background: rgba(0,0,0,0.4);
+            border: 2px solid #27ae60;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .contribucion-item:hover {
+            background: rgba(39, 174, 96, 0.2);
+            transform: translateY(-5px);
+        }
+        .contribucion-item.selected {
+            background: rgba(39, 174, 96, 0.3);
+            border-color: #ffffff;
+        }
+        .reflexion-input {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #bb8fce;
+            border-radius: 15px;
+            color: #ffffff;
+            padding: 20px;
+            font-size: 1.1rem;
+            resize: vertical;
+        }
+        .trascender-btn {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .trascender-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(142, 68, 173, 0.4);
+        }
+        .mensaje-trascendencia {
+            display: none;
+            background: rgba(39, 174, 96, 0.2);
+            border: 3px solid #27ae60;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .mensaje-necesidad {
+            display: none;
+            background: rgba(231, 76, 60, 0.2);
+            border: 3px solid #e74c3c;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🌟 Propósito y Trascendencia CO•RA</h1>
+            <p style="color: #bb8fce; margin-bottom: 20px;">
+                "Todo ser humano puede ayudar desde donde esté. El propósito es ayudar. Sin intención real, no entiendes tu propósito."
+            </p>
+        </div>
+
+        <!-- Filosofía Central -->
+        <div class="filosofia-section">
+            <h2 style="color: #8e44ad; margin-bottom: 25px;">💫 Filosofía Central CO•RA</h2>
+            <div style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 25px;">
+                <p style="margin: 15px 0;">
+                    <strong>"El mundo necesita ser balanceado."</strong>
+                </p>
+                <p style="margin: 15px 0;">
+                    <strong>"El ser humano con pura necesidad no trasciende."</strong>
+                </p>
+                <p style="margin: 15px 0;">
+                    <strong>"Todos podemos aportar algo, desde donde estemos."</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Visualización del Balance -->
+        <div class="balance-visual">
+            <div class="lado-necesidad">
+                <h3 style="color: #e74c3c; margin-bottom: 15px;">⬇️ SOLO NECESIDAD</h3>
+                <div style="font-size: 3rem; margin: 20px 0;">🕳️</div>
+                <p style="line-height: 1.6;">
+                    <strong>No trasciende</strong><br>
+                    Permanece en el vacío<br>
+                    No comprende su propósito<br>
+                    Desequilibra el sistema
+                </p>
+            </div>
+
+            <div class="balanza">⚖️</div>
+
+            <div class="lado-trascendencia">
+                <h3 style="color: #27ae60; margin-bottom: 15px;">⬆️ AYUDAR + RECIBIR</h3>
+                <div style="font-size: 3rem; margin: 20px 0;">🌟</div>
+                <p style="line-height: 1.6;">
+                    <strong>Trasciende</strong><br>
+                    Se eleva y eleva a otros<br>
+                    Comprende su propósito<br>
+                    Equilibra el mundo
+                </p>
+            </div>
+        </div>
+
+        <!-- Test de Propósito -->
+        <div class="proposito-test">
+            <h3 style="color: #bb8fce; margin-bottom: 20px;">🎯 Evaluación de Comprensión del Propósito</h3>
+
+            <div class="pregunta-proposito">
+                <p style="margin-bottom: 15px; font-weight: bold;">
+                    1. ¿Cuál crees que es tu propósito fundamental como ser humano?
+                </p>
+                <div class="respuesta-options">
+                    <div class="respuesta-option" onclick="selectProposito(1, 1)" data-score="100">
+                        Ayudar a otros y contribuir al equilibrio del mundo desde mis capacidades únicas
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(1, 2)" data-score="70">
+                        Crecer personalmente mientras apoyo a quienes puedo
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(1, 3)" data-score="40">
+                        Resolver mis problemas y luego ver cómo puedo ayudar
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(1, 4)" data-score="10">
+                        Obtener lo que necesito para estar bien
+                    </div>
+                </div>
+            </div>
+
+            <div class="pregunta-proposito">
+                <p style="margin-bottom: 15px; font-weight: bold;">
+                    2. Cuando tienes una necesidad, ¿cuál es tu primera reacción?
+                </p>
+                <div class="respuesta-options">
+                    <div class="respuesta-option" onclick="selectProposito(2, 1)" data-score="100">
+                        Pensar cómo puedo contribuir mientras recibo ayuda
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(2, 2)" data-score="80">
+                        Buscar ayuda y planear cómo devolver el favor
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(2, 3)" data-score="50">
+                        Pedir ayuda y agradecer cuando la recibo
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(2, 4)" data-score="20">
+                        Buscar quien me resuelva el problema
+                    </div>
+                </div>
+            </div>
+
+            <div class="pregunta-proposito">
+                <p style="margin-bottom: 15px; font-weight: bold;">
+                    3. ¿Qué significa para ti "trascender"?
+                </p>
+                <div class="respuesta-options">
+                    <div class="respuesta-option" onclick="selectProposito(3, 1)" data-score="100">
+                        Elevarme elevando a otros, crear equilibrio y armonía
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(3, 2)" data-score="75">
+                        Superar mis limitaciones para servir mejor
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(3, 3)" data-score="50">
+                        Crecer espiritualmente y ser mejor persona
+                    </div>
+                    <div class="respuesta-option" onclick="selectProposito(3, 4)" data-score="25">
+                        Lograr mis metas y ser exitoso
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Niveles de Trascendencia -->
+        <div style="margin: 40px 0;">
+            <h3 style="color: #bb8fce; margin-bottom: 20px; text-align: center;">📊 Niveles de Trascendencia</h3>
+            <div class="nivel-trascendencia">
+                <div class="nivel-card nivel-1">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🕳️</div>
+                    <h4 style="color: #e74c3c;">VACÍO</h4>
+                    <p style="font-size: 0.8rem;">Solo necesidad</p>
+                </div>
+                <div class="nivel-card nivel-2">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🌱</div>
+                    <h4 style="color: #f39c12;">DESPERTAR</h4>
+                    <p style="font-size: 0.8rem;">Reconoce propósito</p>
+                </div>
+                <div class="nivel-card nivel-3">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🌿</div>
+                    <h4 style="color: #f1c40f;">CRECIMIENTO</h4>
+                    <p style="font-size: 0.8rem;">Ayuda ocasional</p>
+                </div>
+                <div class="nivel-card nivel-4">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🌳</div>
+                    <h4 style="color: #2ecc71;">EQUILIBRIO</h4>
+                    <p style="font-size: 0.8rem;">Dar y recibir</p>
+                </div>
+                <div class="nivel-card nivel-5">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🌟</div>
+                    <h4 style="color: #9b59b6;">TRASCENDENCIA</h4>
+                    <p style="font-size: 0.8rem;">Propósito puro</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contribución Universal -->
+        <div class="contribucion-universal">
+            <h3 style="color: #27ae60; margin-bottom: 20px;">🌍 Todos Pueden Contribuir Desde Donde Están</h3>
+            
+            <p style="margin-bottom: 20px; line-height: 1.6;">
+                No importa tu situación, ubicación o recursos. Siempre hay algo que puedes aportar:
+            </p>
+
+            <div class="contribucion-grid">
+                <div class="contribucion-item" onclick="selectContribucion('escucha')">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">👂</div>
+                    <h4>Escucha Activa</h4>
+                    <p style="font-size: 0.9rem;">Estar presente para otros</p>
+                </div>
+                <div class="contribucion-item" onclick="selectContribucion('experiencia')">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">📚</div>
+                    <h4>Experiencia Vivida</h4>
+                    <p style="font-size: 0.9rem;">Compartir aprendizajes</p>
+                </div>
+                <div class="contribucion-item" onclick="selectContribucion('energia')">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">⚡</div>
+                    <h4>Energía Positiva</h4>
+                    <p style="font-size: 0.9rem;">Elevar vibración colectiva</p>
+                </div>
+                <div class="contribucion-item" onclick="selectContribucion('tiempo')">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">⏰</div>
+                    <h4>Tiempo</h4>
+                    <p style="font-size: 0.9rem;">Dedicar momentos a otros</p>
+                </div>
+                <div class="contribucion-item" onclick="selectContribucion('habilidades')">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">🛠️</div>
+                    <h4>Habilidades</h4>
+                    <p style="font-size: 0.9rem;">Talentos únicos</p>
+                </div>
+                <div class="contribucion-item" onclick="selectContribucion('amor')">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">❤️</div>
+                    <h4>Amor Incondicional</h4>
+                    <p style="font-size: 0.9rem;">La contribución más poderosa</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reflexión Personal -->
+        <div style="margin: 40px 0;">
+            <h3 style="color: #bb8fce; margin-bottom: 20px;">💭 Reflexión Personal</h3>
+            
+            <div style="margin: 20px 0;">
+                <p style="margin-bottom: 10px; font-weight: bold;">
+                    ¿Cómo puedes contribuir al equilibrio del mundo desde donde estás ahora?
+                </p>
+                <textarea id="reflexionContribucion" class="reflexion-input" placeholder="Reflexiona profundamente sobre tu capacidad única de ayudar, sin importar tus circunstancias actuales..."></textarea>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <p style="margin-bottom: 10px; font-weight: bold;">
+                    ¿Qué necesitas cambiar en tu perspectiva para trascender la pura necesidad?
+                </p>
+                <textarea id="reflexionCambio" class="reflexion-input" placeholder="Identifica qué patrones mentales o creencias te mantienen en el nivel de solo recibir..."></textarea>
+            </div>
+        </div>
+
+        <!-- Mensajes de Resultado -->
+        <div class="mensaje-trascendencia" id="mensajeTrascendencia">
+            <h3 style="color: #27ae60; margin-bottom: 20px;">🌟 ¡Has Comprendido tu Propósito!</h3>
+            <p style="line-height: 1.8; margin-bottom: 20px;">
+                Entiendes que tu propósito fundamental es ayudar y contribuir al equilibrio del mundo. 
+                Estás listo para trascender y ser parte de la red de apoyo mutuo CO•RA.
+            </p>
+            <div style="font-size: 4rem; margin: 20px 0;">🚀</div>
+            <p style="color: #2ecc71; font-weight: bold;">
+                Nivel de Trascendencia Alcanzado: EQUILIBRIO-TRASCENDENCIA
+            </p>
+        </div>
+
+        <div class="mensaje-necesidad" id="mensajeNecesidad">
+            <h3 style="color: #e74c3c; margin-bottom: 20px;">🔄 Necesitas Desarrollar tu Comprensión</h3>
+            <p style="line-height: 1.8; margin-bottom: 20px;">
+                Aún no has comprendido completamente que tu propósito fundamental es ayudar. 
+                Te recomendamos reflexionar más profundamente sobre cómo puedes contribuir al equilibrio del mundo.
+            </p>
+            <div style="font-size: 4rem; margin: 20px 0;">🌱</div>
+            <p style="color: #f39c12; font-weight: bold;">
+                Nivel Actual: DESPERTAR - Continúa tu desarrollo
+            </p>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0;">
+            <button class="trascender-btn" onclick="evaluarTrascendencia()">
+                🌟 EVALUAR MI NIVEL DE TRASCENDENCIA
+            </button>
+            
+            <a href="sistema_requisitos_reciprocidad.html" class="trascender-btn" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                ⚖️ CONTINUAR A SISTEMA DE RECIPROCIDAD
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let propositoScores = {};
+        let selectedContribuciones = [];
+
+        function selectProposito(pregunta, opcion) {
+            const options = document.querySelectorAll(`#proposito-test .pregunta-proposito:nth-child(${pregunta}) .respuesta-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            const selectedOption = event.target;
+            selectedOption.classList.add('selected');
+            
+            const score = parseInt(selectedOption.dataset.score);
+            propositoScores[pregunta] = score;
+        }
+
+        function selectContribucion(tipo) {
+            const item = event.target.closest('.contribucion-item');
+            
+            if (selectedContribuciones.includes(tipo)) {
+                selectedContribuciones = selectedContribuciones.filter(c => c !== tipo);
+                item.classList.remove('selected');
+            } else {
+                selectedContribuciones.push(tipo);
+                item.classList.add('selected');
+            }
+        }
+
+        function evaluarTrascendencia() {
+            const reflexionContribucion = document.getElementById('reflexionContribucion').value;
+            const reflexionCambio = document.getElementById('reflexionCambio').value;
+            
+            if (Object.keys(propositoScores).length < 3) {
+                alert('Por favor responde todas las preguntas de propósito');
+                return;
+            }
+            
+            if (!reflexionContribucion.trim() || !reflexionCambio.trim()) {
+                alert('Por favor completa ambas reflexiones');
+                return;
+            }
+            
+            // Calcular puntuación total
+            const totalScore = Object.values(propositoScores).reduce((a, b) => a + b, 0) / 3;
+            
+            // Bonus por contribuciones seleccionadas
+            const contribucionBonus = selectedContribuciones.length * 5;
+            
+            // Bonus por profundidad de reflexión
+            const reflexionBonus = (reflexionContribucion.length + reflexionCambio.length) > 200 ? 10 : 0;
+            
+            const finalScore = totalScore + contribucionBonus + reflexionBonus;
+            
+            // Determinar nivel de trascendencia
+            let nivel = 1;
+            if (finalScore >= 90) nivel = 5;
+            else if (finalScore >= 75) nivel = 4;
+            else if (finalScore >= 60) nivel = 3;
+            else if (finalScore >= 45) nivel = 2;
+            
+            // Activar visualización del nivel
+            document.querySelectorAll('.nivel-card').forEach(card => card.classList.remove('active'));
+            document.querySelector(`.nivel-${nivel}`).classList.add('active');
+            
+            // Mostrar mensaje apropiado
+            if (nivel >= 4) {
+                document.getElementById('mensajeTrascendencia').style.display = 'block';
+                document.getElementById('mensajeNecesidad').style.display = 'none';
+                
+                // Guardar estado de trascendencia
+                localStorage.setItem('nivelTrascendencia', JSON.stringify({
+                    nivel: nivel,
+                    score: finalScore,
+                    comprension: 'completa',
+                    timestamp: new Date().toISOString()
+                }));
+                
+            } else {
+                document.getElementById('mensajeNecesidad').style.display = 'block';
+                document.getElementById('mensajeTrascendencia').style.display = 'none';
+                
+                localStorage.setItem('nivelTrascendencia', JSON.stringify({
+                    nivel: nivel,
+                    score: finalScore,
+                    comprension: 'en_desarrollo',
+                    timestamp: new Date().toISOString()
+                }));
+            }
+            
+            // Scroll al resultado
+            setTimeout(() => {
+                document.querySelector(nivel >= 4 ? '#mensajeTrascendencia' : '#mensajeNecesidad')
+                    .scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

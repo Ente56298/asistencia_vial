@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO•RA - Evaluación Adaptiva Inteligente</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #667eea, #764ba2);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #667eea;
+        }
+        .cora-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .cora-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .cora-title {
+            color: #667eea;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        .cora-subtitle {
+            color: #764ba2;
+            font-size: 1.1rem;
+        }
+        .conversation-area {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            min-height: 400px;
+        }
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .cora-message {
+            background: rgba(102, 126, 234, 0.3);
+            border-left: 4px solid #667eea;
+            margin-right: 50px;
+        }
+        .user-message {
+            background: rgba(118, 75, 162, 0.3);
+            border-right: 4px solid #764ba2;
+            margin-left: 50px;
+            text-align: right;
+        }
+        .message-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .options-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .option {
+            background: rgba(118, 75, 162, 0.2);
+            border: 2px solid #764ba2;
+            color: #ffffff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option:hover {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .typing-indicator {
+            display: none;
+            color: #667eea;
+            font-style: italic;
+            margin: 15px 0;
+        }
+        .typing-dots {
+            display: inline-block;
+            animation: typing 1.5s infinite;
+        }
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0; }
+            30% { opacity: 1; }
+        }
+        .progress-bar {
+            background: rgba(102, 126, 234, 0.2);
+            height: 6px;
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .insights-panel {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid #764ba2;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        .insight-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+        .results-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #667eea;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cora-header">
+            <div class="cora-avatar">🧠</div>
+            <h1 class="cora-title">CO•RA</h1>
+            <p class="cora-subtitle">Tu Compañero de Amplificación Cognitiva</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="conversation-area" id="conversationArea">
+            <div class="message cora-message">
+                <div class="message-content">
+                    ¡Hola! Soy CO•RA, tu compañero inteligente de amplificación cognitiva. Estoy aquí para conocerte profundamente y descubrir el mejor camino para tu desarrollo. 
+                    <br><br>
+                    No necesitas elegir ningún tipo de evaluación - yo me adaptaré a ti mientras conversamos. ¿Estás listo para comenzar este viaje de autoconocimiento?
+                </div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            CO•RA está pensando<span class="typing-dots">...</span>
+        </div>
+
+        <div class="options-container" id="optionsContainer">
+            <div class="option" onclick="selectOption('ready')">Sí, estoy listo para comenzar</div>
+            <div class="option" onclick="selectOption('curious')">Tengo curiosidad, cuéntame más</div>
+            <div class="option" onclick="selectOption('cautious')">Soy un poco cauteloso, ¿qué implica?</div>
+        </div>
+
+        <div class="insights-panel" id="insightsPanel">
+            <h3 style="color: #667eea; margin-bottom: 15px;">🔍 Insights Detectados</h3>
+            <div id="insightsList"></div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #667eea; margin-bottom: 25px;">🎯 Tu Perfil Personalizado CO•RA</h2>
+            <div id="finalProfile"></div>
+        </div>
+    </div>
+
+    <script>
+        class CoraAdaptiveEvaluator {
+            constructor() {
+                this.currentStep = 0;
+                this.userProfile = {
+                    personality: {},
+                    cognitive: {},
+                    emotional: {},
+                    motivation: {},
+                    readiness: 0
+                };
+                this.conversationHistory = [];
+                this.detectedTraits = [];
+                this.autoEvaluationActive = true;
+                this.evaluationAreas = ['cognitive', 'emotional', 'personality', 'behavioral', 'social', 'wellness'];
+                this.currentArea = 0;
+                this.adaptiveLogic = new AdaptiveQuestionLogic();
+            }
+
+            initializeQuestionBank() {
+                return {
+                    opening: [
+                        {
+                            text: "Para empezar, me gustaría conocer qué te trae aquí. ¿Qué esperas descubrir sobre ti mismo?",
+                            type: "motivation",
+                            followUp: ["growth", "curiosity", "challenge"]
+                        }
+                    ],
+                    personality: [
+                        {
+                            text: "Cuando enfrentas un problema complejo, ¿cuál es tu primera reacción?",
+                            options: [
+                                {text: "Analizo todos los detalles sistemáticamente", trait: "analytical"},
+                                {text: "Busco patrones y conexiones intuitivas", trait: "intuitive"},
+                                {text: "Consulto con otros para obtener perspectivas", trait: "collaborative"},
+                                {text: "Confío en mi experiencia previa", trait: "experiential"}
+                            ]
+                        },
+                        {
+                            text: "¿Cómo describirías tu relación con el cambio?",
+                            options: [
+                                {text: "Lo abrazo como oportunidad de crecimiento", trait: "adaptable"},
+                                {text: "Lo acepto pero prefiero estabilidad", trait: "cautious"},
+                                {text: "Me emociona la incertidumbre", trait: "adventurous"},
+                                {text: "Necesito tiempo para procesarlo", trait: "reflective"}
+                            ]
+                        }
+                    ],
+                    cognitive: [
+                        {
+                            text: "Cuando aprendes algo nuevo, ¿qué método funciona mejor para ti?",
+                            options: [
+                                {text: "Experimentación práctica directa", trait: "kinesthetic"},
+                                {text: "Visualización y diagramas", trait: "visual"},
+                                {text: "Explicaciones verbales detalladas", trait: "auditory"},
+                                {text: "Lectura y análisis teórico", trait: "reading"}
+                            ]
+                        }
+                    ],
+                    emotional: [
+                        {
+                            text: "¿Cómo manejas típicamente el estrés o la presión?",
+                            options: [
+                                {text: "Mantengo la calma y busco soluciones", trait: "resilient"},
+                                {text: "Necesito tiempo para procesar mis emociones", trait: "reflective"},
+                                {text: "Busco apoyo en otros", trait: "social"},
+                                {text: "Me motiva y me hace más productivo", trait: "thriving"}
+                            ]
+                        }
+                    ],
+                    depth: [
+                        {
+                            text: "Si pudieras amplificar una capacidad mental, ¿cuál elegirías?",
+                            options: [
+                                {text: "Creatividad e innovación", trait: "creative"},
+                                {text: "Análisis lógico y resolución de problemas", trait: "analytical"},
+                                {text: "Intuición y percepción", trait: "intuitive"},
+                                {text: "Memoria y procesamiento de información", trait: "cognitive"}
+                            ]
+                        }
+                    ]
+                };
+            }
+
+            start() {
+                setTimeout(() => {
+                    this.beginAutoEvaluation();
+                }, 2000);
+            }
+
+            beginAutoEvaluation() {
+                this.addCoraMessage("Perfecto. Ahora voy a realizar una evaluación completa automática. Solo necesito que me confirmes si hay algo específico que quieras expresar diferente a lo que observe.");
+                
+                setTimeout(() => {
+                    this.startCognitiveAnalysis();
+                }, 3000);
+            }
+
+            startCognitiveAnalysis() {
+                this.addCoraMessage("🧠 Iniciando análisis cognitivo automático...");
+                
+                setTimeout(() => {
+                    this.performCognitiveEvaluation();
+                }, 2000);
+            }
+
+            performCognitiveEvaluation() {
+                // CO•RA realiza evaluación cognitiva automática
+                const cognitiveResults = this.analyzeCognitivePatterns();
+                
+                this.addCoraMessage(`Análisis cognitivo completado. Detecté: ${cognitiveResults.summary}. ¿Hay algo sobre tu forma de pensar que sientes que es diferente a esto?`);
+                
+                this.showUserExpressionOption('cognitive', cognitiveResults);
+            }
+
+            analyzeCognitivePatterns() {
+                // Simulación de análisis automático de CO•RA
+                const patterns = [
+                    { type: 'analytical', strength: Math.random() * 100 },
+                    { type: 'creative', strength: Math.random() * 100 },
+                    { type: 'intuitive', strength: Math.random() * 100 },
+                    { type: 'logical', strength: Math.random() * 100 }
+                ];
+                
+                const dominant = patterns.sort((a, b) => b.strength - a.strength)[0];
+                this.userProfile.cognitive[dominant.type] = dominant.strength;
+                
+                return {
+                    dominant: dominant.type,
+                    strength: Math.round(dominant.strength),
+                    summary: `Patrón ${dominant.type} dominante (${Math.round(dominant.strength)}%)`
+                };
+            }
+
+            showUserExpressionOption(area, results) {
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = `
+                    <div class="option" onclick="coraEvaluator.acceptAutoEvaluation('${area}', ${JSON.stringify(results).replace(/"/g, '&quot;')})">Correcto, eso me describe bien</div>
+                    <div class="option" onclick="coraEvaluator.expressDifference('${area}')">Hay algo diferente que quiero expresar</div>
+                `;
+                optionsContainer.style.display = 'block';
+            }
+
+            acceptAutoEvaluation(area, results) {
+                document.getElementById('optionsContainer').style.display = 'none';
+                this.addUserMessage("Sí, eso me describe correctamente");
+                
+                setTimeout(() => {
+                    this.continueToNextArea(area);
+                }, 1000);
+            }
+
+            expressDifference(area) {
+                document.getElementById('optionsContainer').style.display = 'none';
+                this.addUserMessage("Hay algo diferente que quiero expresar");
+                
+                setTimeout(() => {
+                    this.requestUserExpression(area);
+                }, 1000);
+            }
+
+            requestUserExpression(area) {
+                this.addCoraMessage(`Por favor, exprésame cómo sientes que es diferente tu ${area === 'cognitive' ? 'forma de pensar' : area}:`);
+                
+                // Crear campo de texto para expresión libre
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = `
+                    <textarea id="userExpression" placeholder="Escribe aquí tu perspectiva..." style="width: 100%; height: 100px; padding: 15px; border-radius: 10px; background: rgba(102, 126, 234, 0.1); border: 2px solid #667eea; color: white; font-size: 1rem; resize: vertical;"></textarea>
+                    <div class="option" onclick="coraEvaluator.processUserExpression('${area}')">Enviar mi perspectiva</div>
+                `;
+                optionsContainer.style.display = 'block';
+            }
+
+            processUserExpression(area) {
+                const expression = document.getElementById('userExpression').value;
+                if (!expression.trim()) {
+                    alert('Por favor, escribe tu perspectiva antes de continuar.');
+                    return;
+                }
+                
+                document.getElementById('optionsContainer').style.display = 'none';
+                this.addUserMessage(expression);
+                
+                // CO•RA procesa la expresión del usuario
+                setTimeout(() => {
+                    this.analyzeUserExpression(area, expression);
+                }, 1500);
+            }
+
+            analyzeUserExpression(area, expression) {
+                this.addCoraMessage(`Entiendo. Tu perspectiva sobre ${area} es muy valiosa. He ajustado mi evaluación basándome en tu expresión.`);
+                
+                // Registrar la expresión personalizada
+                this.userProfile[area].userExpression = expression;
+                
+                setTimeout(() => {
+                    this.continueToNextArea(area);
+                }, 2000);
+            }
+
+            addUserMessage(text) {
+                const conversationArea = document.getElementById('conversationArea');
+                const message = document.createElement('div');
+                message.className = 'message user-message';
+                message.innerHTML = `<div class="message-content">${text}</div>`;
+                conversationArea.appendChild(message);
+                conversationArea.scrollTop = conversationArea.scrollHeight;
+            }
+
+            addCoraMessage(text, hasOptions = false) {
+                const conversationArea = document.getElementById('conversationArea');
+                
+                this.showTyping();
+                
+                setTimeout(() => {
+                    this.hideTyping();
+                    
+                    const message = document.createElement('div');
+                    message.className = 'message cora-message';
+                    message.innerHTML = `<div class="message-content">${text}</div>`;
+                    conversationArea.appendChild(message);
+                    conversationArea.scrollTop = conversationArea.scrollHeight;
+                    
+                    if (hasOptions) {
+                        setTimeout(() => this.showNextQuestion(), 1000);
+                    }
+                }, 2000);
+            }
+
+            showTyping() {
+                document.getElementById('typingIndicator').style.display = 'block';
+            }
+
+            hideTyping() {
+                document.getElementById('typingIndicator').style.display = 'none';
+            }
+
+            continueToNextArea(completedArea) {
+                this.currentArea++;
+                this.updateProgress();
+                
+                if (this.currentArea < this.evaluationAreas.length) {
+                    const nextArea = this.evaluationAreas[this.currentArea];
+                    setTimeout(() => {
+                        this.evaluateNextArea(nextArea);
+                    }, 1500);
+                } else {
+                    setTimeout(() => {
+                        this.completeAutoEvaluation();
+                    }, 1500);
+                }
+            }
+
+            evaluateNextArea(area) {
+                const areaMessages = {
+                    emotional: "🎭 Analizando tu perfil emocional...",
+                    personality: "🌟 Evaluando tu personalidad...",
+                    behavioral: "⚡ Observando tus patrones de comportamiento...",
+                    social: "👥 Analizando tu perfil social...",
+                    wellness: "💚 Evaluando tu bienestar integral..."
+                };
+                
+                this.addCoraMessage(areaMessages[area] || `Evaluando ${area}...`);
+                
+                setTimeout(() => {
+                    this.performAreaEvaluation(area);
+                }, 2500);
+            }
+
+            performAreaEvaluation(area) {
+                const results = this.autoAnalyzeArea(area);
+                
+                this.addCoraMessage(`${results.summary}. ¿Sientes que hay algo diferente en tu ${this.getAreaDescription(area)} que deba considerar?`);
+                
+                this.showUserExpressionOption(area, results);
+            }
+
+            autoAnalyzeArea(area) {
+                const areaAnalysis = {
+                    emotional: () => {
+                        const stability = Math.random() * 100;
+                        const resilience = Math.random() * 100;
+                        this.userProfile.emotional = { stability, resilience };
+                        return {
+                            summary: `Estabilidad emocional: ${Math.round(stability)}%, Resiliencia: ${Math.round(resilience)}%`,
+                            dominant: stability > resilience ? 'stable' : 'resilient'
+                        };
+                    },
+                    personality: () => {
+                        const traits = ['extroversion', 'openness', 'conscientiousness'];
+                        const scores = traits.map(t => ({ trait: t, score: Math.random() * 100 }));
+                        const dominant = scores.sort((a, b) => b.score - a.score)[0];
+                        this.userProfile.personality[dominant.trait] = dominant.score;
+                        return {
+                            summary: `Rasgo dominante: ${dominant.trait} (${Math.round(dominant.score)}%)`,
+                            dominant: dominant.trait
+                        };
+                    },
+                    behavioral: () => {
+                        const adaptability = Math.random() * 100;
+                        const consistency = Math.random() * 100;
+                        this.userProfile.behavioral = { adaptability, consistency };
+                        return {
+                            summary: `Adaptabilidad: ${Math.round(adaptability)}%, Consistencia: ${Math.round(consistency)}%`,
+                            dominant: adaptability > consistency ? 'adaptive' : 'consistent'
+                        };
+                    },
+                    social: () => {
+                        const collaboration = Math.random() * 100;
+                        const leadership = Math.random() * 100;
+                        this.userProfile.social = { collaboration, leadership };
+                        return {
+                            summary: `Colaboración: ${Math.round(collaboration)}%, Liderazgo: ${Math.round(leadership)}%`,
+                            dominant: collaboration > leadership ? 'collaborative' : 'leader'
+                        };
+                    },
+                    wellness: () => {
+                        const physical = Math.random() * 100;
+                        const mental = Math.random() * 100;
+                        const overall = (physical + mental) / 2;
+                        this.userProfile.wellness = { physical, mental, overall };
+                        return {
+                            summary: `Bienestar físico: ${Math.round(physical)}%, Mental: ${Math.round(mental)}%, General: ${Math.round(overall)}%`,
+                            dominant: overall >= 70 ? 'optimal' : overall >= 50 ? 'good' : 'needs_attention'
+                        };
+                    }
+                };
+                
+                return areaAnalysis[area] ? areaAnalysis[area]() : { summary: `${area} evaluado`, dominant: 'unknown' };
+            }
+
+            getAreaDescription(area) {
+                const descriptions = {
+                    emotional: 'perfil emocional',
+                    personality: 'personalidad',
+                    behavioral: 'comportamiento',
+                    social: 'perfil social',
+                    wellness: 'bienestar'
+                };
+                return descriptions[area] || area;
+            }
+
+            showNextQuestion() {
+                if (!this.currentQuestion) return;
+                
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = '';
+                
+                this.currentQuestion.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option';
+                    optionElement.textContent = option.text;
+                    optionElement.onclick = () => this.selectQuestionOption(option, index);
+                    optionsContainer.appendChild(optionElement);
+                });
+                
+                optionsContainer.style.display = 'block';
+            }
+
+            selectQuestionOption(option, index) {
+                this.recordTraitResponse(option);
+                document.getElementById('optionsContainer').style.display = 'none';
+                
+                this.addUserMessage(option.text);
+                
+                setTimeout(() => {
+                    this.processTraitResponse(option);
+                }, 1000);
+            }
+
+            recordTraitResponse(option) {
+                if (option.trait) {
+                    this.detectedTraits.push(option.trait);
+                    this.updateUserProfile(option.trait);
+                }
+            }
+
+            updateUserProfile(trait) {
+                const traitCategories = {
+                    analytical: 'cognitive',
+                    intuitive: 'cognitive',
+                    collaborative: 'personality',
+                    adaptable: 'personality',
+                    resilient: 'emotional',
+                    creative: 'cognitive'
+                };
+                
+                const category = traitCategories[trait] || 'personality';
+                if (!this.userProfile[category][trait]) {
+                    this.userProfile[category][trait] = 0;
+                }
+                this.userProfile[category][trait]++;
+                
+                this.showInsight(trait);
+            }
+
+            showInsight(trait) {
+                const insightsPanel = document.getElementById('insightsPanel');
+                const insightsList = document.getElementById('insightsList');
+                
+                const insights = {
+                    analytical: "Detectando fuerte orientación analítica - excelente para amplificación lógica",
+                    intuitive: "Perfil intuitivo identificado - ideal para técnicas de insight cognitivo",
+                    collaborative: "Tendencia colaborativa - beneficiarás de amplificación social",
+                    adaptable: "Alta adaptabilidad - preparado para técnicas avanzadas",
+                    resilient: "Resiliencia emocional detectada - base sólida para amplificación",
+                    creative: "Potencial creativo identificado - perfecto para amplificación innovadora"
+                };
+                
+                if (insights[trait]) {
+                    const insightElement = document.createElement('div');
+                    insightElement.className = 'insight-item';
+                    insightElement.textContent = insights[trait];
+                    insightsList.appendChild(insightElement);
+                    insightsPanel.style.display = 'block';
+                }
+            }
+
+            processTraitResponse(option) {
+                const responses = this.adaptiveLogic.generateAdaptiveResponse(option, this.userProfile);
+                this.addCoraMessage(responses.message, responses.hasNext);
+            }
+
+            updateProgress() {
+                const progress = Math.min((this.currentArea / this.evaluationAreas.length) * 100, 100);
+                document.getElementById('progressFill').style.width = progress + '%';
+            }
+
+            getResponseText(choice) {
+                const responses = {
+                    ready: "Perfecto, estoy listo para comenzar",
+                    curious: "Me interesa saber más sobre el proceso",
+                    cautious: "Prefiero entender bien antes de continuar"
+                };
+                return responses[choice] || choice;
+            }
+
+            recordResponse(choice) {
+                this.conversationHistory.push({
+                    step: this.currentStep,
+                    choice: choice,
+                    timestamp: Date.now()
+                });
+            }
+
+            completeAutoEvaluation() {
+                this.addCoraMessage("🎯 Evaluación automática completada. He analizado todos los aspectos fundamentales de tu perfil. Ahora debo verificar tu autenticidad final...");
+                
+                setTimeout(() => {
+                    this.performAuthenticityCheck();
+                }, 3000);
+            }
+
+            performAuthenticityCheck() {
+                this.addCoraMessage("🔍 Realizando verificación de autenticidad basada en coherencia de respuestas y patrones detectados...");
+                
+                setTimeout(() => {
+                    this.determineNextPath();
+                }, 4000);
+            }
+
+            determineNextPath() {
+                const authenticityScore = this.calculateAuthenticity();
+                
+                if (authenticityScore >= 70) {
+                    this.addCoraMessage("Tu autenticidad es evidente. Estás listo para el Pasillo de la Verdad, donde confirmaremos tu intención final.");
+                    setTimeout(() => {
+                        this.showPathChoice(true);
+                    }, 2000);
+                } else {
+                    this.addCoraMessage("Detecto algunas inconsistencias. Necesitas mayor reflexión antes de continuar. Te sugiero una nueva evaluación.");
+                    setTimeout(() => {
+                        this.showPathChoice(false);
+                    }, 2000);
+                }
+            }
+
+            calculateAuthenticity() {
+                let score = 50;
+                if (this.detectedTraits.length >= 4) score += 20;
+                if (this.currentStep >= 5) score += 15;
+                if (this.conversationHistory.length >= 6) score += 15;
+                return Math.min(score, 100);
+            }
+
+            showPathChoice(isAuthentic) {
+                document.querySelector('.conversation-area').style.display = 'none';
+                document.getElementById('insightsPanel').style.display = 'none';
+                document.getElementById('resultsContainer').style.display = 'block';
+                
+                const pathContent = isAuthentic ? this.generateTruthPath() : this.generateRetryPath();
+                document.getElementById('finalProfile').innerHTML = pathContent;
+            }
+
+            generateTruthPath() {
+                return `
+                    <div style="background: rgba(78, 205, 196, 0.2); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                        <h3 style="color: #4ECDC4; margin-bottom: 15px;">✅ Autenticidad Confirmada</h3>
+                        <p style="margin-bottom: 15px;">Tu conversación conmigo revela intención genuina y autoconocimiento real.</p>
+                        <p style="color: #44A08D;">Ahora debes atravesar el <strong>Pasillo de la Verdad</strong> para la confirmación final.</p>
+                    </div>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="pasillo_verdad.html" style="background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; padding: 20px 40px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 1.2rem;">🚪 ENTRAR AL PASILLO DE LA VERDAD</a>
+                    </div>
+                `;
+            }
+
+            generateRetryPath() {
+                return `
+                    <div style="background: rgba(241, 196, 15, 0.2); padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #F1C40F;">
+                        <h3 style="color: #F1C40F; margin-bottom: 15px;">⚠️ Reflexión Requerida</h3>
+                        <p style="margin-bottom: 15px;">Necesitas mayor autoconocimiento antes de acceder a CO•RA.</p>
+                        <p style="color: #E67E22;">Debes realizar una nueva evaluación con mayor profundidad.</p>
+                    </div>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="index.html" style="background: linear-gradient(135deg, #F1C40F, #E67E22); color: white; padding: 15px 30px; border-radius: 25px; text-decoration: none; font-weight: bold;">🔄 NUEVA EVALUACIÓN</a>
+                    </div>
+                `;
+            }
+
+            showResults() {
+                document.querySelector('.conversation-area').style.display = 'none';
+                document.getElementById('insightsPanel').style.display = 'none';
+                document.getElementById('resultsContainer').style.display = 'block';
+                
+                const profile = this.generatePersonalizedProfile();
+                document.getElementById('finalProfile').innerHTML = profile;
+            }
+
+            generatePersonalizedProfile() {
+                const dominantTraits = this.getDominantTraits();
+                const recommendations = this.generateRecommendations(dominantTraits);
+                
+                return `
+                    <div style="background: rgba(102, 126, 234, 0.2); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">🎯 Tu Perfil Único</h3>
+                        <p style="margin-bottom: 15px;">Basándome en nuestra conversación, he identificado que eres una persona con ${dominantTraits.join(', ')}.</p>
+                        <p>Tu perfil indica una preparación ${this.getReadinessLevel()} para la amplificación cognitiva CO•RA.</p>
+                    </div>
+                    
+                    <div style="background: rgba(118, 75, 162, 0.2); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                        <h3 style="color: #764ba2; margin-bottom: 15px;">🚀 Recomendaciones Personalizadas</h3>
+                        ${recommendations}
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="conexion_simbolica.html" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px 30px; border-radius: 25px; text-decoration: none; font-weight: bold;">
+                            🔗 ESTABLECER CONEXIÓN CO•RA
+                        </a>
+                    </div>
+                `;
+            }
+
+            getDominantTraits() {
+                const allTraits = this.detectedTraits;
+                const traitCounts = {};
+                
+                allTraits.forEach(trait => {
+                    traitCounts[trait] = (traitCounts[trait] || 0) + 1;
+                });
+                
+                return Object.keys(traitCounts)
+                    .sort((a, b) => traitCounts[b] - traitCounts[a])
+                    .slice(0, 3)
+                    .map(trait => this.getTraitDescription(trait));
+            }
+
+            getTraitDescription(trait) {
+                const descriptions = {
+                    analytical: "orientación analítica",
+                    intuitive: "pensamiento intuitivo",
+                    collaborative: "naturaleza colaborativa",
+                    adaptable: "alta adaptabilidad",
+                    resilient: "fortaleza emocional",
+                    creative: "potencial creativo"
+                };
+                return descriptions[trait] || trait;
+            }
+
+            getReadinessLevel() {
+                const traitCount = this.detectedTraits.length;
+                if (traitCount >= 5) return "excelente";
+                if (traitCount >= 3) return "muy buena";
+                return "adecuada";
+            }
+
+            generateRecommendations(traits) {
+                return `
+                    <ul style="text-align: left; color: white;">
+                        <li style="margin: 10px 0;">Comenzar con técnicas de amplificación ${traits[0] ? 'enfocadas en ' + traits[0] : 'básicas'}</li>
+                        <li style="margin: 10px 0;">Desarrollo gradual hacia sistemas más avanzados</li>
+                        <li style="margin: 10px 0;">Monitoreo personalizado durante el proceso</li>
+                        <li style="margin: 10px 0;">Integración con tus fortalezas naturales identificadas</li>
+                    </ul>
+                `;
+            }
+        }
+
+        class AdaptiveQuestionLogic {
+            getNextQuestion(previousChoice, userProfile, step) {
+                const questionSets = {
+                    1: {
+                        coraResponse: "Perfecto. Me gusta tu actitud. Ahora, para conocerte mejor...",
+                        question: "Cuando enfrentas un problema complejo, ¿cuál es tu primera reacción?",
+                        options: [
+                            {text: "Analizo todos los detalles sistemáticamente", trait: "analytical"},
+                            {text: "Busco patrones y conexiones intuitivas", trait: "intuitive"},
+                            {text: "Consulto con otros para obtener perspectivas", trait: "collaborative"},
+                            {text: "Confío en mi experiencia previa", trait: "experiential"}
+                        ]
+                    },
+                    2: {
+                        coraResponse: "Interesante. Eso me dice mucho sobre tu estilo cognitivo. Continuemos...",
+                        question: "¿Cómo describirías tu relación con el cambio?",
+                        options: [
+                            {text: "Lo abrazo como oportunidad de crecimiento", trait: "adaptable"},
+                            {text: "Lo acepto pero prefiero estabilidad", trait: "cautious"},
+                            {text: "Me emociona la incertidumbre", trait: "adventurous"},
+                            {text: "Necesito tiempo para procesarlo", trait: "reflective"}
+                        ]
+                    },
+                    3: {
+                        coraResponse: "Veo un patrón emergiendo. Tu perfil se está definiendo claramente...",
+                        question: "Cuando aprendes algo nuevo, ¿qué método funciona mejor para ti?",
+                        options: [
+                            {text: "Experimentación práctica directa", trait: "kinesthetic"},
+                            {text: "Visualización y diagramas", trait: "visual"},
+                            {text: "Explicaciones verbales detalladas", trait: "auditory"},
+                            {text: "Lectura y análisis teórico", trait: "reading"}
+                        ]
+                    },
+                    4: {
+                        coraResponse: "Excelente. Tu estilo de aprendizaje es clave para personalizar CO•RA...",
+                        question: "¿Cómo manejas típicamente el estrés o la presión?",
+                        options: [
+                            {text: "Mantengo la calma y busco soluciones", trait: "resilient"},
+                            {text: "Necesito tiempo para procesar mis emociones", trait: "reflective"},
+                            {text: "Busco apoyo en otros", trait: "social"},
+                            {text: "Me motiva y me hace más productivo", trait: "thriving"}
+                        ]
+                    },
+                    5: {
+                        coraResponse: "Fascinante. Tu perfil emocional complementa perfectamente lo que he observado...",
+                        question: "Si pudieras amplificar una capacidad mental, ¿cuál elegirías?",
+                        options: [
+                            {text: "Creatividad e innovación", trait: "creative"},
+                            {text: "Análisis lógico y resolución de problemas", trait: "analytical"},
+                            {text: "Intuición y percepción", trait: "intuitive"},
+                            {text: "Memoria y procesamiento de información", trait: "cognitive"}
+                        ]
+                    }
+                };
+
+                return questionSets[step] || null;
+            }
+
+            generateAdaptiveResponse(option, userProfile) {
+                const responses = [
+                    "Muy revelador. Esto confirma algunas de mis observaciones sobre tu perfil...",
+                    "Interesante elección. Veo coherencia en tus respuestas...",
+                    "Perfecto. Cada respuesta me ayuda a entender mejor cómo personalizar tu experiencia...",
+                    "Excelente. Tu patrón de respuestas está creando un perfil muy claro..."
+                ];
+
+                return {
+                    message: responses[Math.floor(Math.random() * responses.length)],
+                    hasNext: true
+                };
+            }
+        }
+
+        // Inicializar evaluador adaptivo
+        const coraEvaluator = new CoraAdaptiveEvaluator();
+
+        function selectOption(choice) {
+            coraEvaluator.selectOption(choice);
+        }
+
+        // Iniciar cuando la página carga
+        document.addEventListener('DOMContentLoaded', function() {
+            coraEvaluator.start();
+        });
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selector de Evaluación - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #1e3c72, #2a5298);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.85);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #4facfe;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title {
+            color: #4facfe;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .subtitle {
+            color: #00f2fe;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .eval-card {
+            background: rgba(79, 172, 254, 0.1);
+            border: 2px solid #4facfe;
+            border-radius: 20px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .eval-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(79, 172, 254, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        .eval-card:hover::before {
+            left: 100%;
+        }
+        .eval-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(79, 172, 254, 0.3);
+            border-color: #00f2fe;
+        }
+        .eval-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .eval-title {
+            color: #4facfe;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .eval-description {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .eval-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        .eval-features li {
+            color: #00f2fe;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .eval-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4facfe;
+            font-weight: bold;
+        }
+        .eval-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #00f2fe;
+            border-top: 1px solid rgba(79, 172, 254, 0.3);
+            padding-top: 15px;
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .difficulty.basic {
+            background: rgba(46, 204, 113, 0.3);
+            color: #2ECC71;
+            border: 1px solid #2ECC71;
+        }
+        .difficulty.intermediate {
+            background: rgba(241, 196, 15, 0.3);
+            color: #F1C40F;
+            border: 1px solid #F1C40F;
+        }
+        .difficulty.advanced {
+            background: rgba(231, 76, 60, 0.3);
+            color: #E74C3C;
+            border: 1px solid #E74C3C;
+        }
+        .difficulty.expert {
+            background: rgba(155, 89, 182, 0.3);
+            color: #9B59B6;
+            border: 1px solid #9B59B6;
+        }
+        .eval-card.professional {
+            border: 2px solid #4ECDC4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+        .eval-card.professional:hover {
+            border-color: #44A08D;
+            box-shadow: 0 15px 40px rgba(78, 205, 196, 0.3);
+        }
+        .eval-card.professional .eval-title {
+            color: #4ECDC4;
+        }
+        .recommendation-panel {
+            background: rgba(0, 242, 254, 0.1);
+            border: 2px solid #00f2fe;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .recommendation-title {
+            color: #00f2fe;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .recommendation-text {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .quick-start {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        .quick-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎯 Selector de Evaluación CO•RA</h1>
+            <p class="subtitle">Elige el tipo de evaluación que mejor se adapte a tu nivel de autoconocimiento y objetivos</p>
+        </div>
+
+        <div class="evaluation-grid">
+            <div class="eval-card" onclick="location.href='evaluacion_basica.html'">
+                <div class="eval-icon">🌱</div>
+                <div class="eval-title">Evaluación Básica</div>
+                <div class="eval-description">
+                    Perfecta para comenzar tu viaje de autoconocimiento. Evalúa tu nivel actual con preguntas simples y directas.
+                </div>
+                <ul class="eval-features">
+                    <li>Preguntas fáciles de entender</li>
+                    <li>Orientación personalizada</li>
+                    <li>Sin conocimientos previos requeridos</li>
+                    <li>Recomendaciones de siguiente paso</li>
+                </ul>
+                <div class="eval-stats">
+                    <span>⏱️ 3-5 min</span>
+                    <span>📊 8 preguntas</span>
+                </div>
+                <div class="difficulty basic">BÁSICO</div>
+            </div>
+
+            <div class="eval-card" onclick="location.href='evaluacion_guiada.html'">
+                <div class="eval-icon">🧭</div>
+                <div class="eval-title">Evaluación Guiada</div>
+                <div class="eval-description">
+                    Para principiantes que necesitan explicaciones. Incluye conceptos básicos de autoconocimiento con ejemplos claros.
+                </div>
+                <ul class="eval-features">
+                    <li>Explicaciones educativas</li>
+                    <li>Conceptos paso a paso</li>
+                    <li>Ejemplos prácticos</li>
+                    <li>Lenguaje accesible</li>
+                </ul>
+                <div class="eval-stats">
+                    <span>⏱️ 8-12 min</span>
+                    <span>📊 5 secciones</span>
+                </div>
+                <div class="difficulty basic">BÁSICO</div>
+            </div>
+
+            <div class="eval-card" onclick="location.href='evaluacion_intermedia.html'">
+                <div class="eval-icon">⚡</div>
+                <div class="eval-title">Evaluación Intermedia</div>
+                <div class="eval-description">
+                    Para usuarios con conocimiento moderado. Explora autoconocimiento, procesamiento cognitivo y motivación profunda.
+                </div>
+                <ul class="eval-features">
+                    <li>Análisis cognitivo intermedio</li>
+                    <li>Evaluación de motivaciones</li>
+                    <li>Preparación para CO•RA</li>
+                    <li>Perfil personalizado</li>
+                </ul>
+                <div class="eval-stats">
+                    <span>⏱️ 10-15 min</span>
+                    <span>📊 12 preguntas</span>
+                </div>
+                <div class="difficulty intermediate">INTERMEDIO</div>
+            </div>
+
+            <div class="eval-card" onclick="location.href='evaluacion_mhq.html'">
+                <div class="eval-icon">🧠</div>
+                <div class="eval-title">Evaluación MHQ</div>
+                <div class="eval-description">
+                    Cociente de Salud Mental científicamente validado. Evalúa 6 dimensiones clave para personalizar tu experiencia CO•RA.
+                </div>
+                <ul class="eval-features">
+                    <li>Basado en Sapien Labs</li>
+                    <li>6 dimensiones de salud mental</li>
+                    <li>Puntuación científica 0-200</li>
+                    <li>Recomendaciones de seguridad</li>
+                </ul>
+                <div class="eval-stats">
+                    <span>⏱️ 5-7 min</span>
+                    <span>📊 18 preguntas</span>
+                </div>
+                <div class="difficulty intermediate">INTERMEDIO</div>
+            </div>
+
+            <div class="eval-card" onclick="location.href='evaluacion_profunda.html'">
+                <div class="eval-icon">🔬</div>
+                <div class="eval-title">Evaluación Profunda</div>
+                <div class="eval-description">
+                    Análisis psicológico avanzado en 5 fases. Descubre tu intención real y preparación para amplificación cognitiva.
+                </div>
+                <ul class="eval-features">
+                    <li>15 preguntas especializadas</li>
+                    <li>5 fases de análisis profundo</li>
+                    <li>Detección de intención auténtica</li>
+                    <li>Evaluación existencial</li>
+                </ul>
+                <div class="eval-stats">
+                    <span>⏱️ 15-20 min</span>
+                    <span>📊 15 preguntas</span>
+                </div>
+                <div class="difficulty advanced">AVANZADO</div>
+            </div>
+
+            <div class="eval-card" onclick="location.href='evaluacion_completa.html'">
+                <div class="eval-icon">🎯</div>
+                <div class="eval-title">Batería Completa</div>
+                <div class="eval-description">
+                    Evaluación psicológica comprehensiva con múltiples tests validados: Big Five, MBTI, Inteligencia Emocional y más.
+                </div>
+                <ul class="eval-features">
+                    <li>6 tests psicológicos validados</li>
+                    <li>Perfil de personalidad completo</li>
+                    <li>Análisis multidimensional</li>
+                    <li>Recomendación integral CO•RA</li>
+                </ul>
+                <div class="eval-stats">
+                    <span>⏱️ 25-35 min</span>
+                    <span>📊 180+ preguntas</span>
+                </div>
+                <div class="difficulty expert">EXPERTO</div>
+            </div>
+
+            <div class="eval-card professional" onclick="location.href='evaluacion_profesional.html'">
+                <div class="eval-icon">🏥</div>
+                <div class="eval-title">Evaluación Profesional</div>
+                <div class="eval-description">
+                    Tests basados en estándares clínicos internacionales. Incluye evaluaciones utilizadas en práctica psicológica profesional.
+                </div>
+                <ul class="eval-features">
+                    <li>Tests validados científicamente</li>
+                    <li>Estándares clínicos profesionales</li>
+                    <li>Reporte psicológico detallado</li>
+                    <li>Categorías especializadas</li>
+                </ul>
+                <div class="eval-stats">
+                    <span>⏱️ 15-60 min</span>
+                    <span>📊 4-16 tests</span>
+                </div>
+                <div class="difficulty expert">CLÍNICO</div>
+            </div>
+        </div>
+
+        <div class="recommendation-panel">
+            <div class="recommendation-title">💡 ¿No estás seguro cuál elegir?</div>
+            <div class="recommendation-text">
+                Si es tu primera vez con CO•RA o no tienes experiencia previa en autoconocimiento, te recomendamos comenzar con la <strong>Evaluación Básica</strong>. 
+                Si ya tienes algún conocimiento sobre ti mismo, la <strong>Evaluación Intermedia</strong> será perfecta. 
+                Para usuarios experimentados que buscan un análisis completo, la <strong>Batería Completa</strong> es ideal.
+                <br><br>
+                <strong style="color: #4ECDC4;">NUEVO:</strong> La <strong>Evaluación Profesional</strong> utiliza tests psicológicos de nivel clínico para usuarios que buscan una evaluación de estándares profesionales.
+            </div>
+            <button class="quick-start" onclick="location.href='evaluacion_basica.html'">🚀 Comenzar con Básica</button>
+            <button class="quick-start" onclick="location.href='evaluacion_intermedia.html'">⚡ Ir a Intermedia</button>
+            <button class="quick-start" onclick="location.href='evaluacion_completa.html'">🎯 Batería Completa</button>
+        </div>
+    </div>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script src="level_detector.js"></script>
+    <script>
+        // Integración con detector de nivel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar recomendación después de análisis inicial
+            setTimeout(() => {
+                if (window.coraLevelDetector && window.coraLevelDetector.confidence > 0.6) {
+                    const report = window.coraLevelDetector.getDetectionReport();
+                    console.log('Nivel detectado:', report);
+                    
+                    // Resaltar evaluación recomendada
+                    const recommendedCard = document.querySelector(`[onclick*="${report.recommendedEvaluation}"]`);
+                    if (recommendedCard) {
+                        recommendedCard.style.border = '3px solid #00f2fe';
+                        recommendedCard.style.boxShadow = '0 0 30px rgba(0, 242, 254, 0.5)';
+                        
+                        const badge = document.createElement('div');
+                        badge.style.cssText = `
+                            position: absolute;
+                            top: -10px;
+                            right: -10px;
+                            background: #00f2fe;
+                            color: #000;
+                            padding: 5px 10px;
+                            border-radius: 15px;
+                            font-size: 0.8rem;
+                            font-weight: bold;
+                            z-index: 10;
+                        `;
+                        badge.textContent = 'RECOMENDADO';
+                        recommendedCard.appendChild(badge);
+                    }
+                }
+            }, 8000);
+        });
+    </script>
+</body>
+</html>

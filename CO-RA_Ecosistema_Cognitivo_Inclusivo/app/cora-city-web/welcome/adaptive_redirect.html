@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Adaptativo - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #1a1a2e, #16213e);
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .analysis-container {
+            text-align: center;
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #4facfe;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            position: relative;
+        }
+        .scanning-animation {
+            width: 100px;
+            height: 100px;
+            border: 3px solid rgba(79, 172, 254, 0.3);
+            border-top: 3px solid #4facfe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .analysis-text {
+            font-size: 1.2rem;
+            color: #4facfe;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .metrics-display {
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .metric-bar {
+            width: 60%;
+            height: 6px;
+            background: rgba(79, 172, 254, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            width: 0%;
+            transition: width 2s ease-out;
+        }
+        .redirect-info {
+            background: rgba(0, 242, 254, 0.2);
+            border: 2px solid #00f2fe;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+            display: none;
+        }
+        .redirect-btn {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="analysis-container">
+        <div class="scanning-animation"></div>
+        <div class="analysis-text" id="analysisText">Analizando tu perfil cognitivo...</div>
+        
+        <div class="metrics-display">
+            <div class="metric-item">
+                <span>Velocidad de procesamiento:</span>
+                <div class="metric-bar"><div class="metric-fill" id="speedBar"></div></div>
+            </div>
+            <div class="metric-item">
+                <span>Patrón de interacción:</span>
+                <div class="metric-bar"><div class="metric-fill" id="interactionBar"></div></div>
+            </div>
+            <div class="metric-item">
+                <span>Nivel de experiencia:</span>
+                <div class="metric-bar"><div class="metric-fill" id="experienceBar"></div></div>
+            </div>
+            <div class="metric-item">
+                <span>Confianza del análisis:</span>
+                <div class="metric-bar"><div class="metric-fill" id="confidenceBar"></div></div>
+            </div>
+        </div>
+
+        <div class="redirect-info" id="redirectInfo">
+            <h3 style="color: #00f2fe; margin-bottom: 15px;">🎯 Evaluación Recomendada</h3>
+            <p id="recommendationText"></p>
+            <a href="#" class="redirect-btn" id="redirectBtn">Continuar con Evaluación</a>
+        </div>
+    </div>
+
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script src="level_detector.js"></script>
+    <script>
+        class AdaptiveRedirect {
+            constructor() {
+                this.analysisSteps = [
+                    "Analizando patrones de movimiento del mouse...",
+                    "Evaluando velocidad de procesamiento...",
+                    "Detectando nivel de experiencia técnica...",
+                    "Calculando perfil cognitivo...",
+                    "Determinando evaluación óptima..."
+                ];
+                this.currentStep = 0;
+                this.startAnalysis();
+            }
+
+            startAnalysis() {
+                this.updateAnalysisText();
+                this.animateMetrics();
+                
+                setTimeout(() => {
+                    this.completeAnalysis();
+                }, 8000);
+            }
+
+            updateAnalysisText() {
+                const textElement = document.getElementById('analysisText');
+                
+                const updateStep = () => {
+                    if (this.currentStep < this.analysisSteps.length) {
+                        textElement.textContent = this.analysisSteps[this.currentStep];
+                        this.currentStep++;
+                        setTimeout(updateStep, 1500);
+                    }
+                };
+                
+                updateStep();
+            }
+
+            animateMetrics() {
+                setTimeout(() => {
+                    document.getElementById('speedBar').style.width = '75%';
+                }, 1000);
+                
+                setTimeout(() => {
+                    document.getElementById('interactionBar').style.width = '60%';
+                }, 2500);
+                
+                setTimeout(() => {
+                    document.getElementById('experienceBar').style.width = '80%';
+                }, 4000);
+                
+                setTimeout(() => {
+                    document.getElementById('confidenceBar').style.width = '85%';
+                }, 5500);
+            }
+
+            completeAnalysis() {
+                const detector = window.coraLevelDetector;
+                const report = detector ? detector.getDetectionReport() : this.generateMockReport();
+                
+                document.getElementById('analysisText').textContent = "Análisis completado";
+                
+                const redirectInfo = document.getElementById('redirectInfo');
+                const recommendationText = document.getElementById('recommendationText');
+                const redirectBtn = document.getElementById('redirectBtn');
+                
+                const recommendations = {
+                    'novice': {
+                        text: "Detecté que eres nuevo en temas de autoconocimiento. Te recomiendo la Evaluación Guiada con explicaciones paso a paso.",
+                        url: "evaluacion_guiada.html"
+                    },
+                    'basic': {
+                        text: "Tu perfil indica un nivel básico de autoconocimiento. La Evaluación Básica será perfecta para ti.",
+                        url: "evaluacion_basica.html"
+                    },
+                    'intermediate': {
+                        text: "Muestras experiencia moderada. La Evaluación Intermedia explorará tu potencial cognitivo.",
+                        url: "evaluacion_intermedia.html"
+                    },
+                    'advanced': {
+                        text: "Tu comportamiento indica experiencia avanzada. Te recomiendo la Evaluación Profunda.",
+                        url: "evaluacion_profunda.html"
+                    },
+                    'expert': {
+                        text: "Detecté un perfil experto. La Batería Completa será ideal para un análisis comprehensivo.",
+                        url: "evaluacion_completa.html"
+                    }
+                };
+
+                const recommendation = recommendations[report.level] || recommendations['basic'];
+                
+                recommendationText.textContent = recommendation.text;
+                redirectBtn.href = recommendation.url;
+                
+                redirectInfo.style.display = 'block';
+                
+                // Auto-redirect después de 10 segundos
+                let countdown = 10;
+                const countdownInterval = setInterval(() => {
+                    redirectBtn.textContent = `Continuar (${countdown}s)`;
+                    countdown--;
+                    
+                    if (countdown < 0) {
+                        clearInterval(countdownInterval);
+                        window.location.href = recommendation.url;
+                    }
+                }, 1000);
+            }
+
+            generateMockReport() {
+                const levels = ['novice', 'basic', 'intermediate', 'advanced', 'expert'];
+                const randomLevel = levels[Math.floor(Math.random() * levels.length)];
+                
+                return {
+                    level: randomLevel,
+                    confidence: 0.7 + Math.random() * 0.2,
+                    recommendedEvaluation: `evaluacion_${randomLevel === 'expert' ? 'completa' : randomLevel}.html`
+                };
+            }
+        }
+
+        // Inicializar análisis adaptativo
+        document.addEventListener('DOMContentLoaded', function() {
+            new AdaptiveRedirect();
+        });
+    </script>
+</body>
+</html>

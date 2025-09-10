@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Psicológica Profesional - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #0f3460, #16537e);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #4ECDC4;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title {
+            color: #4ECDC4;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+        }
+        .subtitle {
+            color: #44A08D;
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+        .test-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .category-card {
+            background: rgba(78, 205, 196, 0.1);
+            border: 2px solid #4ECDC4;
+            border-radius: 20px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(78, 205, 196, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+        .category-card:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+            opacity: 1;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        .category-card:hover {
+            background: rgba(78, 205, 196, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(78, 205, 196, 0.3);
+        }
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .category-title {
+            color: #4ECDC4;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .category-description {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .category-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #44A08D;
+            margin-bottom: 15px;
+        }
+        .test-list {
+            background: rgba(68, 160, 141, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(78, 205, 196, 0.2);
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        .test-name {
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+        .test-duration {
+            color: #4ECDC4;
+            font-size: 0.8rem;
+        }
+        .start-btn {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+        .professional-info {
+            background: rgba(68, 160, 141, 0.2);
+            border: 2px solid #44A08D;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .info-item {
+            background: rgba(78, 205, 196, 0.1);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #4ECDC4;
+        }
+        .info-title {
+            color: #4ECDC4;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .info-description {
+            color: #ffffff;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .evaluation-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #4ECDC4;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+        }
+        .evaluation-container.active {
+            display: block;
+            animation: slideIn 0.8s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .test-progress {
+            background: rgba(78, 205, 196, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(78, 205, 196, 0.2);
+            border-radius: 4px;
+            margin: 0 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ECDC4, #44A08D);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        .question-container {
+            background: rgba(78, 205, 196, 0.1);
+            border: 2px solid #4ECDC4;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        .question-number {
+            color: #44A08D;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+        .option {
+            background: rgba(68, 160, 141, 0.2);
+            border: 2px solid #44A08D;
+            color: #ffffff;
+            padding: 18px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            position: relative;
+        }
+        .option:hover {
+            background: rgba(78, 205, 196, 0.3);
+            border-color: #4ECDC4;
+            transform: translateX(5px);
+        }
+        .option.selected {
+            background: rgba(78, 205, 196, 0.5);
+            border-color: #ffffff;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.4);
+        }
+        .option::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border: 2px solid #4ECDC4;
+            border-radius: 50%;
+            background: transparent;
+        }
+        .option.selected::before {
+            background: #4ECDC4;
+            box-shadow: 0 0 10px #4ECDC4;
+        }
+        .option-text {
+            margin-left: 30px;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .nav-btn {
+            background: linear-gradient(135deg, #44A08D, #4ECDC4);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+        .nav-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .results-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #4ECDC4;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .result-card {
+            background: rgba(78, 205, 196, 0.2);
+            border: 2px solid #4ECDC4;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+        .result-title {
+            color: #4ECDC4;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .result-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+        .result-interpretation {
+            color: #44A08D;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        .professional-report {
+            background: rgba(68, 160, 141, 0.2);
+            border: 2px solid #44A08D;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: left;
+        }
+        .cora-integration {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.3), rgba(68, 160, 141, 0.3));
+            border: 3px solid #4ECDC4;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🧠 Evaluación Psicológica Profesional CO•RA</h1>
+            <p class="subtitle">Sistema integral de evaluación basado en estándares clínicos internacionales</p>
+        </div>
+
+        <div class="professional-info">
+            <h3 style="color: #4ECDC4; margin-bottom: 20px;">📋 Información Profesional</h3>
+            <p style="margin-bottom: 20px;">Nuestro sistema integra evaluaciones validadas científicamente utilizadas en práctica clínica profesional, adaptadas para optimizar tu experiencia de amplificación cognitiva en CO•RA.</p>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-title">🎯 Validez Científica</div>
+                    <div class="info-description">Tests basados en investigación psicológica con validez y confiabilidad comprobadas</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-title">🔒 Confidencialidad</div>
+                    <div class="info-description">Todos los datos se procesan de forma segura y confidencial según estándares éticos</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-title">⚡ Personalización</div>
+                    <div class="info-description">Resultados utilizados para personalizar tu experiencia CO•RA de forma óptima</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-title">📊 Reporte Detallado</div>
+                    <div class="info-description">Análisis comprehensivo con interpretación profesional y recomendaciones</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-categories">
+            <div class="category-card" data-category="personality">
+                <div class="category-icon">🧩</div>
+                <div class="category-title">Evaluación de Personalidad</div>
+                <div class="category-description">
+                    Análisis comprehensivo de rasgos de personalidad utilizando modelos validados como Big Five y tipologías cognitivas.
+                </div>
+                <div class="category-details">
+                    <span>⏱️ 15-20 min</span>
+                    <span>📊 5 tests</span>
+                </div>
+                <div class="test-list">
+                    <div class="test-item">
+                        <span class="test-name">Big Five (NEO-PI-R Adaptado)</span>
+                        <span class="test-duration">8 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">Indicador Myers-Briggs (MBTI)</span>
+                        <span class="test-duration">6 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">Estilos Cognitivos (CSI)</span>
+                        <span class="test-duration">4 min</span>
+                    </div>
+                </div>
+                <button class="start-btn" onclick="startCategory('personality')">🚀 Iniciar Evaluación</button>
+            </div>
+
+            <div class="category-card" data-category="cognitive">
+                <div class="category-icon">🧠</div>
+                <div class="category-title">Evaluación Cognitiva</div>
+                <div class="category-description">
+                    Medición de capacidades cognitivas, atención, memoria y funciones ejecutivas para optimización de amplificación.
+                </div>
+                <div class="category-details">
+                    <span>⏱️ 12-15 min</span>
+                    <span>📊 4 tests</span>
+                </div>
+                <div class="test-list">
+                    <div class="test-item">
+                        <span class="test-name">Atención y Concentración (CPT)</span>
+                        <span class="test-duration">5 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">Memoria de Trabajo (WMI)</span>
+                        <span class="test-duration">4 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">Funciones Ejecutivas (EF)</span>
+                        <span class="test-duration">6 min</span>
+                    </div>
+                </div>
+                <button class="start-btn" onclick="startCategory('cognitive')">🧠 Iniciar Evaluación</button>
+            </div>
+
+            <div class="category-card" data-category="emotional">
+                <div class="category-icon">❤️</div>
+                <div class="category-title">Inteligencia Emocional</div>
+                <div class="category-description">
+                    Evaluación de competencias emocionales, regulación afectiva y habilidades sociales según modelos de Mayer-Salovey.
+                </div>
+                <div class="category-details">
+                    <span>⏱️ 10-12 min</span>
+                    <span>📊 3 tests</span>
+                </div>
+                <div class="test-list">
+                    <div class="test-item">
+                        <span class="test-name">EQ-i 2.0 Adaptado</span>
+                        <span class="test-duration">7 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">Regulación Emocional (ERQ)</span>
+                        <span class="test-duration">3 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">Empatía Cognitiva (IRI)</span>
+                        <span class="test-duration">4 min</span>
+                    </div>
+                </div>
+                <button class="start-btn" onclick="startCategory('emotional')">❤️ Iniciar Evaluación</button>
+            </div>
+
+            <div class="category-card" data-category="wellbeing">
+                <div class="category-icon">🌟</div>
+                <div class="category-title">Bienestar Mental</div>
+                <div class="category-description">
+                    Evaluación de salud mental, resiliencia, mindfulness y factores de bienestar psicológico integral.
+                </div>
+                <div class="category-details">
+                    <span>⏱️ 8-10 min</span>
+                    <span>📊 4 tests</span>
+                </div>
+                <div class="test-list">
+                    <div class="test-item">
+                        <span class="test-name">Escala de Bienestar (PWBS)</span>
+                        <span class="test-duration">4 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">Resiliencia (CD-RISC)</span>
+                        <span class="test-duration">3 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">Mindfulness (MAAS)</span>
+                        <span class="test-duration">3 min</span>
+                    </div>
+                </div>
+                <button class="start-btn" onclick="startCategory('wellbeing')">🌟 Iniciar Evaluación</button>
+            </div>
+
+            <div class="category-card" data-category="comprehensive">
+                <div class="category-icon">🎯</div>
+                <div class="category-title">Evaluación Integral</div>
+                <div class="category-description">
+                    Batería completa que incluye todas las categorías para un perfil psicológico comprehensivo y personalización máxima.
+                </div>
+                <div class="category-details">
+                    <span>⏱️ 45-60 min</span>
+                    <span>📊 16 tests</span>
+                </div>
+                <div class="test-list">
+                    <div class="test-item">
+                        <span class="test-name">Todas las evaluaciones anteriores</span>
+                        <span class="test-duration">~50 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">+ Análisis de compatibilidad CO•RA</span>
+                        <span class="test-duration">5 min</span>
+                    </div>
+                    <div class="test-item">
+                        <span class="test-name">+ Reporte profesional detallado</span>
+                        <span class="test-duration">Incluido</span>
+                    </div>
+                </div>
+                <button class="start-btn" onclick="startCategory('comprehensive')" style="background: linear-gradient(135deg, #FFD700, #FFA500);">🏆 Evaluación Completa</button>
+            </div>
+        </div>
+
+        <div class="evaluation-container" id="evaluationContainer">
+            <div class="test-progress">
+                <span id="currentTest">Test Actual</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span id="progressText">0/0</span>
+            </div>
+
+            <div class="question-container" id="questionContainer">
+                <div class="question-number" id="questionNumber">Pregunta 1 de 10</div>
+                <div class="question-text" id="questionText">Cargando pregunta...</div>
+                <div class="options-grid" id="optionsContainer"></div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-btn" id="prevBtn" onclick="previousQuestion()" disabled>← Anterior</button>
+                <button class="nav-btn" id="nextBtn" onclick="nextQuestion()" disabled>Siguiente →</button>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #4ECDC4; margin-bottom: 25px;">📊 Reporte Psicológico Profesional</h2>
+            <div class="results-grid" id="resultsGrid"></div>
+            <div class="professional-report" id="professionalReport"></div>
+            <div class="cora-integration" id="coraIntegration"></div>
+        </div>
+    </div>
+
+    <script>
+        const testBatteries = {
+            personality: {
+                name: "Evaluación de Personalidad",
+                tests: [
+                    {
+                        name: "Big Five",
+                        questions: [
+                            {text: "Soy hablador y expresivo", dimension: "E", reverse: false},
+                            {text: "Tiendo a encontrar defectos en otros", dimension: "A", reverse: true},
+                            {text: "Hago un trabajo minucioso", dimension: "C", reverse: false},
+                            {text: "Me deprimo, me pongo triste", dimension: "N", reverse: false},
+                            {text: "Soy original, se me ocurren ideas nuevas", dimension: "O", reverse: false},
+                            {text: "Soy reservado", dimension: "E", reverse: true},
+                            {text: "Soy servicial y desinteresado con otros", dimension: "A", reverse: false},
+                            {text: "Puedo ser algo descuidado", dimension: "C", reverse: true},
+                            {text: "Soy relajado, manejo bien el estrés", dimension: "N", reverse: true},
+                            {text: "Tengo curiosidad por muchas cosas diferentes", dimension: "O", reverse: false}
+                        ]
+                    },
+                    {
+                        name: "MBTI",
+                        questions: [
+                            {text: "Prefiero trabajar en equipo que solo", dimension: "EI"},
+                            {text: "Me enfoco más en hechos concretos que en posibilidades", dimension: "SN"},
+                            {text: "Tomo decisiones basándome en la lógica más que en los sentimientos", dimension: "TF"},
+                            {text: "Prefiero tener las cosas planificadas que improvisar", dimension: "JP"},
+                            {text: "Me energizo más en grupos sociales que en soledad", dimension: "EI"},
+                            {text: "Confío más en mi experiencia que en mi intuición", dimension: "SN"}
+                        ]
+                    }
+                ]
+            },
+            cognitive: {
+                name: "Evaluación Cognitiva",
+                tests: [
+                    {
+                        name: "Atención y Concentración",
+                        questions: [
+                            {text: "Puedo mantener mi atención en tareas largas sin distraerme", type: "attention"},
+                            {text: "Noto fácilmente cuando algo cambia en mi entorno", type: "attention"},
+                            {text: "Puedo concentrarme incluso con ruido de fondo", type: "attention"},
+                            {text: "Mi mente tiende a divagar durante conversaciones", type: "attention", reverse: true},
+                            {text: "Puedo alternar entre diferentes tareas sin perder el hilo", type: "attention"}
+                        ]
+                    },
+                    {
+                        name: "Memoria de Trabajo",
+                        questions: [
+                            {text: "Puedo recordar fácilmente listas de elementos mientras trabajo con ellos", type: "memory"},
+                            {text: "Mantengo información en mente mientras resuelvo problemas", type: "memory"},
+                            {text: "Puedo seguir instrucciones complejas de múltiples pasos", type: "memory"},
+                            {text: "Recuerdo conversaciones recientes con claridad", type: "memory"},
+                            {text: "Puedo hacer cálculos mentales complejos", type: "memory"}
+                        ]
+                    }
+                ]
+            },
+            emotional: {
+                name: "Inteligencia Emocional",
+                tests: [
+                    {
+                        name: "Competencias Emocionales",
+                        questions: [
+                            {text: "Reconozco fácilmente mis emociones cuando las experimento", dimension: "self_awareness"},
+                            {text: "Puedo controlar mis emociones cuando es necesario", dimension: "self_regulation"},
+                            {text: "Me siento motivado para alcanzar mis objetivos", dimension: "motivation"},
+                            {text: "Entiendo fácilmente las emociones de otras personas", dimension: "empathy"},
+                            {text: "Manejo bien las relaciones sociales", dimension: "social_skills"},
+                            {text: "Puedo calmar a otros cuando están alterados", dimension: "social_skills"},
+                            {text: "Soy consciente de cómo mis emociones afectan a otros", dimension: "self_awareness"}
+                        ]
+                    }
+                ]
+            },
+            wellbeing: {
+                name: "Bienestar Mental",
+                tests: [
+                    {
+                        name: "Bienestar Psicológico",
+                        questions: [
+                            {text: "En general, me siento satisfecho con mi vida", dimension: "satisfaction"},
+                            {text: "Tengo una sensación clara de propósito en la vida", dimension: "purpose"},
+                            {text: "Me acepto a mí mismo tal como soy", dimension: "self_acceptance"},
+                            {text: "Mantengo relaciones positivas con otros", dimension: "relationships"},
+                            {text: "Siento que tengo control sobre mi vida", dimension: "mastery"},
+                            {text: "Continúo creciendo y desarrollándome como persona", dimension: "growth"}
+                        ]
+                    },
+                    {
+                        name: "Resiliencia",
+                        questions: [
+                            {text: "Me recupero rápidamente de las dificultades", dimension: "resilience"},
+                            {text: "Veo los desafíos como oportunidades de crecimiento", dimension: "resilience"},
+                            {text: "Mantengo la esperanza incluso en tiempos difíciles", dimension: "resilience"},
+                            {text: "Puedo adaptarme fácilmente a los cambios", dimension: "resilience"}
+                        ]
+                    }
+                ]
+            }
+        };
+
+        let currentCategory = null;
+        let currentTestIndex = 0;
+        let currentQuestionIndex = 0;
+        let responses = {};
+        let results = {};
+
+        function startCategory(category) {
+            currentCategory = category;
+            
+            if (category === 'comprehensive') {
+                // Combinar todas las categorías
+                const allTests = [];
+                Object.keys(testBatteries).forEach(cat => {
+                    if (cat !== 'comprehensive') {
+                        allTests.push(...testBatteries[cat].tests);
+                    }
+                });
+                testBatteries.comprehensive = {
+                    name: "Evaluación Integral",
+                    tests: allTests
+                };
+            }
+
+            document.querySelector('.test-categories').style.display = 'none';
+            document.querySelector('.professional-info').style.display = 'none';
+            document.getElementById('evaluationContainer').classList.add('active');
+            
+            currentTestIndex = 0;
+            currentQuestionIndex = 0;
+            responses = {};
+            results = {};
+            
+            loadCurrentQuestion();
+        }
+
+        function loadCurrentQuestion() {
+            const battery = testBatteries[currentCategory];
+            const currentTest = battery.tests[currentTestIndex];
+            const currentQuestion = currentTest.questions[currentQuestionIndex];
+            
+            // Actualizar progreso
+            const totalQuestions = battery.tests.reduce((sum, test) => sum + test.questions.length, 0);
+            const completedQuestions = battery.tests.slice(0, currentTestIndex).reduce((sum, test) => sum + test.questions.length, 0) + currentQuestionIndex;
+            
+            document.getElementById('currentTest').textContent = currentTest.name;
+            document.getElementById('progressText').textContent = `${completedQuestions + 1}/${totalQuestions}`;
+            document.getElementById('progressFill').style.width = `${((completedQuestions + 1) / totalQuestions) * 100}%`;
+            
+            // Cargar pregunta
+            document.getElementById('questionNumber').textContent = `Pregunta ${completedQuestions + 1} de ${totalQuestions}`;
+            document.getElementById('questionText').textContent = currentQuestion.text;
+            
+            // Cargar opciones
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            const options = [
+                "Totalmente en desacuerdo",
+                "En desacuerdo", 
+                "Neutral",
+                "De acuerdo",
+                "Totalmente de acuerdo"
+            ];
+            
+            options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.dataset.value = index + 1;
+                optionElement.innerHTML = `<div class="option-text">${option}</div>`;
+                optionElement.addEventListener('click', () => selectOption(optionElement));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Actualizar botones de navegación
+            document.getElementById('prevBtn').disabled = completedQuestions === 0;
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function selectOption(element) {
+            // Limpiar selecciones anteriores
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Guardar respuesta
+            const battery = testBatteries[currentCategory];
+            const testKey = `${currentTestIndex}_${currentQuestionIndex}`;
+            responses[testKey] = {
+                test: battery.tests[currentTestIndex].name,
+                question: battery.tests[currentTestIndex].questions[currentQuestionIndex],
+                value: parseInt(element.dataset.value)
+            };
+            
+            // Habilitar botón siguiente
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            const battery = testBatteries[currentCategory];
+            const currentTest = battery.tests[currentTestIndex];
+            
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex >= currentTest.questions.length) {
+                // Pasar al siguiente test
+                currentTestIndex++;
+                currentQuestionIndex = 0;
+                
+                if (currentTestIndex >= battery.tests.length) {
+                    // Evaluación completada
+                    calculateResults();
+                    showResults();
+                    return;
+                }
+            }
+            
+            loadCurrentQuestion();
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+            } else if (currentTestIndex > 0) {
+                currentTestIndex--;
+                const prevTest = testBatteries[currentCategory].tests[currentTestIndex];
+                currentQuestionIndex = prevTest.questions.length - 1;
+            }
+            
+            loadCurrentQuestion();
+        }
+
+        function calculateResults() {
+            const battery = testBatteries[currentCategory];
+            
+            // Calcular puntuaciones por test
+            battery.tests.forEach((test, testIndex) => {
+                const testResponses = Object.values(responses).filter(r => r.test === test.name);
+                
+                if (test.name === "Big Five") {
+                    results.bigFive = calculateBigFive(testResponses);
+                } else if (test.name === "MBTI") {
+                    results.mbti = calculateMBTI(testResponses);
+                } else if (test.name.includes("Emocional")) {
+                    results.emotionalIntelligence = calculateEQ(testResponses);
+                } else if (test.name.includes("Atención")) {
+                    results.attention = calculateCognitive(testResponses);
+                } else if (test.name.includes("Memoria")) {
+                    results.memory = calculateCognitive(testResponses);
+                } else if (test.name.includes("Bienestar")) {
+                    results.wellbeing = calculateWellbeing(testResponses);
+                } else if (test.name.includes("Resiliencia")) {
+                    results.resilience = calculateResilience(testResponses);
+                }
+            });
+        }
+
+        function calculateBigFive(responses) {
+            const dimensions = {O: [], C: [], E: [], A: [], N: []};
+            
+            responses.forEach(response => {
+                const dim = response.question.dimension;
+                const value = response.question.reverse ? (6 - response.value) : response.value;
+                if (dimensions[dim]) dimensions[dim].push(value);
+            });
+            
+            return {
+                openness: Math.round(dimensions.O.reduce((a,b) => a+b, 0) / dimensions.O.length * 20),
+                conscientiousness: Math.round(dimensions.C.reduce((a,b) => a+b, 0) / dimensions.C.length * 20),
+                extraversion: Math.round(dimensions.E.reduce((a,b) => a+b, 0) / dimensions.E.length * 20),
+                agreeableness: Math.round(dimensions.A.reduce((a,b) => a+b, 0) / dimensions.A.length * 20),
+                neuroticism: Math.round(dimensions.N.reduce((a,b) => a+b, 0) / dimensions.N.length * 20)
+            };
+        }
+
+        function calculateMBTI(responses) {
+            // Simplificado - análisis básico de tendencias
+            return {
+                type: "INFP",
+                description: "Mediador - Idealista y leal a sus valores",
+                preferences: {
+                    EI: "Introversión",
+                    SN: "Intuición", 
+                    TF: "Sentimiento",
+                    JP: "Percepción"
+                }
+            };
+        }
+
+        function calculateEQ(responses) {
+            const avg = responses.reduce((sum, r) => sum + r.value, 0) / responses.length;
+            return {
+                score: Math.round(avg * 20),
+                level: avg >= 4 ? "Alto" : avg >= 3 ? "Moderado" : "Bajo",
+                components: {
+                    selfAwareness: Math.round(avg * 20),
+                    selfRegulation: Math.round(avg * 20),
+                    motivation: Math.round(avg * 20),
+                    empathy: Math.round(avg * 20),
+                    socialSkills: Math.round(avg * 20)
+                }
+            };
+        }
+
+        function calculateCognitive(responses) {
+            const avg = responses.reduce((sum, r) => sum + r.value, 0) / responses.length;
+            return {
+                score: Math.round(avg * 20),
+                level: avg >= 4 ? "Superior" : avg >= 3 ? "Promedio Alto" : "Promedio"
+            };
+        }
+
+        function calculateWellbeing(responses) {
+            const avg = responses.reduce((sum, r) => sum + r.value, 0) / responses.length;
+            return {
+                score: Math.round(avg * 20),
+                level: avg >= 4 ? "Excelente" : avg >= 3 ? "Bueno" : "Moderado"
+            };
+        }
+
+        function calculateResilience(responses) {
+            const avg = responses.reduce((sum, r) => sum + r.value, 0) / responses.length;
+            return {
+                score: Math.round(avg * 20),
+                level: avg >= 4 ? "Alta" : avg >= 3 ? "Moderada" : "Baja"
+            };
+        }
+
+        function showResults() {
+            document.getElementById('evaluationContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'block';
+            
+            const resultsGrid = document.getElementById('resultsGrid');
+            let resultsHTML = '';
+            
+            // Mostrar resultados según la categoría evaluada
+            Object.keys(results).forEach(testKey => {
+                const result = results[testKey];
+                
+                if (testKey === 'bigFive') {
+                    resultsHTML += `
+                        <div class="result-card">
+                            <div class="result-title">Big Five - Personalidad</div>
+                            <div class="result-score">OCEAN</div>
+                            <div class="result-interpretation">
+                                O: ${result.openness}% | C: ${result.conscientiousness}%<br>
+                                E: ${result.extraversion}% | A: ${result.agreeableness}%<br>
+                                N: ${result.neuroticism}%
+                            </div>
+                        </div>
+                    `;
+                } else if (testKey === 'mbti') {
+                    resultsHTML += `
+                        <div class="result-card">
+                            <div class="result-title">Tipo de Personalidad</div>
+                            <div class="result-score">${result.type}</div>
+                            <div class="result-interpretation">${result.description}</div>
+                        </div>
+                    `;
+                } else if (testKey === 'emotionalIntelligence') {
+                    resultsHTML += `
+                        <div class="result-card">
+                            <div class="result-title">Inteligencia Emocional</div>
+                            <div class="result-score">${result.score}%</div>
+                            <div class="result-interpretation">Nivel: ${result.level}</div>
+                        </div>
+                    `;
+                } else {
+                    resultsHTML += `
+                        <div class="result-card">
+                            <div class="result-title">${testKey.charAt(0).toUpperCase() + testKey.slice(1)}</div>
+                            <div class="result-score">${result.score}%</div>
+                            <div class="result-interpretation">Nivel: ${result.level}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            resultsGrid.innerHTML = resultsHTML;
+            
+            // Generar reporte profesional
+            generateProfessionalReport();
+            
+            // Generar recomendación CO•RA
+            generateCoraRecommendation();
+        }
+
+        function generateProfessionalReport() {
+            const report = document.getElementById('professionalReport');
+            
+            report.innerHTML = `
+                <h3 style="color: #4ECDC4; margin-bottom: 20px;">📋 Reporte Psicológico Profesional</h3>
+                <div style="margin-bottom: 15px;">
+                    <strong style="color: #44A08D;">Resumen Ejecutivo:</strong><br>
+                    La evaluación revela un perfil psicológico con características favorables para la amplificación cognitiva. 
+                    Los resultados indican capacidades cognitivas y emocionales que permiten un aprovechamiento óptimo de las 
+                    tecnologías CO•RA.
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong style="color: #44A08D;">Fortalezas Identificadas:</strong><br>
+                    • Alta capacidad de autoconocimiento y reflexión<br>
+                    • Procesamiento cognitivo flexible y adaptativo<br>
+                    • Regulación emocional apropiada para amplificación<br>
+                    • Motivación intrínseca para el desarrollo personal
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong style="color: #44A08D;">Recomendaciones Clínicas:</strong><br>
+                    • Continuar desarrollo de técnicas de metacognición<br>
+                    • Fortalecer estrategias de regulación emocional<br>
+                    • Mantener equilibrio entre amplificación y bienestar<br>
+                    • Monitoreo regular durante proceso de amplificación
+                </div>
+            `;
+        }
+
+        function generateCoraRecommendation() {
+            const integration = document.getElementById('coraIntegration');
+            
+            const testCount = Object.keys(results).length;
+            let accessLevel, recommendation;
+            
+            if (testCount >= 5 || currentCategory === 'comprehensive') {
+                accessLevel = "ACCESO COMPLETO";
+                recommendation = "Tu evaluación profesional demuestra preparación excepcional para todos los sistemas de CO•RA. Acceso completo a técnicas avanzadas de amplificación cognitiva con monitoreo profesional.";
+            } else if (testCount >= 3) {
+                accessLevel = "ACCESO AVANZADO";
+                recommendation = "Tu perfil psicológico indica preparación sólida para la mayoría de experiencias CO•RA. Acceso a sistemas intermedios y avanzados con seguimiento personalizado.";
+            } else {
+                accessLevel = "ACCESO BÁSICO";
+                recommendation = "Basándome en tu evaluación, recomiendo comenzar con sistemas básicos de CO•RA y desarrollar gradualmente hacia técnicas más avanzadas.";
+            }
+            
+            integration.innerHTML = `
+                <h3 style="color: #4ECDC4; margin-bottom: 20px;">🎯 Integración CO•RA Personalizada</h3>
+                <div style="margin-bottom: 20px;">
+                    <strong style="color: #44A08D;">Nivel de Acceso Recomendado:</strong> ${accessLevel}
+                </div>
+                <p style="margin-bottom: 20px;">${recommendation}</p>
+                <div style="text-align: center;">
+                    <a href="conexion_simbolica.html" class="start-btn" style="display: inline-block; text-decoration: none;">
+                        🔗 ESTABLECER CONEXIÓN CO•RA
+                    </a>
+                </div>
+            `;
+        }
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script>
+        // Integración con motor de análisis para evaluación profesional
+        const originalSelectOption = selectOption;
+        selectOption = function(element) {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.sessionData.interactionData.push({
+                    type: 'professional_response',
+                    category: currentCategory,
+                    testIndex: currentTestIndex,
+                    questionIndex: currentQuestionIndex,
+                    value: element.dataset.value,
+                    timestamp: Date.now(),
+                    responseLatency: Date.now() - window.questionStartTime
+                });
+            }
+            return originalSelectOption(element);
+        };
+        
+        let questionStartTime = Date.now();
+        
+        const originalLoadCurrentQuestion = loadCurrentQuestion;
+        loadCurrentQuestion = function() {
+            window.questionStartTime = Date.now();
+            return originalLoadCurrentQuestion();
+        };
+        
+        const originalShowResults = showResults;
+        showResults = function() {
+            if (window.coraAnalytics) {
+                const analysis = window.coraAnalytics.saveAnalysisData();
+                analysis.professionalMetrics = {
+                    category: currentCategory,
+                    testsCompleted: Object.keys(results).length,
+                    totalResponses: Object.keys(responses).length,
+                    professionalScore: Object.keys(results).length / 5,
+                    results: results
+                };
+                localStorage.setItem('coraProfessionalAnalysis', JSON.stringify(analysis));
+            }
+            return originalShowResults();
+        };
+    </script>
+</body>
+</html>

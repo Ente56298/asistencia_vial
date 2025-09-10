@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Económica - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #f39c12, #e67e22);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #f39c12;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #f39c12;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        .economic-section {
+            background: rgba(243, 156, 18, 0.1);
+            border: 2px solid #f39c12;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        .economic-section.active {
+            display: block;
+            animation: sectionIn 0.8s ease-out;
+        }
+        @keyframes sectionIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            color: #f39c12;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .economic-question {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #e67e22;
+        }
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .economic-options {
+            display: grid;
+            gap: 12px;
+        }
+        .economic-option {
+            background: rgba(230, 126, 34, 0.2);
+            border: 2px solid #e67e22;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .economic-option:hover {
+            background: rgba(243, 156, 18, 0.3);
+            border-color: #f39c12;
+            transform: translateX(5px);
+        }
+        .economic-option.selected {
+            background: rgba(243, 156, 18, 0.5);
+            border-color: #ffffff;
+        }
+        .stability-indicator {
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .indicator-bar {
+            width: 100%;
+            height: 15px;
+            background: rgba(243, 156, 18, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .indicator-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
+            width: 50%;
+            transition: width 0.5s ease;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);
+        }
+        .results-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #f39c12;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .economic-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .metric-card {
+            background: rgba(243, 156, 18, 0.2);
+            border: 2px solid #f39c12;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">💰 Evaluación Económica CO•RA</h1>
+            <p style="color: #e67e22; margin-bottom: 20px;">
+                Evaluaremos tu estabilidad económica para determinar el modelo de acceso más adecuado a CO•RA
+            </p>
+        </div>
+
+        <div class="stability-indicator">
+            <h3 style="color: #f39c12; margin-bottom: 10px;">Estabilidad Económica</h3>
+            <div class="indicator-bar">
+                <div class="indicator-fill" id="economicStability"></div>
+            </div>
+            <p id="stabilityDescription">Evaluando situación...</p>
+        </div>
+
+        <!-- Sección 1: Situación laboral -->
+        <div class="economic-section active" id="section1">
+            <h2 class="section-title">Sección 1: Situación Laboral</h2>
+            <div class="economic-question">
+                <div class="question-text">
+                    ¿Cuál describe mejor tu situación laboral actual?
+                </div>
+                <div class="economic-options">
+                    <div class="economic-option" onclick="selectEconomic(1, 1)" data-stability="90">
+                        Empleo estable con ingresos regulares y seguros
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(1, 2)" data-stability="70">
+                        Trabajo independiente con ingresos variables pero consistentes
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(1, 3)" data-stability="50">
+                        Empleo temporal o ingresos irregulares
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(1, 4)" data-stability="30">
+                        Desempleado pero con ahorros o apoyo familiar
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(1, 5)" data-stability="10">
+                        Sin ingresos estables ni recursos de respaldo
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 2: Capacidad de inversión -->
+        <div class="economic-section" id="section2">
+            <h2 class="section-title">Sección 2: Capacidad de Inversión</h2>
+            <div class="economic-question">
+                <div class="question-text">
+                    ¿Cuánto podrías invertir mensualmente en tu desarrollo cognitivo sin comprometer tus necesidades básicas?
+                </div>
+                <div class="economic-options">
+                    <div class="economic-option" onclick="selectEconomic(2, 1)" data-stability="100">
+                        Más de $500 USD mensuales
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(2, 2)" data-stability="80">
+                        Entre $200-500 USD mensuales
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(2, 3)" data-stability="60">
+                        Entre $50-200 USD mensuales
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(2, 4)" data-stability="40">
+                        Menos de $50 USD mensuales
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(2, 5)" data-stability="20">
+                        No puedo permitirme ninguna inversión adicional
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 3: Estabilidad financiera -->
+        <div class="economic-section" id="section3">
+            <h2 class="section-title">Sección 3: Estabilidad Financiera</h2>
+            <div class="economic-question">
+                <div class="question-text">
+                    ¿Cómo describirías tu estabilidad financiera a largo plazo?
+                </div>
+                <div class="economic-options">
+                    <div class="economic-option" onclick="selectEconomic(3, 1)" data-stability="95">
+                        Muy estable, con ahorros y planificación a futuro
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(3, 2)" data-stability="75">
+                        Estable, cubro gastos y tengo algunos ahorros
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(3, 3)" data-stability="55">
+                        Moderada, vivo mes a mes pero sin deudas graves
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(3, 4)" data-stability="35">
+                        Inestable, con dificultades para cubrir gastos básicos
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(3, 5)" data-stability="15">
+                        Muy inestable, con deudas y problemas financieros serios
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 4: Motivación para inversión -->
+        <div class="economic-section" id="section4">
+            <h2 class="section-title">Sección 4: Motivación para Inversión</h2>
+            <div class="economic-question">
+                <div class="question-text">
+                    ¿Cuál es tu principal motivación para invertir en amplificación cognitiva?
+                </div>
+                <div class="economic-options">
+                    <div class="economic-option" onclick="selectEconomic(4, 1)" data-stability="85">
+                        Mejorar mis capacidades profesionales y aumentar ingresos
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(4, 2)" data-stability="90">
+                        Desarrollo personal y evolución cognitiva
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(4, 3)" data-stability="70">
+                        Resolver problemas específicos en mi vida
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(4, 4)" data-stability="50">
+                        Curiosidad y experimentación
+                    </div>
+                    <div class="economic-option" onclick="selectEconomic(4, 5)" data-stability="30">
+                        Esperanza de que resuelva mis problemas económicos
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #f39c12; margin-bottom: 25px;">📊 Evaluación Económica Completada</h2>
+            <div id="economicResults"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        let economicScore = 0;
+        let economicResponses = {};
+
+        function selectEconomic(section, option) {
+            const options = document.querySelectorAll(`#section${section} .economic-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            const selectedOption = event.target;
+            selectedOption.classList.add('selected');
+            
+            const stabilityValue = parseInt(selectedOption.dataset.stability);
+            economicResponses[section] = { option, stabilityValue };
+            
+            setTimeout(() => {
+                nextSection();
+            }, 1000);
+        }
+
+        function nextSection() {
+            document.getElementById(`section${currentSection}`).classList.remove('active');
+            
+            if (economicResponses[currentSection]) {
+                economicScore += economicResponses[currentSection].stabilityValue;
+                updateEconomicStability();
+            }
+            
+            currentSection++;
+            
+            if (currentSection <= 4) {
+                setTimeout(() => {
+                    document.getElementById(`section${currentSection}`).classList.add('active');
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    showResults();
+                }, 1000);
+            }
+        }
+
+        function updateEconomicStability() {
+            const averageStability = economicScore / currentSection;
+            const percentage = Math.min(averageStability, 100);
+            
+            document.getElementById('economicStability').style.width = percentage + '%';
+            
+            let description = '';
+            if (percentage >= 80) description = 'Estabilidad Económica Excelente';
+            else if (percentage >= 60) description = 'Estabilidad Económica Buena';
+            else if (percentage >= 40) description = 'Estabilidad Económica Moderada';
+            else description = 'Requiere Apoyo Económico';
+            
+            document.getElementById('stabilityDescription').textContent = description;
+        }
+
+        function showResults() {
+            document.querySelectorAll('.economic-section').forEach(section => section.style.display = 'none');
+            
+            const averageStability = economicScore / 4;
+            const economicProfile = determineEconomicProfile(averageStability);
+            
+            document.getElementById('economicResults').innerHTML = generateEconomicResults(economicProfile, averageStability);
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+
+        function determineEconomicProfile(score) {
+            if (score >= 80) {
+                return {
+                    level: 'ACCESO PREMIUM',
+                    color: '#27ae60',
+                    description: 'Tu estabilidad económica te permite acceso completo a todos los servicios CO•RA.',
+                    model: 'Modelo Premium con servicios completos',
+                    benefits: 'Acceso ilimitado, soporte personalizado, tecnología avanzada',
+                    nextStep: 'evaluacion_salud_integral.html',
+                    buttonText: '🏥 EVALUACIÓN DE SALUD INTEGRAL'
+                };
+            } else if (score >= 60) {
+                return {
+                    level: 'ACCESO ESTÁNDAR',
+                    color: '#f39c12',
+                    description: 'Tu situación económica permite acceso a servicios esenciales de CO•RA.',
+                    model: 'Modelo Estándar con servicios core',
+                    benefits: 'Acceso a funciones principales, soporte regular, actualizaciones',
+                    nextStep: 'evaluacion_salud_integral.html',
+                    buttonText: '🏥 EVALUACIÓN DE SALUD INTEGRAL'
+                };
+            } else if (score >= 40) {
+                return {
+                    level: 'ACCESO BÁSICO',
+                    color: '#e67e22',
+                    description: 'Ofrecemos un modelo accesible adaptado a tu situación económica.',
+                    model: 'Modelo Básico con funciones esenciales',
+                    benefits: 'Acceso a herramientas fundamentales, soporte comunitario',
+                    nextStep: 'evaluacion_salud_integral.html',
+                    buttonText: '🏥 EVALUACIÓN DE SALUD INTEGRAL'
+                };
+            } else {
+                return {
+                    level: 'PROGRAMA DE BECAS',
+                    color: '#e74c3c',
+                    description: 'Calificas para nuestro programa de becas y acceso subsidiado.',
+                    model: 'Acceso gratuito con programa de becas',
+                    benefits: 'Servicios básicos sin costo, oportunidades de desarrollo',
+                    nextStep: 'evaluacion_salud_integral.html',
+                    buttonText: '🏥 EVALUACIÓN DE SALUD INTEGRAL'
+                };
+            }
+        }
+
+        function generateEconomicResults(profile, score) {
+            return `
+                <div style="background: rgba(243, 156, 18, 0.2); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: ${profile.color}; margin-bottom: 15px;">
+                        Modelo Recomendado: ${profile.level}
+                    </h3>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        ${profile.description}
+                    </p>
+                    
+                    <div class="economic-metrics">
+                        <div class="metric-card">
+                            <h4 style="color: #f39c12; margin-bottom: 10px;">Situación Laboral</h4>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${economicResponses[1]?.stabilityValue || 0}%</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4 style="color: #f39c12; margin-bottom: 10px;">Capacidad Inversión</h4>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${economicResponses[2]?.stabilityValue || 0}%</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4 style="color: #f39c12; margin-bottom: 10px;">Estabilidad Financiera</h4>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${economicResponses[3]?.stabilityValue || 0}%</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4 style="color: #f39c12; margin-bottom: 10px;">Motivación</h4>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${economicResponses[4]?.stabilityValue || 0}%</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                        <h4 style="color: #f39c12; margin-bottom: 10px;">📋 Modelo de Acceso:</h4>
+                        <p style="margin-bottom: 10px;">${profile.model}</p>
+                        
+                        <h4 style="color: #f39c12; margin-bottom: 10px;">🎯 Beneficios Incluidos:</h4>
+                        <p>${profile.benefits}</p>
+                    </div>
+                    
+                    <div style="background: rgba(243, 156, 18, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <strong>Puntuación Económica:</strong> ${Math.round(score)}/100
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="${profile.nextStep}" style="
+                        background: linear-gradient(135deg, ${profile.color}, #e67e22);
+                        color: white;
+                        padding: 20px 40px;
+                        border-radius: 25px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.2rem;
+                        display: inline-block;
+                    ">${profile.buttonText}</a>
+                    
+                    <p style="margin-top: 15px; color: #e67e22; font-size: 0.9rem;">
+                        Tu modelo de acceso garantiza que CO•RA sea accesible según tu situación económica
+                    </p>
+                </div>
+            `;
+        }
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

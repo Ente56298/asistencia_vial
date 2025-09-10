@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Socioemocional - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #e74c3c, #c0392b);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #e74c3c;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #e74c3c;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        .evaluation-area {
+            background: rgba(231, 76, 60, 0.1);
+            border: 2px solid #e74c3c;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        .evaluation-area.active {
+            display: block;
+            animation: areaIn 0.8s ease-out;
+        }
+        @keyframes areaIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .area-title {
+            color: #e74c3c;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .situation {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #c0392b;
+        }
+        .situation-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .emotion-scale {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .scale-point {
+            background: rgba(192, 57, 43, 0.2);
+            border: 2px solid #c0392b;
+            color: #ffffff;
+            padding: 15px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .scale-point:hover {
+            background: rgba(231, 76, 60, 0.3);
+            border-color: #e74c3c;
+        }
+        .scale-point.selected {
+            background: rgba(231, 76, 60, 0.5);
+            border-color: #ffffff;
+        }
+        .emotional-state {
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .state-indicator {
+            width: 100%;
+            height: 15px;
+            background: rgba(231, 76, 60, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .state-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #f39c12, #e74c3c);
+            width: 50%;
+            transition: width 0.5s ease;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+        }
+        .results-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #e74c3c;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .stability-chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .stability-metric {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #e74c3c;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">❤️ Evaluación Socioemocional CO•RA</h1>
+            <p style="color: #c0392b; margin-bottom: 20px;">
+                Evaluaremos tu estabilidad emocional y capacidad de manejo social para determinar tu preparación para la amplificación cognitiva
+            </p>
+        </div>
+
+        <div class="emotional-state">
+            <h3 style="color: #e74c3c; margin-bottom: 10px;">Estado Emocional Actual</h3>
+            <div class="state-indicator">
+                <div class="state-fill" id="emotionalState"></div>
+            </div>
+            <p id="stateDescription">Evaluando estabilidad...</p>
+        </div>
+
+        <!-- Área 1: Regulación emocional -->
+        <div class="evaluation-area active" id="area1">
+            <h2 class="area-title">Área 1: Regulación Emocional</h2>
+            <div class="situation">
+                <div class="situation-text">
+                    Imagina que durante una sesión de amplificación cognitiva experimentas una sobrecarga emocional intensa e inesperada. ¿Cómo manejas típicamente este tipo de situaciones?
+                </div>
+                <div class="emotion-scale">
+                    <div class="scale-point" onclick="selectEmotion(1, 1)" data-stability="20">
+                        Me abrumo completamente y necesito detener todo
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(1, 2)" data-stability="40">
+                        Me siento muy incómodo pero trato de continuar
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(1, 3)" data-stability="60">
+                        Reconozco la emoción y busco técnicas para regularla
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(1, 4)" data-stability="80">
+                        Mantengo la calma y proceso la experiencia gradualmente
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(1, 5)" data-stability="100">
+                        Integro la experiencia como parte natural del proceso
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área 2: Relaciones interpersonales -->
+        <div class="evaluation-area" id="area2">
+            <h2 class="area-title">Área 2: Relaciones Interpersonales</h2>
+            <div class="situation">
+                <div class="situation-text">
+                    Tu proceso de amplificación cognitiva está creando cambios en tu personalidad que afectan tus relaciones cercanas. Algunas personas expresan preocupación. ¿Cuál es tu respuesta?
+                </div>
+                <div class="emotion-scale">
+                    <div class="scale-point" onclick="selectEmotion(2, 1)" data-stability="15">
+                        Me siento culpable y considero detener el proceso
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(2, 2)" data-stability="35">
+                        Me preocupo mucho por lo que piensan otros
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(2, 3)" data-stability="55">
+                        Escucho sus preocupaciones pero mantengo mi decisión
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(2, 4)" data-stability="75">
+                        Comunico abiertamente sobre mi proceso y cambios
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(2, 5)" data-stability="95">
+                        Mantengo relaciones saludables mientras evoluciono
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área 3: Autoestima y autoconcepto -->
+        <div class="evaluation-area" id="area3">
+            <h2 class="area-title">Área 3: Autoestima y Autoconcepto</h2>
+            <div class="situation">
+                <div class="situation-text">
+                    Durante el proceso de amplificación, te das cuenta de limitaciones previas en tu pensamiento que no habías reconocido. ¿Cómo afecta esto tu percepción de ti mismo?
+                </div>
+                <div class="emotion-scale">
+                    <div class="scale-point" onclick="selectEmotion(3, 1)" data-stability="10">
+                        Me siento profundamente inadecuado e inseguro
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(3, 2)" data-stability="30">
+                        Cuestiono mi valor y capacidades anteriores
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(3, 3)" data-stability="50">
+                        Acepto que tenía limitaciones pero no me define
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(3, 4)" data-stability="70">
+                        Veo el crecimiento como parte natural de la evolución
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(3, 5)" data-stability="90">
+                        Celebro el descubrimiento como oportunidad de mejora
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área 4: Manejo del estrés -->
+        <div class="evaluation-area" id="area4">
+            <h2 class="area-title">Área 4: Manejo del Estrés</h2>
+            <div class="situation">
+                <div class="situation-text">
+                    La amplificación cognitiva está generando cambios rápidos en tu percepción y capacidades, creando estrés por la velocidad del cambio. ¿Cómo respondes?
+                </div>
+                <div class="emotion-scale">
+                    <div class="scale-point" onclick="selectEmotion(4, 1)" data-stability="25">
+                        El estrés me paraliza y afecta mi funcionamiento diario
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(4, 2)" data-stability="45">
+                        Siento ansiedad constante pero trato de continuar
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(4, 3)" data-stability="65">
+                        Uso técnicas de manejo de estrés que conozco
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(4, 4)" data-stability="85">
+                        Adapto mi ritmo y busco equilibrio en el proceso
+                    </div>
+                    <div class="scale-point" onclick="selectEmotion(4, 5)" data-stability="100">
+                        Transformo el estrés en energía para el crecimiento
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #e74c3c; margin-bottom: 25px;">📊 Evaluación Socioemocional Completada</h2>
+            <div id="emotionalResults"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentArea = 1;
+        let stabilityScore = 0;
+        let emotionalResponses = {};
+
+        function selectEmotion(area, level) {
+            const options = document.querySelectorAll(`#area${area} .scale-point`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            const selectedOption = event.target;
+            selectedOption.classList.add('selected');
+            
+            const stabilityValue = parseInt(selectedOption.dataset.stability);
+            emotionalResponses[area] = { level, stabilityValue };
+            
+            setTimeout(() => {
+                nextArea();
+            }, 1000);
+        }
+
+        function nextArea() {
+            document.getElementById(`area${currentArea}`).classList.remove('active');
+            
+            if (emotionalResponses[currentArea]) {
+                stabilityScore += emotionalResponses[currentArea].stabilityValue;
+                updateEmotionalState();
+            }
+            
+            currentArea++;
+            
+            if (currentArea <= 4) {
+                setTimeout(() => {
+                    document.getElementById(`area${currentArea}`).classList.add('active');
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    showResults();
+                }, 1000);
+            }
+        }
+
+        function updateEmotionalState() {
+            const averageStability = stabilityScore / currentArea;
+            const percentage = Math.min(averageStability, 100);
+            
+            document.getElementById('emotionalState').style.width = percentage + '%';
+            
+            let description = '';
+            if (percentage >= 80) description = 'Estabilidad Emocional Excelente';
+            else if (percentage >= 60) description = 'Estabilidad Emocional Buena';
+            else if (percentage >= 40) description = 'Estabilidad Emocional Moderada';
+            else description = 'Requiere Fortalecimiento Emocional';
+            
+            document.getElementById('stateDescription').textContent = description;
+        }
+
+        function showResults() {
+            document.querySelectorAll('.evaluation-area').forEach(area => area.style.display = 'none');
+            
+            const averageStability = stabilityScore / 4;
+            const emotionalProfile = determineEmotionalProfile(averageStability);
+            
+            document.getElementById('emotionalResults').innerHTML = generateEmotionalResults(emotionalProfile, averageStability);
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+
+        function determineEmotionalProfile(score) {
+            if (score >= 80) {
+                return {
+                    level: 'ESTABILIDAD ÓPTIMA',
+                    color: '#27ae60',
+                    description: 'Tienes excelente regulación emocional y estabilidad social.',
+                    recommendation: 'Preparado para amplificación cognitiva completa',
+                    support: 'Monitoreo estándar durante el proceso',
+                    nextStep: 'evaluacion_economica.html',
+                    buttonText: '💰 EVALUACIÓN ECONÓMICA'
+                };
+            } else if (score >= 60) {
+                return {
+                    level: 'ESTABILIDAD BUENA',
+                    color: '#f39c12',
+                    description: 'Muestras buena estabilidad emocional con áreas menores de mejora.',
+                    recommendation: 'Amplificación gradual con apoyo emocional',
+                    support: 'Sesiones de apoyo socioemocional regulares',
+                    nextStep: 'evaluacion_economica.html',
+                    buttonText: '💰 EVALUACIÓN ECONÓMICA'
+                };
+            } else if (score >= 40) {
+                return {
+                    level: 'ESTABILIDAD MODERADA',
+                    color: '#e67e22',
+                    description: 'Necesitas fortalecimiento emocional antes de la amplificación completa.',
+                    recommendation: 'Programa de preparación socioemocional',
+                    support: 'Terapia de apoyo y técnicas de regulación emocional',
+                    nextStep: 'evaluacion_economica.html',
+                    buttonText: '💰 EVALUACIÓN ECONÓMICA'
+                };
+            } else {
+                return {
+                    level: 'REQUIERE ESTABILIZACIÓN',
+                    color: '#e74c3c',
+                    description: 'Es necesario trabajar en estabilidad emocional antes de proceder.',
+                    recommendation: 'Aplazamiento hasta lograr estabilidad emocional',
+                    support: 'Intervención terapéutica profesional recomendada',
+                    nextStep: 'index.html',
+                    buttonText: '🔄 NUEVA EVALUACIÓN POSTERIOR'
+                };
+            }
+        }
+
+        function generateEmotionalResults(profile, score) {
+            return `
+                <div style="background: rgba(231, 76, 60, 0.2); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: ${profile.color}; margin-bottom: 15px;">
+                        Nivel Socioemocional: ${profile.level}
+                    </h3>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        ${profile.description}
+                    </p>
+                    
+                    <div class="stability-chart">
+                        <div class="stability-metric">
+                            <h4 style="color: #e74c3c; margin-bottom: 10px;">Regulación Emocional</h4>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${emotionalResponses[1]?.stabilityValue || 0}%</div>
+                        </div>
+                        <div class="stability-metric">
+                            <h4 style="color: #e74c3c; margin-bottom: 10px;">Relaciones Sociales</h4>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${emotionalResponses[2]?.stabilityValue || 0}%</div>
+                        </div>
+                        <div class="stability-metric">
+                            <h4 style="color: #e74c3c; margin-bottom: 10px;">Autoestima</h4>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${emotionalResponses[3]?.stabilityValue || 0}%</div>
+                        </div>
+                        <div class="stability-metric">
+                            <h4 style="color: #e74c3c; margin-bottom: 10px;">Manejo de Estrés</h4>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${emotionalResponses[4]?.stabilityValue || 0}%</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                        <h4 style="color: #e74c3c; margin-bottom: 10px;">📋 Recomendación:</h4>
+                        <p style="margin-bottom: 10px;">${profile.recommendation}</p>
+                        
+                        <h4 style="color: #e74c3c; margin-bottom: 10px;">🎯 Apoyo Requerido:</h4>
+                        <p>${profile.support}</p>
+                    </div>
+                    
+                    <div style="background: rgba(231, 76, 60, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <strong>Puntuación Socioemocional:</strong> ${Math.round(score)}/100
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="${profile.nextStep}" style="
+                        background: linear-gradient(135deg, ${profile.color}, #c0392b);
+                        color: white;
+                        padding: 20px 40px;
+                        border-radius: 25px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.2rem;
+                        display: inline-block;
+                    ">${profile.buttonText}</a>
+                    
+                    <p style="margin-top: 15px; color: #c0392b; font-size: 0.9rem;">
+                        Tu estabilidad socioemocional determina el protocolo de amplificación más seguro
+                    </p>
+                </div>
+            `;
+        }
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

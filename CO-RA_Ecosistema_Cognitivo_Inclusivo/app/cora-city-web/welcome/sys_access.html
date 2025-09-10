@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>System Access</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#000;color:#0f0;font-family:monospace;height:100vh;display:flex;align-items:center;justify-content:center;}
+        .terminal{background:#000;border:1px solid #0f0;padding:20px;width:400px;border-radius:5px;}
+        input{background:#000;color:#0f0;border:none;outline:none;font-family:monospace;width:100%;}
+        .prompt{margin:10px 0;}
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div>System Terminal v2.1</div>
+        <div>Enter access credentials:</div>
+        <div class="prompt">
+            user@system:~$ <input type="password" id="access" onkeypress="checkAccess(event)">
+        </div>
+        <div id="output"></div>
+    </div>
+    <script>
+        function checkAccess(e){
+            if(e.key==='Enter'){
+                const code=document.getElementById('access').value;
+                if(code==='CORA_STEALTH_2024'){
+                    document.getElementById('output').innerHTML='<div style="color:#0f0;">Access granted. Redirecting...</div>';
+                    setTimeout(()=>{window.location.href='index.html';},1500);
+                }else{
+                    document.getElementById('output').innerHTML='<div style="color:#f00;">Access denied.</div>';
+                    document.getElementById('access').value='';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

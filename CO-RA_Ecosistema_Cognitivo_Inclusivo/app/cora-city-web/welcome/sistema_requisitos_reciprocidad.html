@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Requisitos y Reciprocidad - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #34495e;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #3498db;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .requisitos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .requisito-card {
+            background: rgba(52, 73, 94, 0.1);
+            border: 2px solid #34495e;
+            border-radius: 20px;
+            padding: 25px;
+        }
+        .card-title {
+            color: #3498db;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .urgencia-levels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .urgencia-card {
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .urgencia-critica {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: #e74c3c;
+        }
+        .urgencia-alta {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: #f39c12;
+        }
+        .urgencia-normal {
+            background: rgba(39, 174, 96, 0.2);
+            border-color: #27ae60;
+        }
+        .urgencia-card:hover {
+            transform: scale(1.05);
+        }
+        .urgencia-card.selected {
+            border-width: 5px;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+        }
+        .verificacion-section {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #e74c3c;
+        }
+        .reciprocidad-tracker {
+            background: rgba(39, 174, 96, 0.1);
+            border: 2px solid #27ae60;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .balance-meter {
+            width: 100%;
+            height: 30px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+            position: relative;
+        }
+        .balance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c 0%, #f39c12 50%, #27ae60 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .balance-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .input-field {
+            width: 100%;
+            min-height: 80px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #34495e;
+            border-radius: 10px;
+            color: #ffffff;
+            padding: 15px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        .checkbox-group {
+            display: grid;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .checkbox-item:hover {
+            background: rgba(52, 152, 219, 0.2);
+        }
+        .checkbox-item input[type="checkbox"] {
+            transform: scale(1.3);
+        }
+        .contribucion-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .contribucion-card {
+            background: rgba(0,0,0,0.4);
+            border: 2px solid #7f8c8d;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .contribucion-card:hover {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.2);
+        }
+        .contribucion-card.selected {
+            border-color: #27ae60;
+            background: rgba(39, 174, 96, 0.2);
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover {
+            transform: scale(1.05);
+        }
+        .alert-box {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+        .alert-success {
+            background: rgba(39, 174, 96, 0.2);
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+        .alert-danger {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">⚖️ Sistema de Requisitos y Reciprocidad CO•RA</h1>
+            <p style="color: #74b9ff; margin-bottom: 20px;">
+                Verificación de urgencias reales, requisitos de matcheo y ciclo de reciprocidad obligatoria
+            </p>
+        </div>
+
+        <div class="requisitos-grid">
+            <!-- Requisitos Básicos de Matcheo -->
+            <div class="requisito-card">
+                <h3 class="card-title">📋 Requisitos Básicos de Matcheo</h3>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="req1" onchange="updateRequirements()">
+                        <label for="req1">Evaluación PIE-CO•RA completada (≥70 puntos)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="req2" onchange="updateRequirements()">
+                        <label for="req2">Balance de reciprocidad positivo (≥0)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="req3" onchange="updateRequirements()">
+                        <label for="req3">Verificación de identidad energética</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="req4" onchange="updateRequirements()">
+                        <label for="req4">Compromiso de contribución activa</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="req5" onchange="updateRequirements()">
+                        <label for="req5">Historial de seguimiento (mín. 7 días)</label>
+                    </div>
+                </div>
+
+                <div class="alert-box alert-warning" id="requirementsAlert">
+                    ⚠️ Completa todos los requisitos para acceder al sistema de matcheo
+                </div>
+            </div>
+
+            <!-- Clasificación de Urgencias -->
+            <div class="requisito-card">
+                <h3 class="card-title">🚨 Clasificación de Urgencias</h3>
+                
+                <div class="urgencia-levels">
+                    <div class="urgencia-card urgencia-critica" onclick="selectUrgency('critica')">
+                        <h4 style="color: #e74c3c; margin-bottom: 10px;">🔴 CRÍTICA</h4>
+                        <p style="font-size: 0.9rem;">0-24 horas</p>
+                        <p style="font-size: 0.8rem;">Verificación inmediata</p>
+                    </div>
+                    <div class="urgencia-card urgencia-alta" onclick="selectUrgency('alta')">
+                        <h4 style="color: #f39c12; margin-bottom: 10px;">🟡 ALTA</h4>
+                        <p style="font-size: 0.9rem;">1-7 días</p>
+                        <p style="font-size: 0.8rem;">Verificación 48h</p>
+                    </div>
+                    <div class="urgencia-card urgencia-normal" onclick="selectUrgency('normal')">
+                        <h4 style="color: #27ae60; margin-bottom: 10px;">🟢 NORMAL</h4>
+                        <p style="font-size: 0.9rem;">7+ días</p>
+                        <p style="font-size: 0.8rem;">Proceso estándar</p>
+                    </div>
+                </div>
+
+                <div id="urgencyDetails" style="display: none;">
+                    <h4 style="color: #3498db; margin: 20px 0 10px;">Detalles de la Urgencia:</h4>
+                    <textarea id="urgencyDescription" class="input-field" placeholder="Describe específicamente la situación, incluyendo evidencias verificables..."></textarea>
+                </div>
+            </div>
+
+            <!-- Verificación de Urgencias -->
+            <div class="requisito-card">
+                <h3 class="card-title">🔍 Verificación de Urgencias</h3>
+                
+                <div class="verificacion-section">
+                    <h4 style="color: #e74c3c; margin-bottom: 15px;">Urgencias Particulares:</h4>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="verif1">
+                            <label for="verif1">Documentación médica (salud)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="verif2">
+                            <label for="verif2">Comprobantes financieros (económica)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="verif3">
+                            <label for="verif3">Referencias profesionales (laboral)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="verif4">
+                            <label for="verif4">Testimonio de terceros (personal)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="verificacion-section" style="border-color: #f39c12;">
+                    <h4 style="color: #f39c12; margin-bottom: 15px;">Urgencias Públicas:</h4>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        Requieren estrategia colectiva donde cada habitante contribuye según capacidad
+                    </p>
+                    <div class="contribucion-options" id="contribucionOptions">
+                        <div class="contribucion-card" onclick="selectContribution('conocimiento')">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🧠</div>
+                            <div>Conocimiento</div>
+                        </div>
+                        <div class="contribucion-card" onclick="selectContribution('tiempo')">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">⏰</div>
+                            <div>Tiempo</div>
+                        </div>
+                        <div class="contribucion-card" onclick="selectContribution('recursos')">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">💰</div>
+                            <div>Recursos</div>
+                        </div>
+                        <div class="contribucion-card" onclick="selectContribution('habilidades')">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🛠️</div>
+                            <div>Habilidades</div>
+                        </div>
+                        <div class="contribucion-card" onclick="selectContribution('red')">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🌐</div>
+                            <div>Red Contactos</div>
+                        </div>
+                        <div class="contribucion-card" onclick="selectContribution('energia')">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
+                            <div>Energía</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sistema de Reciprocidad -->
+            <div class="requisito-card">
+                <h3 class="card-title">🔄 Sistema de Reciprocidad Obligatoria</h3>
+                
+                <div class="reciprocidad-tracker">
+                    <h4 style="color: #27ae60; margin-bottom: 15px;">Balance Energético Personal:</h4>
+                    
+                    <div class="balance-meter">
+                        <div class="balance-fill" id="balanceFill" style="width: 60%;"></div>
+                        <div class="balance-indicator" id="balanceText">Balance: +15</div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
+                        <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #27ae60; font-weight: bold;">Ayuda Brindada</div>
+                            <div style="font-size: 1.5rem; color: white;" id="ayudaBrindada">23</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #e74c3c; font-weight: bold;">Ayuda Recibida</div>
+                            <div style="font-size: 1.5rem; color: white;" id="ayudaRecibida">8</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-box alert-success">
+                    ✅ Balance positivo: Puedes solicitar ayuda
+                </div>
+
+                <h4 style="color: #3498db; margin: 20px 0 10px;">Formas de Reciprocidad:</h4>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="recip1">
+                        <label for="recip1">Mentoría a nuevos usuarios (2 horas/semana)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="recip2">
+                        <label for="recip2">Contribución a base de conocimiento</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="recip3">
+                        <label for="recip3">Moderación de comunidad</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="recip4">
+                        <label for="recip4">Desarrollo de recursos CO•RA</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="recip5">
+                        <label for="recip5">Apoyo técnico y mantenimiento</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ciclo de Sostenibilidad -->
+            <div class="requisito-card">
+                <h3 class="card-title">♻️ Ciclo de Sostenibilidad del Sistema</h3>
+                
+                <div style="background: rgba(0,0,0,0.6); border-radius: 15px; padding: 25px; margin: 20px 0;">
+                    <h4 style="color: #3498db; margin-bottom: 15px;">Reglas del Ciclo:</h4>
+                    
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+                            <span style="color: #27ae60;">✅</span>
+                            <span>Todo usuario ayudado DEBE contribuir equivalentemente</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+                            <span style="color: #27ae60;">✅</span>
+                            <span>Balance negativo = suspensión temporal de solicitudes</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+                            <span style="color: #27ae60;">✅</span>
+                            <span>Contribución mínima: 2 horas/mes o equivalente</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+                            <span style="color: #27ae60;">✅</span>
+                            <span>Urgencias críticas: reciprocidad diferida (máx. 30 días)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-box alert-warning">
+                    ⚠️ El incumplimiento de reciprocidad resulta en exclusión del sistema
+                </div>
+
+                <h4 style="color: #3498db; margin: 20px 0 10px;">Compromiso de Reciprocidad:</h4>
+                <textarea id="commitmentText" class="input-field" placeholder="Describe cómo planeas contribuir al sistema CO•RA para mantener el ciclo de reciprocidad..."></textarea>
+            </div>
+
+            <!-- Panel de Control -->
+            <div class="requisito-card">
+                <h3 class="card-title">🎛️ Panel de Control de Matcheo</h3>
+                
+                <div id="matcheoStatus" class="alert-box alert-danger">
+                    ❌ No cumples los requisitos mínimos para matcheo
+                </div>
+
+                <div style="margin: 25px 0;">
+                    <h4 style="color: #3498db; margin-bottom: 15px;">Estado Actual:</h4>
+                    <div style="display: grid; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px;">
+                            <span>Requisitos Básicos:</span>
+                            <span id="reqStatus" style="color: #e74c3c;">0/5</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px;">
+                            <span>Balance Reciprocidad:</span>
+                            <span id="balanceStatus" style="color: #27ae60;">+15</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px;">
+                            <span>Verificación Urgencia:</span>
+                            <span id="urgencyStatus" style="color: #f39c12;">Pendiente</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="submit-btn" onclick="submitMatcheoRequest()" disabled id="submitBtn">
+                    🔄 SOLICITAR MATCHEO
+                </button>
+                
+                <button class="submit-btn" onclick="goToMatcheo()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                    ⚡ IR A SISTEMA DE MATCHEO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedUrgency = null;
+        let selectedContributions = [];
+        let requirementsMet = 0;
+
+        function updateRequirements() {
+            const checkboxes = document.querySelectorAll('#req1, #req2, #req3, #req4, #req5');
+            requirementsMet = Array.from(checkboxes).filter(cb => cb.checked).length;
+            
+            document.getElementById('reqStatus').textContent = `${requirementsMet}/5`;
+            document.getElementById('reqStatus').style.color = requirementsMet === 5 ? '#27ae60' : '#e74c3c';
+            
+            const alertBox = document.getElementById('requirementsAlert');
+            if (requirementsMet === 5) {
+                alertBox.className = 'alert-box alert-success';
+                alertBox.innerHTML = '✅ Todos los requisitos básicos completados';
+            } else {
+                alertBox.className = 'alert-box alert-warning';
+                alertBox.innerHTML = `⚠️ Completa ${5 - requirementsMet} requisitos restantes`;
+            }
+            
+            updateMatcheoStatus();
+        }
+
+        function selectUrgency(level) {
+            document.querySelectorAll('.urgencia-card').forEach(card => card.classList.remove('selected'));
+            event.target.classList.add('selected');
+            selectedUrgency = level;
+            
+            document.getElementById('urgencyDetails').style.display = 'block';
+            document.getElementById('urgencyStatus').textContent = level.toUpperCase();
+            document.getElementById('urgencyStatus').style.color = 
+                level === 'critica' ? '#e74c3c' : level === 'alta' ? '#f39c12' : '#27ae60';
+            
+            updateMatcheoStatus();
+        }
+
+        function selectContribution(type) {
+            const card = event.target.closest('.contribucion-card');
+            
+            if (selectedContributions.includes(type)) {
+                selectedContributions = selectedContributions.filter(c => c !== type);
+                card.classList.remove('selected');
+            } else {
+                selectedContributions.push(type);
+                card.classList.add('selected');
+            }
+        }
+
+        function updateMatcheoStatus() {
+            const statusDiv = document.getElementById('matcheoStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            const hasRequirements = requirementsMet === 5;
+            const hasUrgency = selectedUrgency !== null;
+            const hasPositiveBalance = true; // Simulado
+            
+            if (hasRequirements && hasUrgency && hasPositiveBalance) {
+                statusDiv.className = 'alert-box alert-success';
+                statusDiv.innerHTML = '✅ Cumples todos los requisitos para matcheo';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            } else {
+                statusDiv.className = 'alert-box alert-danger';
+                statusDiv.innerHTML = '❌ Completa todos los requisitos para acceder al matcheo';
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+            }
+        }
+
+        function submitMatcheoRequest() {
+            const urgencyDesc = document.getElementById('urgencyDescription').value;
+            const commitment = document.getElementById('commitmentText').value;
+            
+            if (!urgencyDesc.trim()) {
+                alert('Por favor describe la urgencia con detalles verificables');
+                return;
+            }
+            
+            if (!commitment.trim()) {
+                alert('Por favor describe tu compromiso de reciprocidad');
+                return;
+            }
+            
+            // Guardar datos de solicitud
+            const requestData = {
+                urgency: selectedUrgency,
+                description: urgencyDesc,
+                contributions: selectedContributions,
+                commitment: commitment,
+                timestamp: new Date().toISOString(),
+                status: 'pending_verification'
+            };
+            
+            localStorage.setItem('matcheoRequest', JSON.stringify(requestData));
+            
+            alert('✅ Solicitud de matcheo enviada. Verificación en proceso según nivel de urgencia.');
+            
+            // Simular proceso de verificación
+            setTimeout(() => {
+                if (selectedUrgency === 'critica') {
+                    alert('🚨 Urgencia crítica: Verificación inmediata iniciada. Recibirás respuesta en 2-4 horas.');
+                } else if (selectedUrgency === 'alta') {
+                    alert('⚡ Urgencia alta: Verificación programada. Respuesta en 24-48 horas.');
+                } else {
+                    alert('📋 Urgencia normal: Procesamiento estándar. Respuesta en 3-7 días.');
+                }
+            }, 2000);
+        }
+
+        function goToMatcheo() {
+            window.location.href = 'sistema_matcheo_intencion.html';
+        }
+
+        // Simular datos de balance
+        function updateBalance() {
+            const ayudaBrindada = 23;
+            const ayudaRecibida = 8;
+            const balance = ayudaBrindada - ayudaRecibida;
+            
+            document.getElementById('ayudaBrindada').textContent = ayudaBrindada;
+            document.getElementById('ayudaRecibida').textContent = ayudaRecibida;
+            document.getElementById('balanceText').textContent = `Balance: ${balance > 0 ? '+' : ''}${balance}`;
+            document.getElementById('balanceStatus').textContent = `${balance > 0 ? '+' : ''}${balance}`;
+            
+            const percentage = Math.min(100, Math.max(0, (balance + 50) / 100 * 100));
+            document.getElementById('balanceFill').style.width = percentage + '%';
+        }
+
+        // Inicializar
+        window.onload = function() {
+            updateBalance();
+            updateRequirements();
+        };
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

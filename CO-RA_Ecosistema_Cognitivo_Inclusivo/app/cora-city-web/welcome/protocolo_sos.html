@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo SOS - Seguimiento y Respuesta</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #c0392b;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #e74c3c;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .alert-level {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .alert-card {
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid;
+            transition: all 0.3s;
+        }
+        .alert-green {
+            background: rgba(39, 174, 96, 0.2);
+            border-color: #27ae60;
+        }
+        .alert-yellow {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: #f39c12;
+        }
+        .alert-red {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: #e74c3c;
+        }
+        .mood-scale {
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+        }
+        .mood-number {
+            text-align: center;
+            padding: 15px 10px;
+            border: 2px solid #7f8c8d;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        .mood-number:hover {
+            background: rgba(231, 76, 60, 0.3);
+        }
+        .mood-number.selected {
+            background: rgba(231, 76, 60, 0.5);
+            border-color: #ffffff;
+        }
+        .mood-green { border-color: #27ae60; }
+        .mood-yellow { border-color: #f39c12; }
+        .mood-red { border-color: #e74c3c; }
+        .emergency-section {
+            background: rgba(231, 76, 60, 0.2);
+            border: 3px solid #e74c3c;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .emergency-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .emergency-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
+        }
+        .input-field {
+            width: 100%;
+            min-height: 60px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #7f8c8d;
+            border-radius: 10px;
+            color: #ffffff;
+            padding: 15px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        .checkin-form {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .sos-kit {
+            background: rgba(192, 57, 43, 0.1);
+            border: 2px solid #c0392b;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .contact-card {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #e74c3c;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .phq-section {
+            background: rgba(231, 76, 60, 0.1);
+            border: 2px solid #e74c3c;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🆘 Protocolo SOS - Seguimiento y Respuesta</h1>
+            <p style="color: #e74c3c; margin-bottom: 20px;">
+                Sistema de monitoreo continuo y respuesta ante crisis de salud mental
+            </p>
+        </div>
+
+        <!-- Check-in Diario -->
+        <div class="checkin-form">
+            <h2 style="color: #e74c3c; margin-bottom: 20px;">📊 Check-in Diario</h2>
+            
+            <h3 style="color: #ffffff; margin-bottom: 15px;">¿Cómo te sientes hoy? (0-10)</h3>
+            <div class="mood-scale">
+                <div class="mood-number mood-red" onclick="selectMood(0)">0</div>
+                <div class="mood-number mood-red" onclick="selectMood(1)">1</div>
+                <div class="mood-number mood-red" onclick="selectMood(2)">2</div>
+                <div class="mood-number mood-red" onclick="selectMood(3)">3</div>
+                <div class="mood-number mood-yellow" onclick="selectMood(4)">4</div>
+                <div class="mood-number mood-yellow" onclick="selectMood(5)">5</div>
+                <div class="mood-number mood-yellow" onclick="selectMood(6)">6</div>
+                <div class="mood-number mood-green" onclick="selectMood(7)">7</div>
+                <div class="mood-number mood-green" onclick="selectMood(8)">8</div>
+                <div class="mood-number mood-green" onclick="selectMood(9)">9</div>
+                <div class="mood-number mood-green" onclick="selectMood(10)">10</div>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="color: #ffffff; margin-bottom: 10px;">¿Cómo te sientes hoy en una palabra?</h4>
+                <input type="text" id="moodWord" class="input-field" style="min-height: 50px;" placeholder="Ej: cansado, esperanzado, ansioso...">
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="color: #ffffff; margin-bottom: 10px;">¿Qué necesitas de ti o de otros esta semana?</h4>
+                <textarea id="weeklyNeeds" class="input-field" placeholder="Describe qué apoyo, actividades o cambios necesitas..."></textarea>
+            </div>
+
+            <button class="continue-btn" onclick="processCheckin()">Registrar Check-in</button>
+        </div>
+
+        <!-- Niveles de Alerta -->
+        <div class="alert-level">
+            <div class="alert-card alert-green">
+                <h3 style="color: #27ae60; margin-bottom: 15px;">🟢 VERDE</h3>
+                <p><strong>Puntaje:</strong> 7-10</p>
+                <p><strong>Estado:</strong> Estable</p>
+                <p><strong>Acción:</strong> Seguimiento normal</p>
+            </div>
+            <div class="alert-card alert-yellow">
+                <h3 style="color: #f39c12; margin-bottom: 15px;">🟡 AMARILLO</h3>
+                <p><strong>Puntaje:</strong> 4-6</p>
+                <p><strong>Estado:</strong> Precaución</p>
+                <p><strong>Acción:</strong> Contacto cercano</p>
+            </div>
+            <div class="alert-card alert-red">
+                <h3 style="color: #e74c3c; margin-bottom: 15px;">🔴 ROJO</h3>
+                <p><strong>Puntaje:</strong> 0-3</p>
+                <p><strong>Estado:</strong> Crisis</p>
+                <p><strong>Acción:</strong> Protocolo SOS</p>
+            </div>
+        </div>
+
+        <!-- Evaluación PHQ-9 Ultracorto -->
+        <div class="phq-section" id="phqSection" style="display: none;">
+            <h2 style="color: #e74c3c; margin-bottom: 20px;">🔍 Evaluación Rápida PHQ-9</h2>
+            
+            <div style="margin: 20px 0;">
+                <h4 style="margin-bottom: 15px;">En las últimas 2 semanas, ¿qué tan seguido has tenido poco interés o placer en hacer cosas?</h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <div class="mood-number" onclick="selectPHQ(1, 0)">Nunca</div>
+                    <div class="mood-number" onclick="selectPHQ(1, 1)">Varios días</div>
+                    <div class="mood-number" onclick="selectPHQ(1, 2)">Más de la mitad</div>
+                    <div class="mood-number" onclick="selectPHQ(1, 3)">Casi todos los días</div>
+                </div>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="margin-bottom: 15px;">¿Qué tan seguido te has sentido decaído, deprimido o sin esperanza?</h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <div class="mood-number" onclick="selectPHQ(2, 0)">Nunca</div>
+                    <div class="mood-number" onclick="selectPHQ(2, 1)">Varios días</div>
+                    <div class="mood-number" onclick="selectPHQ(2, 2)">Más de la mitad</div>
+                    <div class="mood-number" onclick="selectPHQ(2, 3)">Casi todos los días</div>
+                </div>
+            </div>
+
+            <button class="continue-btn" onclick="processPHQ()">Evaluar Estado</button>
+        </div>
+
+        <!-- Kit SOS Personal -->
+        <div class="sos-kit">
+            <h2 style="color: #c0392b; margin-bottom: 20px;">🎒 Kit SOS Personal</h2>
+            
+            <div style="margin: 20px 0;">
+                <h4 style="margin-bottom: 10px;">3 Actividades que me ayudan:</h4>
+                <textarea id="helpfulActivities" class="input-field" placeholder="Ej: escuchar música, caminar, escribir, llamar a un amigo..."></textarea>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="margin-bottom: 10px;">2 Contactos de confianza:</h4>
+                <input type="text" id="contact1" class="input-field" style="min-height: 50px; margin-bottom: 10px;" placeholder="Contacto 1: Nombre y teléfono">
+                <input type="text" id="contact2" class="input-field" style="min-height: 50px;" placeholder="Contacto 2: Nombre y teléfono">
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h4 style="margin-bottom: 10px;">Frases recordatorias personales:</h4>
+                <textarea id="personalPhrases" class="input-field" placeholder="Ej: 'Esto pasará, no estoy solo', 'He superado cosas difíciles antes'..."></textarea>
+            </div>
+
+            <button class="continue-btn" onclick="saveSOSKit()">Guardar Kit SOS</button>
+        </div>
+
+        <!-- Sección de Emergencia -->
+        <div class="emergency-section" id="emergencySection" style="display: none;">
+            <h2 style="color: #e74c3c; margin-bottom: 25px;">🚨 PROTOCOLO SOS ACTIVADO</h2>
+            <p style="margin-bottom: 25px; font-size: 1.2rem;">
+                Se ha detectado una situación de riesgo. Es importante que busques ayuda inmediatamente.
+            </p>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h4 style="color: #e74c3c; margin-bottom: 10px;">🇲🇽 México</h4>
+                    <p><strong>Línea de la Vida</strong></p>
+                    <p style="font-size: 1.3rem; font-weight: bold;">800 911 2000</p>
+                    <p>24/7 - Gratuita</p>
+                </div>
+                
+                <div class="contact-card">
+                    <h4 style="color: #e74c3c; margin-bottom: 10px;">🌍 Internacional</h4>
+                    <p><strong>Suicide Prevention</strong></p>
+                    <p style="font-size: 1.3rem; font-weight: bold;">988</p>
+                    <p>24/7 - USA/Canadá</p>
+                </div>
+                
+                <div class="contact-card">
+                    <h4 style="color: #e74c3c; margin-bottom: 10px;">🆘 Emergencias</h4>
+                    <p><strong>Servicios de Emergencia</strong></p>
+                    <p style="font-size: 1.3rem; font-weight: bold;">911</p>
+                    <p>Inmediato</p>
+                </div>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h3 style="color: #e74c3c; margin-bottom: 15px;">Acciones Inmediatas:</h3>
+                <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                    <p style="margin: 10px 0;">✅ Contacta a uno de tus contactos de confianza</p>
+                    <p style="margin: 10px 0;">✅ Llama a una línea de crisis</p>
+                    <p style="margin: 10px 0;">✅ Ve a un lugar seguro con otras personas</p>
+                    <p style="margin: 10px 0;">✅ Recuerda: esto es temporal y hay ayuda disponible</p>
+                </div>
+            </div>
+
+            <a href="tel:8009112000" class="emergency-btn">📞 LLAMAR LÍNEA DE LA VIDA</a>
+            <button class="emergency-btn" onclick="showSOSKit()">🎒 VER MI KIT SOS</button>
+        </div>
+
+        <!-- Contrato de Seguridad -->
+        <div class="sos-kit">
+            <h2 style="color: #c0392b; margin-bottom: 20px;">📋 Contrato de Seguridad Personal</h2>
+            <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 10px; margin: 15px 0;">
+                <p style="line-height: 1.6; margin-bottom: 15px;">
+                    <strong>Me comprometo a:</strong>
+                </p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>No hacerme daño a mí mismo</li>
+                    <li>Contactar a alguien de confianza si tengo pensamientos de autolesión</li>
+                    <li>Llamar a una línea de crisis si no puedo contactar a mis personas de apoyo</li>
+                    <li>Buscar ayuda profesional si estos sentimientos persisten</li>
+                    <li>Recordar que estos sentimientos son temporales</li>
+                </ul>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="safetyContract" style="transform: scale(1.5);">
+                    <span>Acepto y me comprometo con este contrato de seguridad</span>
+                </label>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="evaluacion_integral_completa.html" class="emergency-btn" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                🏠 VOLVER AL INICIO
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let currentMood = null;
+        let phqScores = {};
+        let sosData = {};
+
+        function selectMood(score) {
+            document.querySelectorAll('.mood-number').forEach(num => num.classList.remove('selected'));
+            event.target.classList.add('selected');
+            currentMood = score;
+        }
+
+        function selectPHQ(question, score) {
+            const questionDiv = event.target.parentElement;
+            questionDiv.querySelectorAll('.mood-number').forEach(num => num.classList.remove('selected'));
+            event.target.classList.add('selected');
+            phqScores[question] = score;
+        }
+
+        function processCheckin() {
+            if (currentMood === null) {
+                alert('Por favor selecciona tu estado de ánimo del 0 al 10');
+                return;
+            }
+
+            const moodWord = document.getElementById('moodWord').value;
+            const weeklyNeeds = document.getElementById('weeklyNeeds').value;
+
+            // Guardar datos del check-in
+            const checkinData = {
+                mood: currentMood,
+                word: moodWord,
+                needs: weeklyNeeds,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('lastCheckin', JSON.stringify(checkinData));
+
+            // Determinar nivel de alerta
+            if (currentMood <= 3) {
+                // ROJO - Activar protocolo SOS
+                document.getElementById('phqSection').style.display = 'block';
+                document.getElementById('emergencySection').style.display = 'block';
+                alert('⚠️ ALERTA ROJA: Se ha activado el protocolo SOS. Por favor completa la evaluación rápida.');
+            } else if (currentMood <= 6) {
+                // AMARILLO - Precaución
+                alert('⚠️ ALERTA AMARILLA: Se recomienda contactar con tu red de apoyo y considerar ayuda profesional.');
+                showSupportRecommendations();
+            } else {
+                // VERDE - Normal
+                alert('✅ ESTADO VERDE: Excelente, continúa con tu rutina de autocuidado.');
+            }
+        }
+
+        function processPHQ() {
+            if (Object.keys(phqScores).length < 2) {
+                alert('Por favor responde ambas preguntas');
+                return;
+            }
+
+            const totalScore = Object.values(phqScores).reduce((a, b) => a + b, 0);
+            
+            if (totalScore >= 3) {
+                alert('🚨 EVALUACIÓN CRÍTICA: Es importante que busques ayuda profesional inmediatamente.');
+                document.getElementById('emergencySection').style.display = 'block';
+            } else {
+                alert('📊 Evaluación completada. Se recomienda seguimiento cercano.');
+            }
+        }
+
+        function saveSOSKit() {
+            const activities = document.getElementById('helpfulActivities').value;
+            const contact1 = document.getElementById('contact1').value;
+            const contact2 = document.getElementById('contact2').value;
+            const phrases = document.getElementById('personalPhrases').value;
+
+            sosData = {
+                activities: activities,
+                contacts: [contact1, contact2],
+                phrases: phrases,
+                created: new Date().toISOString()
+            };
+
+            localStorage.setItem('sosKit', JSON.stringify(sosData));
+            alert('✅ Kit SOS guardado correctamente. Siempre estará disponible cuando lo necesites.');
+        }
+
+        function showSOSKit() {
+            const savedKit = localStorage.getItem('sosKit');
+            if (savedKit) {
+                const kit = JSON.parse(savedKit);
+                let kitDisplay = `
+                    🎒 TU KIT SOS PERSONAL:
+                    
+                    📝 Actividades que te ayudan:
+                    ${kit.activities}
+                    
+                    📞 Contactos de confianza:
+                    ${kit.contacts.join('\n')}
+                    
+                    💭 Tus frases recordatorias:
+                    ${kit.phrases}
+                `;
+                alert(kitDisplay);
+            } else {
+                alert('No tienes un Kit SOS guardado. Por favor créalo primero.');
+            }
+        }
+
+        function showSupportRecommendations() {
+            const recommendations = `
+                📋 RECOMENDACIONES DE APOYO:
+                
+                ✅ Contacta a un amigo o familiar de confianza
+                ✅ Considera hablar con un profesional de salud mental
+                ✅ Mantén rutinas básicas: sueño, alimentación, ejercicio
+                ✅ Evita decisiones importantes hasta sentirte mejor
+                ✅ Practica técnicas de relajación o mindfulness
+                
+                Si los síntomas persisten o empeoran, busca ayuda profesional.
+            `;
+            
+            setTimeout(() => {
+                alert(recommendations);
+            }, 2000);
+        }
+
+        // Cargar datos previos si existen
+        window.onload = function() {
+            const savedKit = localStorage.getItem('sosKit');
+            if (savedKit) {
+                const kit = JSON.parse(savedKit);
+                document.getElementById('helpfulActivities').value = kit.activities || '';
+                document.getElementById('contact1').value = kit.contacts[0] || '';
+                document.getElementById('contact2').value = kit.contacts[1] || '';
+                document.getElementById('personalPhrases').value = kit.phrases || '';
+            }
+        };
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

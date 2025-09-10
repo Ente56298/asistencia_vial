@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Permanencia Continua - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #16537e 0%, #1e3c72 50%, #2a5298 100%);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #1e3c72;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #4a90e2;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .permanencia-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .permanencia-card {
+            background: rgba(30, 60, 114, 0.1);
+            border: 2px solid #1e3c72;
+            border-radius: 20px;
+            padding: 25px;
+        }
+        .card-title {
+            color: #4a90e2;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .compromiso-levels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .compromiso-card {
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .compromiso-basico {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: #f39c12;
+        }
+        .compromiso-intermedio {
+            background: rgba(52, 152, 219, 0.2);
+            border-color: #3498db;
+        }
+        .compromiso-avanzado {
+            background: rgba(155, 89, 182, 0.2);
+            border-color: #9b59b6;
+        }
+        .compromiso-card:hover {
+            transform: scale(1.05);
+        }
+        .compromiso-card.selected {
+            border-width: 5px;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+        }
+        .timeline-container {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(30, 60, 114, 0.2);
+            border-radius: 10px;
+            border-left: 4px solid #4a90e2;
+        }
+        .timeline-icon {
+            font-size: 2rem;
+            min-width: 50px;
+        }
+        .continuidad-tracker {
+            background: rgba(39, 174, 96, 0.1);
+            border: 2px solid #27ae60;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .continuidad-meter {
+            width: 100%;
+            height: 30px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+            position: relative;
+        }
+        .continuidad-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f39c12 0%, #3498db 50%, #9b59b6 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .continuidad-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .apoyo-tipos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .apoyo-card {
+            background: rgba(0,0,0,0.4);
+            border: 2px solid #7f8c8d;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .apoyo-card:hover {
+            border-color: #4a90e2;
+            background: rgba(74, 144, 226, 0.2);
+        }
+        .apoyo-card.selected {
+            border-color: #27ae60;
+            background: rgba(39, 174, 96, 0.2);
+        }
+        .input-field {
+            width: 100%;
+            min-height: 80px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #1e3c72;
+            border-radius: 10px;
+            color: #ffffff;
+            padding: 15px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        .checkbox-group {
+            display: grid;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .checkbox-item:hover {
+            background: rgba(74, 144, 226, 0.2);
+        }
+        .checkbox-item input[type="checkbox"] {
+            transform: scale(1.3);
+        }
+        .permanencia-btn {
+            background: linear-gradient(135deg, #1e3c72, #4a90e2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        .permanencia-btn:hover {
+            transform: scale(1.05);
+        }
+        .alert-box {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+        .alert-success {
+            background: rgba(39, 174, 96, 0.2);
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+        .alert-info {
+            background: rgba(52, 152, 219, 0.2);
+            border-color: #3498db;
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🔄 Sistema de Permanencia Continua CO•RA</h1>
+            <p style="color: #74b9ff; margin-bottom: 20px;">
+                Compromiso real a largo plazo para apoyo continuo y sostenible
+            </p>
+        </div>
+
+        <div class="permanencia-grid">
+            <!-- Niveles de Compromiso -->
+            <div class="permanencia-card">
+                <h3 class="card-title">📅 Niveles de Compromiso Temporal</h3>
+                
+                <div class="compromiso-levels">
+                    <div class="compromiso-card compromiso-basico" onclick="selectCompromiso('basico')">
+                        <h4 style="color: #f39c12; margin-bottom: 10px;">🟡 BÁSICO</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>3-6 meses</strong></p>
+                        <p style="font-size: 0.8rem;">Apoyo puntual y seguimiento</p>
+                    </div>
+                    <div class="compromiso-card compromiso-intermedio" onclick="selectCompromiso('intermedio')">
+                        <h4 style="color: #3498db; margin-bottom: 10px;">🔵 INTERMEDIO</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>6-12 meses</strong></p>
+                        <p style="font-size: 0.8rem;">Acompañamiento continuo</p>
+                    </div>
+                    <div class="compromiso-card compromiso-avanzado" onclick="selectCompromiso('avanzado')">
+                        <h4 style="color: #9b59b6; margin-bottom: 10px;">🟣 AVANZADO</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>1+ años</strong></p>
+                        <p style="font-size: 0.8rem;">Transformación profunda</p>
+                    </div>
+                </div>
+
+                <div class="alert-box alert-info">
+                    ℹ️ El nivel de compromiso determina el tipo de apoyo que puedes brindar y recibir
+                </div>
+            </div>
+
+            <!-- Timeline de Permanencia -->
+            <div class="permanencia-card">
+                <h3 class="card-title">⏰ Timeline de Permanencia</h3>
+                
+                <div class="timeline-container">
+                    <div class="timeline-item">
+                        <div class="timeline-icon">🌱</div>
+                        <div>
+                            <h4 style="color: #4a90e2;">Mes 1-2: Establecimiento</h4>
+                            <p style="font-size: 0.9rem;">Conexión inicial, evaluación de necesidades, plan de apoyo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">🌿</div>
+                        <div>
+                            <h4 style="color: #4a90e2;">Mes 3-6: Desarrollo</h4>
+                            <p style="font-size: 0.9rem;">Apoyo activo, seguimiento regular, ajustes del plan</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">🌳</div>
+                        <div>
+                            <h4 style="color: #4a90e2;">Mes 6-12: Consolidación</h4>
+                            <p style="font-size: 0.9rem;">Autonomía progresiva, reciprocidad activa</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">🌟</div>
+                        <div>
+                            <h4 style="color: #4a90e2;">12+ meses: Trascendencia</h4>
+                            <p style="font-size: 0.9rem;">Transformación completa, mentor para otros</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracker de Continuidad -->
+            <div class="permanencia-card">
+                <h3 class="card-title">📊 Tracker de Continuidad</h3>
+                
+                <div class="continuidad-tracker">
+                    <h4 style="color: #27ae60; margin-bottom: 15px;">Permanencia Actual:</h4>
+                    
+                    <div class="continuidad-meter">
+                        <div class="continuidad-fill" id="continuidadFill" style="width: 45%;"></div>
+                        <div class="continuidad-indicator" id="continuidadText">5.4 meses</div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
+                        <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #27ae60; font-weight: bold;">Apoyo Brindado</div>
+                            <div style="font-size: 1.5rem; color: white;" id="apoyoBrindado">127 horas</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #3498db; font-weight: bold;">Consistencia</div>
+                            <div style="font-size: 1.5rem; color: white;" id="consistencia">92%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-box alert-success">
+                    ✅ Permanencia estable: Cumples compromisos a largo plazo
+                </div>
+            </div>
+
+            <!-- Tipos de Apoyo Continuo -->
+            <div class="permanencia-card">
+                <h3 class="card-title">🤝 Tipos de Apoyo Continuo</h3>
+                
+                <div class="apoyo-tipos">
+                    <div class="apoyo-card" onclick="selectApoyo('mentoria')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">👨‍🏫</div>
+                        <h4>Mentoría</h4>
+                        <p style="font-size: 0.8rem;">Guía a largo plazo</p>
+                    </div>
+                    <div class="apoyo-card" onclick="selectApoyo('acompanamiento')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🤝</div>
+                        <h4>Acompañamiento</h4>
+                        <p style="font-size: 0.8rem;">Presencia constante</p>
+                    </div>
+                    <div class="apoyo-card" onclick="selectApoyo('desarrollo')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📈</div>
+                        <h4>Desarrollo</h4>
+                        <p style="font-size: 0.8rem;">Crecimiento progresivo</p>
+                    </div>
+                    <div class="apoyo-card" onclick="selectApoyo('sanacion')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🌿</div>
+                        <h4>Sanación</h4>
+                        <p style="font-size: 0.8rem;">Proceso terapéutico</p>
+                    </div>
+                    <div class="apoyo-card" onclick="selectApoyo('proyecto')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
+                        <h4>Proyecto</h4>
+                        <p style="font-size: 0.8rem;">Objetivo específico</p>
+                    </div>
+                    <div class="apoyo-card" onclick="selectApoyo('crisis')">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🆘</div>
+                        <h4>Crisis</h4>
+                        <p style="font-size: 0.8rem;">Apoyo intensivo</p>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #4a90e2; margin-bottom: 10px;">Describe el tipo de apoyo continuo que necesitas/ofreces:</h4>
+                    <textarea id="descripcionApoyo" class="input-field" placeholder="Ej: Necesito mentoría en desarrollo profesional durante 8 meses, con sesiones semanales de 2 horas..."></textarea>
+                </div>
+            </div>
+
+            <!-- Compromisos de Permanencia -->
+            <div class="permanencia-card">
+                <h3 class="card-title">📋 Compromisos de Permanencia</h3>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="comp1" onchange="updateCompromisos()">
+                        <label for="comp1">Me comprometo a mantener contacto regular según el plan acordado</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="comp2" onchange="updateCompromisos()">
+                        <label for="comp2">Notificaré con 2 semanas de anticipación si necesito pausar el apoyo</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="comp3" onchange="updateCompromisos()">
+                        <label for="comp3">Mantendré reciprocidad activa durante todo el proceso</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="comp4" onchange="updateCompromisos()">
+                        <label for="comp4">Participaré en evaluaciones de progreso mensuales</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="comp5" onchange="updateCompromisos()">
+                        <label for="comp5">Al completar mi proceso, ayudaré a otros en situación similar</label>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #4a90e2; margin-bottom: 10px;">Plan de Contingencia:</h4>
+                    <textarea id="planContingencia" class="input-field" placeholder="Describe qué harás si surgen obstáculos que impidan cumplir tu compromiso..."></textarea>
+                </div>
+
+                <div class="alert-box alert-warning" id="compromisosAlert">
+                    ⚠️ Completa todos los compromisos para acceder al apoyo continuo
+                </div>
+            </div>
+
+            <!-- Verificación de Permanencia -->
+            <div class="permanencia-card">
+                <h3 class="card-title">🔍 Verificación de Permanencia</h3>
+                
+                <div style="background: rgba(0,0,0,0.6); border-radius: 15px; padding: 25px; margin: 20px 0;">
+                    <h4 style="color: #4a90e2; margin-bottom: 15px;">Historial de Permanencia:</h4>
+                    
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px; margin: 5px 0;">
+                            <span>Compromisos Completados:</span>
+                            <span style="color: #27ae60; font-weight: bold;">3/3</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px; margin: 5px 0;">
+                            <span>Tiempo Promedio de Apoyo:</span>
+                            <span style="color: #3498db; font-weight: bold;">8.2 meses</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px; margin: 5px 0;">
+                            <span>Índice de Confiabilidad:</span>
+                            <span style="color: #9b59b6; font-weight: bold;">94%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #4a90e2; margin-bottom: 10px;">Referencias de Permanencia:</h4>
+                    <input type="text" class="input-field" style="min-height: 50px; margin-bottom: 10px;" placeholder="Contacto 1: Persona que puede verificar tu compromiso a largo plazo">
+                    <input type="text" class="input-field" style="min-height: 50px;" placeholder="Contacto 2: Referencia de apoyo continuo previo">
+                </div>
+            </div>
+
+            <!-- Panel de Control -->
+            <div class="permanencia-card">
+                <h3 class="card-title">🎛️ Panel de Control de Permanencia</h3>
+                
+                <div id="permanenciaStatus" class="alert-box alert-warning">
+                    ⚠️ Completa todos los requisitos para acceso a apoyo continuo
+                </div>
+
+                <div style="margin: 25px 0;">
+                    <h4 style="color: #4a90e2; margin-bottom: 15px;">Estado Actual:</h4>
+                    <div style="display: grid; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px;">
+                            <span>Nivel de Compromiso:</span>
+                            <span id="nivelStatus" style="color: #f39c12;">No seleccionado</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px;">
+                            <span>Tipo de Apoyo:</span>
+                            <span id="apoyoStatus" style="color: #f39c12;">No definido</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.4); border-radius: 8px;">
+                            <span>Compromisos:</span>
+                            <span id="compStatus" style="color: #e74c3c;">0/5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="permanencia-btn" onclick="submitPermanencia()" disabled id="submitBtn">
+                    🔄 SOLICITAR APOYO CONTINUO
+                </button>
+                
+                <button class="permanencia-btn" onclick="goToMatcheo()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                    ⚡ IR A MATCHEO CONTINUO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedCompromiso = null;
+        let selectedApoyo = [];
+        let compromisosCount = 0;
+
+        function selectCompromiso(nivel) {
+            document.querySelectorAll('.compromiso-card').forEach(card => card.classList.remove('selected'));
+            event.target.classList.add('selected');
+            selectedCompromiso = nivel;
+            
+            document.getElementById('nivelStatus').textContent = nivel.toUpperCase();
+            document.getElementById('nivelStatus').style.color = 
+                nivel === 'basico' ? '#f39c12' : nivel === 'intermedio' ? '#3498db' : '#9b59b6';
+            
+            updatePermanenciaStatus();
+        }
+
+        function selectApoyo(tipo) {
+            const card = event.target.closest('.apoyo-card');
+            
+            if (selectedApoyo.includes(tipo)) {
+                selectedApoyo = selectedApoyo.filter(a => a !== tipo);
+                card.classList.remove('selected');
+            } else {
+                selectedApoyo.push(tipo);
+                card.classList.add('selected');
+            }
+            
+            document.getElementById('apoyoStatus').textContent = 
+                selectedApoyo.length > 0 ? selectedApoyo.join(', ') : 'No definido';
+            document.getElementById('apoyoStatus').style.color = 
+                selectedApoyo.length > 0 ? '#27ae60' : '#f39c12';
+            
+            updatePermanenciaStatus();
+        }
+
+        function updateCompromisos() {
+            const checkboxes = document.querySelectorAll('#comp1, #comp2, #comp3, #comp4, #comp5');
+            compromisosCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            
+            document.getElementById('compStatus').textContent = `${compromisosCount}/5`;
+            document.getElementById('compStatus').style.color = compromisosCount === 5 ? '#27ae60' : '#e74c3c';
+            
+            const alertBox = document.getElementById('compromisosAlert');
+            if (compromisosCount === 5) {
+                alertBox.className = 'alert-box alert-success';
+                alertBox.innerHTML = '✅ Todos los compromisos de permanencia aceptados';
+            } else {
+                alertBox.className = 'alert-box alert-warning';
+                alertBox.innerHTML = `⚠️ Acepta ${5 - compromisosCount} compromisos restantes`;
+            }
+            
+            updatePermanenciaStatus();
+        }
+
+        function updatePermanenciaStatus() {
+            const statusDiv = document.getElementById('permanenciaStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            const hasCompromiso = selectedCompromiso !== null;
+            const hasApoyo = selectedApoyo.length > 0;
+            const hasCompromisos = compromisosCount === 5;
+            
+            if (hasCompromiso && hasApoyo && hasCompromisos) {
+                statusDiv.className = 'alert-box alert-success';
+                statusDiv.innerHTML = '✅ Listo para apoyo continuo a largo plazo';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            } else {
+                statusDiv.className = 'alert-box alert-warning';
+                statusDiv.innerHTML = '⚠️ Completa todos los requisitos para apoyo continuo';
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+            }
+        }
+
+        function submitPermanencia() {
+            const descripcionApoyo = document.getElementById('descripcionApoyo').value;
+            const planContingencia = document.getElementById('planContingencia').value;
+            
+            if (!descripcionApoyo.trim()) {
+                alert('Por favor describe el tipo de apoyo continuo que necesitas');
+                return;
+            }
+            
+            if (!planContingencia.trim()) {
+                alert('Por favor describe tu plan de contingencia');
+                return;
+            }
+            
+            // Guardar datos de permanencia
+            const permanenciaData = {
+                compromiso: selectedCompromiso,
+                tiposApoyo: selectedApoyo,
+                descripcion: descripcionApoyo,
+                planContingencia: planContingencia,
+                duracionEstimada: getDuracionByCompromiso(selectedCompromiso),
+                timestamp: new Date().toISOString(),
+                status: 'pending_matching'
+            };
+            
+            localStorage.setItem('permanenciaData', JSON.stringify(permanenciaData));
+            
+            alert('✅ Solicitud de apoyo continuo registrada. Buscando matches con permanencia compatible.');
+            
+            // Simular proceso de matching continuo
+            setTimeout(() => {
+                const duracion = getDuracionByCompromiso(selectedCompromiso);
+                alert(`🔄 Buscando usuarios con compromiso de ${duracion} para apoyo continuo. Esto puede tomar 24-48 horas.`);
+            }, 2000);
+        }
+
+        function getDuracionByCompromiso(compromiso) {
+            const duraciones = {
+                'basico': '3-6 meses',
+                'intermedio': '6-12 meses',
+                'avanzado': '1+ años'
+            };
+            return duraciones[compromiso] || 'No definido';
+        }
+
+        function goToMatcheo() {
+            window.location.href = 'sistema_matcheo_intencion.html';
+        }
+
+        // Simular datos de continuidad
+        function updateContinuidad() {
+            const meses = 5.4;
+            const horas = 127;
+            const consistencia = 92;
+            
+            document.getElementById('continuidadText').textContent = `${meses} meses`;
+            document.getElementById('apoyoBrindado').textContent = `${horas} horas`;
+            document.getElementById('consistencia').textContent = `${consistencia}%`;
+            
+            const percentage = Math.min(100, (meses / 12) * 100);
+            document.getElementById('continuidadFill').style.width = percentage + '%';
+        }
+
+        // Inicializar
+        window.onload = function() {
+            updateContinuidad();
+            updateCompromisos();
+        };
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

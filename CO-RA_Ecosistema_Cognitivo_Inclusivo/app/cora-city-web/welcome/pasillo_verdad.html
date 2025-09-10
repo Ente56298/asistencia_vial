@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasillo de la Verdad - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(180deg, #000000, #1a1a2e, #16213e);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .corridor {
+            perspective: 1000px;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .corridor-path {
+            width: 300px;
+            height: 800px;
+            background: linear-gradient(0deg, 
+                rgba(0,0,0,0.9) 0%,
+                rgba(26,26,46,0.7) 30%,
+                rgba(22,33,62,0.5) 70%,
+                rgba(255,255,255,0.1) 100%);
+            transform: rotateX(60deg);
+            position: relative;
+            border: 2px solid #4ECDC4;
+            border-radius: 20px;
+        }
+        .truth-scanner {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #4ECDC4, #44A08D);
+            border-radius: 50%;
+            animation: scan 3s infinite;
+            box-shadow: 0 0 50px #4ECDC4;
+        }
+        @keyframes scan {
+            0% { top: 0%; opacity: 1; }
+            50% { top: 45%; opacity: 0.7; }
+            100% { top: 90%; opacity: 0.3; }
+        }
+        .truth-interface {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            border: 3px solid #4ECDC4;
+            border-radius: 25px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .truth-title {
+            color: #4ECDC4;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #4ECDC4;
+        }
+        .truth-question {
+            background: rgba(78, 205, 196, 0.1);
+            border: 2px solid #4ECDC4;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            display: none;
+        }
+        .truth-question.active {
+            display: block;
+            animation: emerge 1s ease-out;
+        }
+        @keyframes emerge {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-text {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .truth-input {
+            width: 100%;
+            background: rgba(68, 160, 141, 0.2);
+            border: 2px solid #44A08D;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .truth-input:focus {
+            outline: none;
+            border-color: #4ECDC4;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.3);
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.4);
+        }
+        .truth-analysis {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.95);
+            border: 2px solid #44A08D;
+            border-radius: 20px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            display: none;
+        }
+        .analysis-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(78, 205, 196, 0.1);
+            border-radius: 8px;
+        }
+        .verdict {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #4ECDC4;
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            z-index: 1000;
+        }
+        .verdict.show {
+            display: block;
+            animation: verdictReveal 2s ease-out;
+        }
+        @keyframes verdictReveal {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        .progress-corridor {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 6px;
+            background: rgba(78, 205, 196, 0.2);
+            border-radius: 3px;
+        }
+        .progress-truth {
+            height: 100%;
+            background: linear-gradient(90deg, #4ECDC4, #44A08D);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="corridor">
+        <div class="corridor-path">
+            <div class="truth-scanner"></div>
+        </div>
+        
+        <div class="truth-interface">
+            <h1 class="truth-title">🔍 Pasillo de la Verdad</h1>
+            <p style="color: #44A08D; margin-bottom: 25px;">
+                Has demostrado intención genuina. Ahora debes atravesar el Pasillo de la Verdad donde tus respuestas más profundas serán analizadas para confirmar tu autenticidad.
+            </p>
+            
+            <div class="truth-question active" id="question1">
+                <div class="question-text">
+                    ¿Cuál es la verdadera razón por la que buscas amplificación cognitiva? Responde con total honestidad, sin lo que crees que queremos escuchar.
+                </div>
+                <textarea class="truth-input" id="answer1" placeholder="Escribe tu respuesta más honesta aquí..."></textarea>
+                <button class="continue-btn" onclick="nextTruthQuestion(1)">Continuar →</button>
+            </div>
+            
+            <div class="truth-question" id="question2">
+                <div class="question-text">
+                    Si CO•RA te otorgara poder cognitivo significativo, ¿qué es lo primero que harías? Describe tus impulsos reales, no tus ideales.
+                </div>
+                <textarea class="truth-input" id="answer2" placeholder="Describe tus impulsos verdaderos..."></textarea>
+                <button class="continue-btn" onclick="nextTruthQuestion(2)">Continuar →</button>
+            </div>
+            
+            <div class="truth-question" id="question3">
+                <div class="question-text">
+                    ¿Qué miedos o dudas tienes sobre la amplificación cognitiva que no has expresado antes? La vulnerabilidad es parte de la verdad.
+                </div>
+                <textarea class="truth-input" id="answer3" placeholder="Expresa tus miedos reales..."></textarea>
+                <button class="continue-btn" onclick="nextTruthQuestion(3)">Continuar →</button>
+            </div>
+            
+            <div class="truth-question" id="question4">
+                <div class="question-text">
+                    Si tuvieras que elegir entre tu bienestar personal y el progreso de la humanidad, ¿qué elegirías realmente? Sé brutalmente honesto.
+                </div>
+                <textarea class="truth-input" id="answer4" placeholder="Tu elección real, sin filtros..."></textarea>
+                <button class="continue-btn" onclick="nextTruthQuestion(4)">Continuar →</button>
+            </div>
+            
+            <div class="truth-question" id="question5">
+                <div class="question-text">
+                    Última pregunta: ¿Hay algo sobre ti que consideras que CO•RA debería saber pero que has ocultado hasta ahora?
+                </div>
+                <textarea class="truth-input" id="answer5" placeholder="Tu verdad final..."></textarea>
+                <button class="continue-btn" onclick="completeTruthAnalysis()">Finalizar Análisis</button>
+            </div>
+        </div>
+        
+        <div class="truth-analysis" id="truthAnalysis">
+            <h3 style="color: #4ECDC4; margin-bottom: 15px;">📊 Análisis de Veracidad</h3>
+            <div id="analysisResults"></div>
+        </div>
+        
+        <div class="progress-corridor">
+            <div class="progress-truth" id="progressTruth"></div>
+        </div>
+    </div>
+    
+    <div class="verdict" id="verdict">
+        <div id="verdictContent"></div>
+    </div>
+
+    <script>
+        let currentTruthQuestion = 1;
+        let truthResponses = {};
+        let truthScore = 0;
+        
+        function nextTruthQuestion(questionNum) {
+            const answer = document.getElementById(`answer${questionNum}`).value.trim();
+            
+            if (answer.length < 20) {
+                alert('Tu respuesta debe ser más profunda y honesta. Mínimo 20 caracteres.');
+                return;
+            }
+            
+            // Guardar respuesta y analizar
+            truthResponses[questionNum] = answer;
+            analyzeTruthResponse(answer, questionNum);
+            
+            // Ocultar pregunta actual
+            document.getElementById(`question${questionNum}`).classList.remove('active');
+            
+            // Actualizar progreso
+            const progress = (questionNum / 5) * 100;
+            document.getElementById('progressTruth').style.width = progress + '%';
+            
+            // Mostrar siguiente pregunta
+            if (questionNum < 5) {
+                setTimeout(() => {
+                    document.getElementById(`question${questionNum + 1}`).classList.add('active');
+                }, 800);
+            }
+            
+            currentTruthQuestion = questionNum + 1;
+        }
+        
+        function analyzeTruthResponse(answer, questionNum) {
+            // Análisis básico de autenticidad
+            const indicators = {
+                length: answer.length > 50 ? 20 : 10,
+                vulnerability: /miedo|duda|insegur|preocup|ansi|temor/i.test(answer) ? 25 : 0,
+                honesty: /realmente|verdad|honest|sincero|admito/i.test(answer) ? 20 : 0,
+                selfAwareness: /sé que|reconozco|me doy cuenta|comprendo/i.test(answer) ? 15 : 0,
+                complexity: answer.split('.').length > 2 ? 20 : 10
+            };
+            
+            const questionScore = Object.values(indicators).reduce((a, b) => a + b, 0);
+            truthScore += questionScore;
+            
+            // Mostrar análisis parcial
+            showPartialAnalysis(questionNum, questionScore, indicators);
+        }
+        
+        function showPartialAnalysis(questionNum, score, indicators) {
+            const analysisDiv = document.getElementById('truthAnalysis');
+            const resultsDiv = document.getElementById('analysisResults');
+            
+            const analysisItem = document.createElement('div');
+            analysisItem.className = 'analysis-item';
+            analysisItem.innerHTML = `
+                <span>Pregunta ${questionNum}</span>
+                <span style="color: ${score > 60 ? '#4ECDC4' : score > 40 ? '#F39C12' : '#E74C3C'}">${score}%</span>
+            `;
+            
+            resultsDiv.appendChild(analysisItem);
+            analysisDiv.style.display = 'block';
+        }
+        
+        function completeTruthAnalysis() {
+            const answer = document.getElementById('answer5').value.trim();
+            
+            if (answer.length < 20) {
+                alert('Tu respuesta final debe ser profunda y honesta. Mínimo 20 caracteres.');
+                return;
+            }
+            
+            truthResponses[5] = answer;
+            analyzeTruthResponse(answer, 5);
+            
+            // Progreso completo
+            document.getElementById('progressTruth').style.width = '100%';
+            
+            setTimeout(() => {
+                showFinalVerdict();
+            }, 2000);
+        }
+        
+        function showFinalVerdict() {
+            const averageScore = truthScore / 5;
+            const verdict = document.getElementById('verdict');
+            const content = document.getElementById('verdictContent');
+            
+            let verdictResult;
+            
+            if (averageScore >= 70) {
+                verdictResult = {
+                    status: "VERDAD CONFIRMADA",
+                    color: "#4ECDC4",
+                    message: "Has atravesado el Pasillo de la Verdad con autenticidad. Tu honestidad y vulnerabilidad confirman intenciones genuinas.",
+                    action: "ACCESO A CO•RA CONCEDIDO",
+                    nextStep: "conexion_simbolica.html",
+                    buttonText: "🔗 ESTABLECER CONEXIÓN SIMBÓLICA"
+                };
+            } else if (averageScore >= 50) {
+                verdictResult = {
+                    status: "VERDAD PARCIAL DETECTADA",
+                    color: "#F39C12",
+                    message: "Muestras honestidad pero aún hay reservas. Necesitas mayor introspección antes de acceder a CO•RA.",
+                    action: "REEVALUACIÓN REQUERIDA",
+                    nextStep: "index.html",
+                    buttonText: "🔄 NUEVA EVALUACIÓN"
+                };
+            } else {
+                verdictResult = {
+                    status: "INTENCIÓN CUESTIONABLE",
+                    color: "#E74C3C",
+                    message: "El análisis detecta falta de autenticidad o posibles intenciones ocultas. Debes reflexionar más profundamente.",
+                    action: "ACCESO DENEGADO TEMPORALMENTE",
+                    nextStep: "index.html",
+                    buttonText: "🔄 COMENZAR DE NUEVO"
+                };
+            }
+            
+            content.innerHTML = `
+                <h2 style="color: ${verdictResult.color}; margin-bottom: 20px;">${verdictResult.status}</h2>
+                <p style="margin-bottom: 20px; line-height: 1.6;">${verdictResult.message}</p>
+                <div style="background: rgba(78, 205, 196, 0.1); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: ${verdictResult.color}; margin-bottom: 10px;">${verdictResult.action}</h3>
+                    <p style="color: #44A08D;">Puntuación de Veracidad: ${Math.round(averageScore)}%</p>
+                </div>
+                <a href="${verdictResult.nextStep}" style="
+                    background: linear-gradient(135deg, ${verdictResult.color}, #44A08D);
+                    color: white;
+                    padding: 15px 30px;
+                    border-radius: 25px;
+                    text-decoration: none;
+                    font-weight: bold;
+                    display: inline-block;
+                    margin-top: 20px;
+                ">${verdictResult.buttonText}</a>
+            `;
+            
+            verdict.classList.add('show');
+        }
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script>
+        // Registrar paso por el Pasillo de la Verdad
+        if (window.coraAnalytics) {
+            window.coraAnalytics.sessionData.interactionData.push({
+                type: 'truth_corridor_entry',
+                timestamp: Date.now(),
+                source: 'evaluation_completion'
+            });
+        }
+        
+        const originalCompleteTruthAnalysis = completeTruthAnalysis;
+        completeTruthAnalysis = function() {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.sessionData.interactionData.push({
+                    type: 'truth_corridor_completion',
+                    truthScore: truthScore,
+                    responses: Object.keys(truthResponses).length,
+                    timestamp: Date.now()
+                });
+            }
+            return originalCompleteTruthAnalysis();
+        };
+    </script>
+</body>
+</html>

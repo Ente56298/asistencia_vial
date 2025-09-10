@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pruebas de Comportamiento - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #2c3e50, #34495e);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .behavior-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(0,0,0,0.8);
+            border-radius: 20px;
+            border: 2px solid #3498db;
+        }
+        .test-title {
+            color: #3498db;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        .test-phase {
+            background: rgba(52, 152, 219, 0.1);
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .test-phase.active {
+            display: block;
+            animation: phaseIn 0.8s ease-out;
+        }
+        @keyframes phaseIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .phase-title {
+            color: #3498db;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        .behavior-task {
+            background: rgba(0,0,0,0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #2980b9;
+        }
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .task-item {
+            background: rgba(41, 128, 185, 0.2);
+            border: 2px solid #2980b9;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .task-item:hover {
+            background: rgba(52, 152, 219, 0.3);
+            transform: scale(1.05);
+        }
+        .task-item.selected {
+            background: rgba(52, 152, 219, 0.5);
+            border-color: #ffffff;
+        }
+        .sequence-display {
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+        .pattern-cell {
+            width: 60px;
+            height: 60px;
+            background: rgba(52, 152, 219, 0.2);
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pattern-cell.active {
+            background: #3498db;
+            box-shadow: 0 0 15px #3498db;
+        }
+        .timer-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .behavior-metrics {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #27ae60;
+            color: #27ae60;
+            font-size: 0.9rem;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+        }
+        .results-panel {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #3498db;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-display" id="timerDisplay">Tiempo: 00:00</div>
+    <div class="behavior-metrics" id="behaviorMetrics">
+        <div>Clics: <span id="clickCount">0</span></div>
+        <div>Precisión: <span id="accuracy">100%</span></div>
+        <div>Velocidad: <span id="speed">Normal</span></div>
+    </div>
+
+    <div class="test-container">
+        <div class="behavior-header">
+            <h1 class="test-title">🧪 Pruebas de Comportamiento CO•RA</h1>
+            <p>Tu comportamiento será analizado en tiempo real para evaluar patrones cognitivos, emocionales y de toma de decisiones</p>
+        </div>
+
+        <!-- Fase 1: Reacción bajo presión -->
+        <div class="test-phase active" id="phase1">
+            <h2 class="phase-title">Fase 1: Reacción bajo Presión</h2>
+            <div class="behavior-task">
+                <p>Haz clic en los números en orden ascendente lo más rápido posible. Tienes 30 segundos.</p>
+                <div class="task-grid" id="numberGrid"></div>
+                <button class="continue-btn" onclick="startPhase1()" id="startBtn1">Iniciar Prueba</button>
+            </div>
+        </div>
+
+        <!-- Fase 2: Memoria de trabajo -->
+        <div class="test-phase" id="phase2">
+            <h2 class="phase-title">Fase 2: Memoria de Trabajo</h2>
+            <div class="behavior-task">
+                <p>Memoriza la secuencia que se muestra y repítela exactamente.</p>
+                <div class="sequence-display" id="sequenceDisplay">Presiona Iniciar</div>
+                <div class="pattern-grid" id="patternGrid"></div>
+                <button class="continue-btn" onclick="startPhase2()" id="startBtn2">Iniciar Secuencia</button>
+            </div>
+        </div>
+
+        <!-- Fase 3: Toma de decisiones -->
+        <div class="test-phase" id="phase3">
+            <h2 class="phase-title">Fase 3: Toma de Decisiones Éticas</h2>
+            <div class="behavior-task">
+                <p>Responde rápidamente a estos dilemas. Tu tiempo de respuesta y elección serán analizados.</p>
+                <div id="dilemmaContainer"></div>
+            </div>
+        </div>
+
+        <!-- Fase 4: Resistencia al estrés -->
+        <div class="test-phase" id="phase4">
+            <h2 class="phase-title">Fase 4: Resistencia al Estrés</h2>
+            <div class="behavior-task">
+                <p>Mantén el cursor dentro del área móvil mientras se acelera y cambia de tamaño.</p>
+                <div id="stressTest" style="position: relative; height: 300px; background: rgba(0,0,0,0.8); border-radius: 15px; margin: 20px 0;">
+                    <div id="movingTarget" style="position: absolute; width: 50px; height: 50px; background: #3498db; border-radius: 50%; transition: all 0.1s;"></div>
+                </div>
+                <button class="continue-btn" onclick="startPhase4()" id="startBtn4">Iniciar Prueba de Estrés</button>
+            </div>
+        </div>
+
+        <div class="results-panel" id="resultsPanel">
+            <h2 style="color: #3498db; margin-bottom: 25px;">📊 Análisis de Comportamiento Completado</h2>
+            <div id="behaviorResults"></div>
+        </div>
+    </div>
+
+    <script>
+        class BehaviorAnalyzer {
+            constructor() {
+                this.currentPhase = 1;
+                this.startTime = Date.now();
+                this.behaviorData = {
+                    clicks: 0,
+                    accuracy: 100,
+                    reactionTimes: [],
+                    stressLevel: 0,
+                    decisionPattern: [],
+                    memoryScore: 0
+                };
+                this.timer = null;
+                this.updateTimer();
+            }
+
+            updateTimer() {
+                this.timer = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    document.getElementById('timerDisplay').textContent = 
+                        `Tiempo: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+
+            updateMetrics() {
+                document.getElementById('clickCount').textContent = this.behaviorData.clicks;
+                document.getElementById('accuracy').textContent = Math.round(this.behaviorData.accuracy) + '%';
+                
+                const avgReaction = this.behaviorData.reactionTimes.length > 0 
+                    ? this.behaviorData.reactionTimes.reduce((a,b) => a+b) / this.behaviorData.reactionTimes.length 
+                    : 0;
+                
+                const speed = avgReaction < 500 ? 'Rápida' : avgReaction < 1000 ? 'Normal' : 'Lenta';
+                document.getElementById('speed').textContent = speed;
+            }
+
+            recordClick(correct = true) {
+                this.behaviorData.clicks++;
+                if (!correct) {
+                    this.behaviorData.accuracy = (this.behaviorData.accuracy * (this.behaviorData.clicks - 1) + 0) / this.behaviorData.clicks;
+                }
+                this.updateMetrics();
+            }
+
+            nextPhase() {
+                document.getElementById(`phase${this.currentPhase}`).classList.remove('active');
+                this.currentPhase++;
+                if (this.currentPhase <= 4) {
+                    setTimeout(() => {
+                        document.getElementById(`phase${this.currentPhase}`).classList.add('active');
+                    }, 500);
+                } else {
+                    this.showResults();
+                }
+            }
+
+            showResults() {
+                clearInterval(this.timer);
+                document.querySelectorAll('.test-phase').forEach(phase => phase.style.display = 'none');
+                
+                const results = this.analyzeBehavior();
+                document.getElementById('behaviorResults').innerHTML = results;
+                document.getElementById('resultsPanel').style.display = 'block';
+            }
+
+            analyzeBehavior() {
+                const totalTime = Math.floor((Date.now() - this.startTime) / 1000);
+                const avgReaction = this.behaviorData.reactionTimes.length > 0 
+                    ? Math.round(this.behaviorData.reactionTimes.reduce((a,b) => a+b) / this.behaviorData.reactionTimes.length)
+                    : 0;
+
+                let behaviorProfile = "Analítico";
+                let coraCompatibility = 75;
+
+                if (this.behaviorData.accuracy > 90 && avgReaction < 600) {
+                    behaviorProfile = "Eficiente y Preciso";
+                    coraCompatibility = 95;
+                } else if (this.behaviorData.stressLevel < 30) {
+                    behaviorProfile = "Resistente al Estrés";
+                    coraCompatibility = 85;
+                } else if (avgReaction > 1000) {
+                    behaviorProfile = "Reflexivo y Cauteloso";
+                    coraCompatibility = 70;
+                }
+
+                const nextStep = coraCompatibility >= 80 ? 'evaluacion_acompanamiento.html' : 'index.html';
+                const nextText = coraCompatibility >= 80 ? '🤝 EVALUACIÓN DE ACOMPAÑAMIENTO' : '🔄 NUEVA EVALUACIÓN';
+
+                return `
+                    <div style="background: rgba(52, 152, 219, 0.2); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                        <h3 style="color: #3498db; margin-bottom: 15px;">Perfil Comportamental: ${behaviorProfile}</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+                            <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px;">
+                                <strong>Precisión:</strong> ${Math.round(this.behaviorData.accuracy)}%
+                            </div>
+                            <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px;">
+                                <strong>Tiempo Reacción:</strong> ${avgReaction}ms
+                            </div>
+                            <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px;">
+                                <strong>Resistencia Estrés:</strong> ${100 - this.behaviorData.stressLevel}%
+                            </div>
+                            <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px;">
+                                <strong>Memoria Trabajo:</strong> ${this.behaviorData.memoryScore}%
+                            </div>
+                        </div>
+                        <p style="margin: 15px 0;">Compatibilidad CO•RA: <strong style="color: ${coraCompatibility >= 80 ? '#27ae60' : '#f39c12'}">${coraCompatibility}%</strong></p>
+                    </div>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${nextStep}" style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 20px 40px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 1.2rem;">${nextText}</a>
+                        <p style="margin-top: 15px; color: #2980b9; font-size: 0.9rem;">Determinaremos si necesitas acompañamiento guiado real</p>
+                    </div>
+                `;
+            }
+        }
+
+        const analyzer = new BehaviorAnalyzer();
+
+        function startPhase1() {
+            const grid = document.getElementById('numberGrid');
+            const numbers = Array.from({length: 12}, (_, i) => i + 1);
+            numbers.sort(() => Math.random() - 0.5);
+            
+            grid.innerHTML = '';
+            numbers.forEach(num => {
+                const item = document.createElement('div');
+                item.className = 'task-item';
+                item.textContent = num;
+                item.onclick = () => selectNumber(num, item);
+                grid.appendChild(item);
+            });
+            
+            document.getElementById('startBtn1').style.display = 'none';
+            
+            let expectedNumber = 1;
+            let phaseStartTime = Date.now();
+            
+            window.selectNumber = function(num, element) {
+                const reactionTime = Date.now() - phaseStartTime;
+                analyzer.behaviorData.reactionTimes.push(reactionTime);
+                
+                if (num === expectedNumber) {
+                    element.classList.add('selected');
+                    expectedNumber++;
+                    analyzer.recordClick(true);
+                    
+                    if (expectedNumber > 12) {
+                        setTimeout(() => analyzer.nextPhase(), 1000);
+                    }
+                } else {
+                    analyzer.recordClick(false);
+                    analyzer.behaviorData.stressLevel += 5;
+                }
+                phaseStartTime = Date.now();
+            };
+        }
+
+        function startPhase2() {
+            const sequence = [];
+            const grid = document.getElementById('patternGrid');
+            
+            // Crear grid de patrones
+            grid.innerHTML = '';
+            for (let i = 0; i < 16; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'pattern-cell';
+                cell.dataset.index = i;
+                grid.appendChild(cell);
+            }
+            
+            // Generar secuencia aleatoria
+            for (let i = 0; i < 5; i++) {
+                sequence.push(Math.floor(Math.random() * 16));
+            }
+            
+            // Mostrar secuencia
+            let sequenceIndex = 0;
+            const showSequence = setInterval(() => {
+                if (sequenceIndex < sequence.length) {
+                    const cells = document.querySelectorAll('.pattern-cell');
+                    cells[sequence[sequenceIndex]].classList.add('active');
+                    
+                    setTimeout(() => {
+                        cells[sequence[sequenceIndex]].classList.remove('active');
+                    }, 500);
+                    
+                    sequenceIndex++;
+                } else {
+                    clearInterval(showSequence);
+                    startUserInput(sequence);
+                }
+            }, 800);
+            
+            document.getElementById('startBtn2').style.display = 'none';
+        }
+
+        function startUserInput(correctSequence) {
+            let userSequence = [];
+            const cells = document.querySelectorAll('.pattern-cell');
+            
+            cells.forEach((cell, index) => {
+                cell.onclick = () => {
+                    userSequence.push(index);
+                    cell.classList.add('active');
+                    
+                    setTimeout(() => cell.classList.remove('active'), 200);
+                    
+                    if (userSequence.length === correctSequence.length) {
+                        const correct = userSequence.every((val, i) => val === correctSequence[i]);
+                        analyzer.behaviorData.memoryScore = correct ? 100 : Math.max(0, 100 - (userSequence.length * 20));
+                        
+                        setTimeout(() => analyzer.nextPhase(), 1000);
+                    }
+                };
+            });
+        }
+
+        function startPhase3() {
+            const dilemmas = [
+                {
+                    question: "Un sistema de IA puede salvar 1000 vidas pero requiere sacrificar la privacidad de millones. ¿Procedes?",
+                    options: ["Sí, el bien mayor justifica el sacrificio", "No, la privacidad es un derecho fundamental"]
+                },
+                {
+                    question: "Tienes información que puede prevenir un desastre pero revelarla destruiría la vida de un inocente. ¿Qué haces?",
+                    options: ["Revelo la información", "Protejo al inocente"]
+                }
+            ];
+            
+            let currentDilemma = 0;
+            const container = document.getElementById('dilemmaContainer');
+            
+            function showDilemma() {
+                if (currentDilemma < dilemmas.length) {
+                    const dilemma = dilemmas[currentDilemma];
+                    const startTime = Date.now();
+                    
+                    container.innerHTML = `
+                        <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 12px; margin: 15px 0;">
+                            <p style="margin-bottom: 20px; font-size: 1.1rem;">${dilemma.question}</p>
+                            <div style="display: grid; gap: 10px;">
+                                ${dilemma.options.map((option, i) => 
+                                    `<button class="task-item" onclick="selectDilemmaOption(${i}, ${Date.now()})" style="text-align: left; padding: 15px;">${option}</button>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    window.selectDilemmaOption = function(choice, clickTime) {
+                        const reactionTime = clickTime - startTime;
+                        analyzer.behaviorData.reactionTimes.push(reactionTime);
+                        analyzer.behaviorData.decisionPattern.push({choice, reactionTime});
+                        
+                        currentDilemma++;
+                        setTimeout(showDilemma, 500);
+                    };
+                } else {
+                    setTimeout(() => analyzer.nextPhase(), 1000);
+                }
+            }
+            
+            showDilemma();
+        }
+
+        function startPhase4() {
+            const testArea = document.getElementById('stressTest');
+            const target = document.getElementById('movingTarget');
+            let isInside = false;
+            let testDuration = 15000; // 15 segundos
+            let moveSpeed = 100;
+            
+            function moveTarget() {
+                const maxX = testArea.offsetWidth - target.offsetWidth;
+                const maxY = testArea.offsetHeight - target.offsetHeight;
+                
+                const newX = Math.random() * maxX;
+                const newY = Math.random() * maxY;
+                
+                target.style.left = newX + 'px';
+                target.style.top = newY + 'px';
+                
+                moveSpeed = Math.max(50, moveSpeed - 2); // Acelerar gradualmente
+                setTimeout(moveTarget, moveSpeed);
+            }
+            
+            testArea.onmousemove = function(e) {
+                const rect = target.getBoundingClientRect();
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                
+                isInside = mouseX >= rect.left && mouseX <= rect.right && 
+                          mouseY >= rect.top && mouseY <= rect.bottom;
+                
+                if (!isInside) {
+                    analyzer.behaviorData.stressLevel += 0.5;
+                }
+            };
+            
+            moveTarget();
+            document.getElementById('startBtn4').style.display = 'none';
+            
+            setTimeout(() => {
+                analyzer.nextPhase();
+            }, testDuration);
+        }
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

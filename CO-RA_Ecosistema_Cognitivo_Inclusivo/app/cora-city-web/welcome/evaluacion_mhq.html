@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación MHQ - Cociente de Salud Mental CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #1a1a2e, #16213e);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid #6C5CE7;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #6C5CE7;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #A29BFE;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .mhq-info {
+            background: rgba(108, 92, 231, 0.1);
+            border: 2px solid #6C5CE7;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .dimension-container {
+            background: rgba(108, 92, 231, 0.1);
+            border: 2px solid #6C5CE7;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .dimension-container.active {
+            display: block;
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .dimension-title {
+            color: #6C5CE7;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dimension-description {
+            background: rgba(162, 155, 254, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #A29BFE;
+        }
+        .question {
+            margin-bottom: 25px;
+            display: none;
+        }
+        .question.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .question-text {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .scale-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.5);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+        }
+        .scale-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            min-width: 80px;
+        }
+        .scale-option:hover {
+            background: rgba(108, 92, 231, 0.3);
+        }
+        .scale-number {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #6C5CE7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        .scale-option.selected .scale-number {
+            background: #6C5CE7;
+            color: #ffffff;
+        }
+        .scale-label {
+            font-size: 0.8rem;
+            text-align: center;
+            color: #A29BFE;
+        }
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(108, 92, 231, 0.3);
+            transition: all 0.3s;
+        }
+        .progress-dot.active {
+            background: #6C5CE7;
+            box-shadow: 0 0 10px #6C5CE7;
+        }
+        .progress-dot.completed {
+            background: #00B894;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none;
+        }
+        .continue-btn.show {
+            display: inline-block;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .mhq-result {
+            display: none;
+            text-align: center;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #6C5CE7;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 20px;
+        }
+        .mhq-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #6C5CE7;
+            margin: 20px 0;
+        }
+        .dimension-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .dimension-score {
+            background: rgba(108, 92, 231, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #6C5CE7;
+        }
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #A29BFE;
+        }
+        .interpretation {
+            background: rgba(0, 184, 148, 0.2);
+            border: 2px solid #00B894;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .cora-recommendation {
+            background: rgba(108, 92, 231, 0.2);
+            border: 2px solid #6C5CE7;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🧠 Evaluación MHQ CO•RA</h1>
+            <p class="subtitle">Cociente de Salud Mental adaptado para amplificación cognitiva</p>
+        </div>
+
+        <div class="mhq-info">
+            <h3 style="color: #6C5CE7; margin-bottom: 15px;">¿Qué es el MHQ?</h3>
+            <p>El Mental Health Quotient (MHQ) es una medida científica que evalúa tu bienestar mental en 6 dimensiones clave. CO•RA utiliza esta evaluación para personalizar tu experiencia de amplificación cognitiva de manera segura y efectiva.</p>
+            <p style="margin-top: 10px; color: #A29BFE;"><strong>Tiempo estimado:</strong> 5-7 minutos | <strong>Preguntas:</strong> 18 (3 por dimensión)</p>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+        </div>
+
+        <!-- Dimensión 1: Estado de Ánimo y Perspectiva -->
+        <div class="dimension-container active" data-dimension="1">
+            <div class="dimension-title">
+                😊 Estado de Ánimo y Perspectiva
+            </div>
+            <div class="dimension-description">
+                Esta dimensión evalúa tu estado emocional general, optimismo y capacidad para mantener una perspectiva positiva ante los desafíos.
+            </div>
+            
+            <div class="question active" data-question="1">
+                <div class="question-text">
+                    En las últimas 2 semanas, ¿con qué frecuencia te has sentido optimista sobre tu futuro?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nunca</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Raramente</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">A veces</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Frecuentemente</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Siempre</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="2">
+                <div class="question-text">
+                    ¿Qué tan satisfecho te sientes con tu vida en general?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Muy insatisfecho</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Insatisfecho</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Neutral</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Satisfecho</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy satisfecho</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="3">
+                <div class="question-text">
+                    ¿Con qué frecuencia experimentas emociones positivas como alegría, gratitud o entusiasmo?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nunca</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Raramente</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">A veces</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Frecuentemente</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy frecuentemente</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dimensión 2: Regulación Social y Emocional -->
+        <div class="dimension-container" data-dimension="2">
+            <div class="dimension-title">
+                🤝 Regulación Social y Emocional
+            </div>
+            <div class="dimension-description">
+                Evalúa tu capacidad para manejar emociones, mantener relaciones saludables y regular tu comportamiento social.
+            </div>
+            
+            <div class="question active" data-question="4">
+                <div class="question-text">
+                    ¿Qué tan bien puedes controlar tus emociones cuando estás estresado o molesto?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Muy mal</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Mal</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Regular</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Bien</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy bien</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="5">
+                <div class="question-text">
+                    ¿Qué tan fácil te resulta mantener relaciones cercanas y significativas?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Muy difícil</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Difícil</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Moderado</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Fácil</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy fácil</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="6">
+                <div class="question-text">
+                    ¿Con qué frecuencia sientes que puedes expresar tus emociones de manera apropiada?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nunca</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Raramente</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">A veces</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Frecuentemente</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Siempre</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dimensión 3: Impulso y Motivación -->
+        <div class="dimension-container" data-dimension="3">
+            <div class="dimension-title">
+                🚀 Impulso y Motivación
+            </div>
+            <div class="dimension-description">
+                Mide tu energía, motivación para alcanzar objetivos y capacidad para mantener el impulso hacia tus metas.
+            </div>
+            
+            <div class="question active" data-question="7">
+                <div class="question-text">
+                    ¿Qué tan motivado te sientes para alcanzar tus objetivos personales?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nada motivado</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Poco motivado</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Moderadamente</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Muy motivado</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Extremadamente</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="8">
+                <div class="question-text">
+                    ¿Con qué frecuencia sientes que tienes la energía necesaria para completar tus tareas diarias?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nunca</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Raramente</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">A veces</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Frecuentemente</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Siempre</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="9">
+                <div class="question-text">
+                    ¿Qué tan persistente eres cuando enfrentas obstáculos para alcanzar tus metas?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nada persistente</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Poco persistente</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Moderadamente</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Muy persistente</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Extremadamente</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dimensión 4: Cognición -->
+        <div class="dimension-container" data-dimension="4">
+            <div class="dimension-title">
+                🧠 Cognición
+            </div>
+            <div class="dimension-description">
+                Evalúa tu capacidad de concentración, memoria, toma de decisiones y procesamiento de información.
+            </div>
+            
+            <div class="question active" data-question="10">
+                <div class="question-text">
+                    ¿Qué tan bien puedes concentrarte en tareas que requieren atención sostenida?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Muy mal</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Mal</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Regular</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Bien</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy bien</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="11">
+                <div class="question-text">
+                    ¿Con qué frecuencia experimentas problemas de memoria o dificultad para recordar información importante?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nunca</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Raramente</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">A veces</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Frecuentemente</div>
+                    </div>
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Siempre</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="12">
+                <div class="question-text">
+                    ¿Qué tan confiado te sientes en tu capacidad para tomar decisiones complejas?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nada confiado</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Poco confiado</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Moderadamente</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Muy confiado</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Extremadamente</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dimensión 5: Adaptabilidad y Resistencia -->
+        <div class="dimension-container" data-dimension="5">
+            <div class="dimension-title">
+                🌊 Adaptabilidad y Resistencia
+            </div>
+            <div class="dimension-description">
+                Mide tu capacidad para adaptarte a cambios, recuperarte de adversidades y mantener estabilidad emocional.
+            </div>
+            
+            <div class="question active" data-question="13">
+                <div class="question-text">
+                    ¿Qué tan bien te adaptas a cambios inesperados en tu vida?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Muy mal</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Mal</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Regular</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Bien</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy bien</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="14">
+                <div class="question-text">
+                    ¿Qué tan rápido te recuperas emocionalmente después de experiencias difíciles o estresantes?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Muy lento</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Lento</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Moderado</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Rápido</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy rápido</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="15">
+                <div class="question-text">
+                    ¿Con qué frecuencia mantienes la calma bajo presión?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nunca</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Raramente</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">A veces</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Frecuentemente</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Siempre</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dimensión 6: Función Corporal -->
+        <div class="dimension-container" data-dimension="6">
+            <div class="dimension-title">
+                💪 Función Corporal
+            </div>
+            <div class="dimension-description">
+                Evalúa tu bienestar físico, calidad del sueño, niveles de energía y la conexión mente-cuerpo.
+            </div>
+            
+            <div class="question active" data-question="16">
+                <div class="question-text">
+                    ¿Qué tan bien duermes por las noches?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Muy mal</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Mal</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Regular</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Bien</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy bien</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="17">
+                <div class="question-text">
+                    ¿Cómo calificarías tu nivel general de energía física?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Muy bajo</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Bajo</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">Moderado</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Alto</div>
+                    </div>
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Muy alto</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question" data-question="18">
+                <div class="question-text">
+                    ¿Con qué frecuencia experimentas síntomas físicos relacionados con el estrés (dolores de cabeza, tensión muscular, problemas digestivos)?
+                </div>
+                <div class="scale-container">
+                    <div class="scale-option" data-value="4">
+                        <div class="scale-number">0</div>
+                        <div class="scale-label">Nunca</div>
+                    </div>
+                    <div class="scale-option" data-value="3">
+                        <div class="scale-number">1</div>
+                        <div class="scale-label">Raramente</div>
+                    </div>
+                    <div class="scale-option" data-value="2">
+                        <div class="scale-number">2</div>
+                        <div class="scale-label">A veces</div>
+                    </div>
+                    <div class="scale-option" data-value="1">
+                        <div class="scale-number">3</div>
+                        <div class="scale-label">Frecuentemente</div>
+                    </div>
+                    <div class="scale-option" data-value="0">
+                        <div class="scale-number">4</div>
+                        <div class="scale-label">Siempre</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="continue-btn" id="continueBtn" onclick="nextQuestion()">Continuar →</button>
+
+        <div class="mhq-result" id="mhqResult">
+            <h2 style="color: #6C5CE7; margin-bottom: 20px;">Tu Cociente de Salud Mental</h2>
+            <div class="mhq-score" id="mhqScore">0</div>
+            <div id="mhqInterpretation"></div>
+            <div class="dimension-scores" id="dimensionScores"></div>
+            <div id="coraRecommendation"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentDimension = 1;
+        let currentQuestion = 1;
+        let responses = {};
+        let dimensionScores = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0};
+        
+        function selectScale(element) {
+            const value = parseInt(element.dataset.value);
+            responses[currentQuestion] = value;
+            
+            // Marcar selección
+            element.closest('.scale-container').querySelectorAll('.scale-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            // Mostrar botón continuar
+            document.getElementById('continueBtn').classList.add('show');
+        }
+        
+        function nextQuestion() {
+            // Agregar puntuación a la dimensión
+            dimensionScores[currentDimension] += responses[currentQuestion];
+            
+            // Ocultar pregunta actual
+            document.querySelector(`[data-question="${currentQuestion}"]`).classList.remove('active');
+            
+            currentQuestion++;
+            
+            // Verificar si hay más preguntas en la dimensión actual
+            const nextQ = document.querySelector(`[data-question="${currentQuestion}"]`);
+            
+            if (nextQ && nextQ.closest(`[data-dimension="${currentDimension}"]`)) {
+                // Mostrar siguiente pregunta en la misma dimensión
+                setTimeout(() => {
+                    nextQ.classList.add('active');
+                    document.getElementById('continueBtn').classList.remove('show');
+                }, 300);
+            } else {
+                // Cambiar a siguiente dimensión
+                nextDimension();
+            }
+        }
+        
+        function nextDimension() {
+            // Marcar dimensión como completada
+            document.querySelector(`.progress-dot:nth-child(${currentDimension})`).classList.add('completed');
+            document.querySelector(`.progress-dot:nth-child(${currentDimension})`).classList.remove('active');
+            
+            // Ocultar dimensión actual
+            document.querySelector(`[data-dimension="${currentDimension}"]`).classList.remove('active');
+            
+            currentDimension++;
+            
+            if (currentDimension <= 6) {
+                // Activar siguiente dimensión
+                document.querySelector(`.progress-dot:nth-child(${currentDimension})`).classList.add('active');
+                
+                setTimeout(() => {
+                    const nextDim = document.querySelector(`[data-dimension="${currentDimension}"]`);
+                    nextDim.classList.add('active');
+                    
+                    const firstQuestion = nextDim.querySelector('.question');
+                    firstQuestion.classList.add('active');
+                    
+                    document.getElementById('continueBtn').classList.remove('show');
+                }, 500);
+            } else {
+                // Mostrar resultado final
+                setTimeout(showMHQResult, 1000);
+            }
+        }
+        
+        function showMHQResult() {
+            document.querySelectorAll('.dimension-container').forEach(dim => dim.style.display = 'none');
+            document.getElementById('continueBtn').style.display = 'none';
+            
+            // Calcular MHQ total
+            const totalScore = Object.values(dimensionScores).reduce((a, b) => a + b, 0);
+            const mhqScore = Math.round((totalScore / 72) * 200); // Escala 0-200
+            
+            document.getElementById('mhqScore').textContent = mhqScore;
+            
+            // Interpretación del MHQ
+            let interpretation, coraRecommendation;
+            
+            if (mhqScore >= 150) {
+                interpretation = {
+                    level: "EXCELENTE",
+                    color: "#00B894",
+                    description: "Tu salud mental está en un rango excelente. Tienes una base sólida para la amplificación cognitiva avanzada."
+                };
+                coraRecommendation = "Acceso completo a todos los sistemas de CO•RA. Puedes explorar técnicas avanzadas de amplificación cognitiva de forma segura.";
+            } else if (mhqScore >= 100) {
+                interpretation = {
+                    level: "BUENO",
+                    color: "#6C5CE7",
+                    description: "Tu salud mental está en un rango saludable. Estás preparado para la mayoría de experiencias de CO•RA."
+                };
+                coraRecommendation = "Acceso a sistemas intermedios y avanzados de CO•RA con monitoreo de bienestar. Enfoque en fortalezas identificadas.";
+            } else if (mhqScore >= 50) {
+                interpretation = {
+                    level: "MODERADO",
+                    color: "#FDCB6E",
+                    description: "Tu salud mental está en un rango moderado. CO•RA puede ayudarte a fortalecer áreas específicas."
+                };
+                coraRecommendation = "Acceso a sistemas básicos e intermedios de CO•RA. Enfoque en desarrollo de bienestar antes de amplificación avanzada.";
+            } else {
+                interpretation = {
+                    level: "NECESITA ATENCIÓN",
+                    color: "#E17055",
+                    description: "Tu bienestar mental requiere atención. CO•RA te ofrecerá herramientas de apoyo y desarrollo gradual."
+                };
+                coraRecommendation = "Acceso a sistemas de apoyo y bienestar de CO•RA. Recomendamos comenzar con técnicas de estabilización y autocuidado.";
+            }
+            
+            document.getElementById('mhqInterpretation').innerHTML = `
+                <div class="interpretation">
+                    <h3 style="color: ${interpretation.color}; margin-bottom: 15px;">Nivel: ${interpretation.level}</h3>
+                    <p>${interpretation.description}</p>
+                </div>
+            `;
+            
+            // Mostrar puntuaciones por dimensión
+            const dimensionNames = [
+                "Estado de Ánimo",
+                "Regulación Social",
+                "Impulso y Motivación", 
+                "Cognición",
+                "Adaptabilidad",
+                "Función Corporal"
+            ];
+            
+            let dimensionHTML = '';
+            for (let i = 1; i <= 6; i++) {
+                const score = Math.round((dimensionScores[i] / 12) * 100);
+                dimensionHTML += `
+                    <div class="dimension-score">
+                        <div>${dimensionNames[i-1]}</div>
+                        <div class="score-value">${score}%</div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('dimensionScores').innerHTML = dimensionHTML;
+            
+            document.getElementById('coraRecommendation').innerHTML = `
+                <div class="cora-recommendation">
+                    <h4 style="color: #6C5CE7; margin-bottom: 15px;">🎯 Recomendación Personalizada CO•RA</h4>
+                    <p>${coraRecommendation}</p>
+                    <a href="conexion_simbolica.html" class="continue-btn show" style="margin-top: 15px;">🔗 ESTABLECER CONEXIÓN</a>
+                </div>
+            `;
+            
+            document.getElementById('mhqResult').style.display = 'block';
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.scale-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectScale(this);
+                });
+            });
+        });
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script>
+        // Integración con motor de análisis para evaluación MHQ
+        const originalSelectScale = selectScale;
+        selectScale = function(element) {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.sessionData.interactionData.push({
+                    type: 'mhq_response',
+                    dimension: currentDimension,
+                    question: currentQuestion,
+                    value: element.dataset.value,
+                    timestamp: Date.now(),
+                    responseLatency: Date.now() - window.questionStartTime
+                });
+            }
+            return originalSelectScale(element);
+        };
+        
+        let questionStartTime = Date.now();
+        
+        const originalNextQuestion = nextQuestion;
+        nextQuestion = function() {
+            window.questionStartTime = Date.now();
+            return originalNextQuestion();
+        };
+        
+        const originalShowMHQResult = showMHQResult;
+        showMHQResult = function() {
+            if (window.coraAnalytics) {
+                const analysis = window.coraAnalytics.saveAnalysisData();
+                analysis.mhqMetrics = {
+                    totalScore: Object.values(dimensionScores).reduce((a, b) => a + b, 0),
+                    dimensionScores: dimensionScores,
+                    mentalHealthLevel: analysis.mhqMetrics?.totalScore > 50 ? 'good' : 'needs_attention'
+                };
+                localStorage.setItem('coraMHQAnalysis', JSON.stringify(analysis));
+            }
+            return originalShowMHQResult();
+        };
+    </script>
+</body>
+</html>

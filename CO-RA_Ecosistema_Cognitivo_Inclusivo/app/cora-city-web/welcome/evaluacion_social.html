@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Social y Relacional - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #e67e22, #d35400);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #e67e22;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #e67e22;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        .social-area {
+            background: rgba(230, 126, 34, 0.1);
+            border: 2px solid #e67e22;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        .social-area.active {
+            display: block;
+            animation: areaIn 0.8s ease-out;
+        }
+        @keyframes areaIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .area-title {
+            color: #e67e22;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .social-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        .social-metric {
+            text-align: center;
+            padding: 15px;
+            background: rgba(230, 126, 34, 0.2);
+            border-radius: 10px;
+            border: 1px solid #e67e22;
+        }
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 5px;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            color: #f39c12;
+        }
+        .social-question {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #f39c12;
+        }
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .social-options {
+            display: grid;
+            gap: 12px;
+        }
+        .social-option {
+            background: rgba(243, 156, 18, 0.2);
+            border: 2px solid #f39c12;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .social-option:hover {
+            background: rgba(230, 126, 34, 0.3);
+            border-color: #e67e22;
+            transform: translateX(5px);
+        }
+        .social-option.selected {
+            background: rgba(230, 126, 34, 0.5);
+            border-color: #ffffff;
+        }
+        .scenario-box {
+            background: rgba(211, 84, 0, 0.2);
+            border: 2px solid #d35400;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .results-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #e67e22;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">👥 Evaluación Social y Relacional CO•RA</h1>
+            <p style="color: #f39c12; margin-bottom: 20px;">
+                Evaluación de habilidades sociales, trabajo en equipo, comunicación y capacidad de convivencia en comunidad
+            </p>
+        </div>
+
+        <div class="social-dashboard" id="socialDashboard">
+            <div class="social-metric">
+                <div class="metric-value" id="teamworkScore">0</div>
+                <div class="metric-label">Trabajo Equipo</div>
+            </div>
+            <div class="social-metric">
+                <div class="metric-value" id="communicationScore">0</div>
+                <div class="metric-label">Comunicación</div>
+            </div>
+            <div class="social-metric">
+                <div class="metric-value" id="leadershipScore">0</div>
+                <div class="metric-label">Liderazgo</div>
+            </div>
+            <div class="social-metric">
+                <div class="metric-value" id="empathyScore">0</div>
+                <div class="metric-label">Empatía</div>
+            </div>
+            <div class="social-metric">
+                <div class="metric-value" id="conflictScore">0</div>
+                <div class="metric-label">Resolución Conflictos</div>
+            </div>
+        </div>
+
+        <!-- Test 1: Trabajo en Equipo (Belbin) -->
+        <div class="social-area active" id="area1">
+            <h2 class="area-title">Test 1: Roles de Equipo (Belbin)</h2>
+            <div class="social-question">
+                <div class="question-text">
+                    En un proyecto grupal, ¿cuál es tu rol natural preferido?
+                </div>
+                <div class="social-options">
+                    <div class="social-option" onclick="selectSocial(1, 1)" data-score="90" data-role="coordinator">
+                        Coordinar el equipo y asegurar que todos contribuyan efectivamente
+                    </div>
+                    <div class="social-option" onclick="selectSocial(1, 2)" data-score="85" data-role="implementer">
+                        Ejecutar las tareas de manera práctica y eficiente
+                    </div>
+                    <div class="social-option" onclick="selectSocial(1, 3)" data-score="95" data-role="teamworker">
+                        Mantener la armonía del grupo y apoyar a todos los miembros
+                    </div>
+                    <div class="social-option" onclick="selectSocial(1, 4)" data-score="80" data-role="plant">
+                        Generar ideas creativas e innovadoras para el proyecto
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 2: Comunicación Asertiva -->
+        <div class="social-area" id="area2">
+            <h2 class="area-title">Test 2: Comunicación Asertiva</h2>
+            <div class="scenario-box">
+                <strong>Escenario:</strong> Un compañero de trabajo constantemente interrumpe tus presentaciones y toma crédito por tus ideas.
+            </div>
+            <div class="social-question">
+                <div class="question-text">
+                    ¿Cómo manejarías esta situación?
+                </div>
+                <div class="social-options">
+                    <div class="social-option" onclick="selectSocial(2, 1)" data-score="100">
+                        Hablar directamente con la persona de manera respetuosa pero firme sobre el comportamiento
+                    </div>
+                    <div class="social-option" onclick="selectSocial(2, 2)" data-score="60">
+                        Evitar el conflicto y buscar trabajar en proyectos diferentes
+                    </div>
+                    <div class="social-option" onclick="selectSocial(2, 3)" data-score="40">
+                        Reportar inmediatamente el comportamiento a un superior
+                    </div>
+                    <div class="social-option" onclick="selectSocial(2, 4)" data-score="20">
+                        Interrumpir de vuelta para demostrar cómo se siente
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 3: Liderazgo Situacional -->
+        <div class="social-area" id="area3">
+            <h2 class="area-title">Test 3: Liderazgo Situacional</h2>
+            <div class="scenario-box">
+                <strong>Escenario:</strong> Tu equipo está desmotivado después de un fracaso en un proyecto importante.
+            </div>
+            <div class="social-question">
+                <div class="question-text">
+                    ¿Cuál sería tu enfoque de liderazgo?
+                </div>
+                <div class="social-options">
+                    <div class="social-option" onclick="selectSocial(3, 1)" data-score="100">
+                        Reconocer el fracaso, extraer lecciones y motivar al equipo hacia nuevos objetivos
+                    </div>
+                    <div class="social-option" onclick="selectSocial(3, 2)" data-score="70">
+                        Analizar qué salió mal y establecer nuevos procesos para evitar errores
+                    </div>
+                    <div class="social-option" onclick="selectSocial(3, 3)" data-score="50">
+                        Dar tiempo al equipo para recuperarse antes de asignar nuevas tareas
+                    </div>
+                    <div class="social-option" onclick="selectSocial(3, 4)" data-score="30">
+                        Identificar responsables del fracaso para evitar que se repita
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 4: Empatía y Comprensión Social -->
+        <div class="social-area" id="area4">
+            <h2 class="area-title">Test 4: Empatía y Comprensión Social</h2>
+            <div class="scenario-box">
+                <strong>Escenario:</strong> Notas que un colega ha estado actuando de manera distante y su rendimiento ha disminuido.
+            </div>
+            <div class="social-question">
+                <div class="question-text">
+                    ¿Cuál sería tu respuesta más empática?
+                </div>
+                <div class="social-options">
+                    <div class="social-option" onclick="selectSocial(4, 1)" data-score="100">
+                        Acercarte de manera privada y preguntarle si necesita apoyo o alguien con quien hablar
+                    </div>
+                    <div class="social-option" onclick="selectSocial(4, 2)" data-score="80">
+                        Ofrecer ayuda con sus tareas sin hacer preguntas personales
+                    </div>
+                    <div class="social-option" onclick="selectSocial(4, 3)" data-score="60">
+                        Informar a un supervisor sobre el cambio en su comportamiento
+                    </div>
+                    <div class="social-option" onclick="selectSocial(4, 4)" data-score="40">
+                        Esperar a que la persona se acerque si necesita ayuda
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 5: Resolución de Conflictos -->
+        <div class="social-area" id="area5">
+            <h2 class="area-title">Test 5: Resolución de Conflictos</h2>
+            <div class="scenario-box">
+                <strong>Escenario:</strong> Dos miembros de tu equipo tienen un desacuerdo fundamental sobre la dirección del proyecto.
+            </div>
+            <div class="social-question">
+                <div class="question-text">
+                    ¿Cómo facilitarías la resolución del conflicto?
+                </div>
+                <div class="social-options">
+                    <div class="social-option" onclick="selectSocial(5, 1)" data-score="100">
+                        Organizar una reunión mediada donde ambas partes expongan sus puntos y busquen soluciones conjuntas
+                    </div>
+                    <div class="social-option" onclick="selectSocial(5, 2)" data-score="80">
+                        Hablar individualmente con cada persona para entender sus perspectivas antes de reunirlos
+                    </div>
+                    <div class="social-option" onclick="selectSocial(5, 3)" data-score="60">
+                        Proponer una votación del equipo para decidir la dirección del proyecto
+                    </div>
+                    <div class="social-option" onclick="selectSocial(5, 4)" data-score="40">
+                        Tomar la decisión tú mismo basándote en tu experiencia y criterio
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #e67e22; margin-bottom: 25px;">👥 Evaluación Social Completada</h2>
+            <div id="socialResults"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentArea = 1;
+        let socialScores = {teamwork: 0, communication: 0, leadership: 0, empathy: 0, conflict: 0};
+        let socialResponses = {};
+        let teamRole = '';
+
+        function selectSocial(area, option) {
+            const options = document.querySelectorAll(`#area${area} .social-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            const selectedOption = event.target;
+            selectedOption.classList.add('selected');
+            
+            const score = parseInt(selectedOption.dataset.score);
+            socialResponses[area] = { option, score };
+            
+            // Capturar rol de equipo del primer test
+            if (area === 1) {
+                teamRole = selectedOption.dataset.role;
+            }
+            
+            // Actualizar dashboard
+            const metrics = ['teamwork', 'communication', 'leadership', 'empathy', 'conflict'];
+            const metricIds = ['teamworkScore', 'communicationScore', 'leadershipScore', 'empathyScore', 'conflictScore'];
+            
+            if (area <= 5) {
+                socialScores[metrics[area-1]] = score;
+                document.getElementById(metricIds[area-1]).textContent = score;
+            }
+            
+            setTimeout(() => {
+                nextArea();
+            }, 1000);
+        }
+
+        function nextArea() {
+            document.getElementById(`area${currentArea}`).classList.remove('active');
+            currentArea++;
+            
+            if (currentArea <= 5) {
+                setTimeout(() => {
+                    document.getElementById(`area${currentArea}`).classList.add('active');
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    showResults();
+                }, 1000);
+            }
+        }
+
+        function showResults() {
+            document.querySelectorAll('.social-area').forEach(area => area.style.display = 'none');
+            
+            const overallSocial = Object.values(socialScores).reduce((a, b) => a + b, 0) / 5;
+            const socialProfile = determineSocialProfile(overallSocial, socialScores);
+            
+            document.getElementById('socialResults').innerHTML = generateSocialResults(socialProfile, overallSocial);
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+
+        function determineSocialProfile(overall, scores) {
+            const minScore = Math.min(...Object.values(scores));
+            
+            if (overall >= 85 && minScore >= 70) {
+                return {
+                    level: 'LÍDER NATURAL',
+                    color: '#9b59b6',
+                    description: 'Excelentes habilidades sociales y de liderazgo. Ideal para roles de coordinación en CO•RA.',
+                    role: 'Coordinador de Distrito o Mentor Principal',
+                    integration: 'Integración inmediata con responsabilidades de liderazgo',
+                    nextStep: 'evaluacion_espiritual.html',
+                    buttonText: '🌟 EVALUACIÓN ESPIRITUAL'
+                };
+            } else if (overall >= 70 && minScore >= 50) {
+                return {
+                    level: 'COLABORADOR EFECTIVO',
+                    color: '#e67e22',
+                    description: 'Buenas habilidades sociales con potencial de liderazgo.',
+                    role: 'Miembro activo con oportunidades de crecimiento',
+                    integration: 'Integración estándar con mentoreo en liderazgo',
+                    nextStep: 'evaluacion_espiritual.html',
+                    buttonText: '🌟 EVALUACIÓN ESPIRITUAL'
+                };
+            } else if (overall >= 50) {
+                return {
+                    level: 'EN DESARROLLO SOCIAL',
+                    color: '#f39c12',
+                    description: 'Habilidades sociales básicas que requieren desarrollo.',
+                    role: 'Miembro con acompañamiento social intensivo',
+                    integration: 'Programa de desarrollo de habilidades sociales',
+                    nextStep: 'entrenamiento_social.html',
+                    buttonText: '🤝 ENTRENAMIENTO SOCIAL'
+                };
+            } else {
+                return {
+                    level: 'REQUIERE PREPARACIÓN SOCIAL',
+                    color: '#e74c3c',
+                    description: 'Necesario desarrollo significativo de habilidades sociales.',
+                    role: 'Preparación individual antes de integración grupal',
+                    integration: 'Programa intensivo de habilidades sociales',
+                    nextStep: 'preparacion_social.html',
+                    buttonText: '📚 PREPARACIÓN SOCIAL'
+                };
+            }
+        }
+
+        function getTeamRoleDescription(role) {
+            const roles = {
+                coordinator: 'Coordinador - Natural para liderar y organizar equipos',
+                implementer: 'Implementador - Excelente ejecutando tareas de manera práctica',
+                teamworker: 'Cohesionador - Mantiene la armonía y apoya al equipo',
+                plant: 'Cerebro - Genera ideas creativas e innovadoras'
+            };
+            return roles[role] || 'Rol versátil adaptable a diferentes necesidades';
+        }
+
+        function generateSocialResults(profile, overall) {
+            return `
+                <div style="background: rgba(230, 126, 34, 0.2); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: ${profile.color}; margin-bottom: 15px;">
+                        Perfil Social: ${profile.level}
+                    </h3>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        ${profile.description}
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin: 20px 0;">
+                        <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #e67e22; font-weight: bold;">Trabajo Equipo</div>
+                            <div style="font-size: 1.3rem; color: white;">${socialScores.teamwork}</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #e67e22; font-weight: bold;">Comunicación</div>
+                            <div style="font-size: 1.3rem; color: white;">${socialScores.communication}</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #e67e22; font-weight: bold;">Liderazgo</div>
+                            <div style="font-size: 1.3rem; color: white;">${socialScores.leadership}</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #e67e22; font-weight: bold;">Empatía</div>
+                            <div style="font-size: 1.3rem; color: white;">${socialScores.empathy}</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="color: #e67e22; font-weight: bold;">Resolución</div>
+                            <div style="font-size: 1.3rem; color: white;">${socialScores.conflict}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                        <h4 style="color: #e67e22; margin-bottom: 10px;">🎭 Rol de Equipo Belbin:</h4>
+                        <p style="margin-bottom: 10px;">${getTeamRoleDescription(teamRole)}</p>
+                        
+                        <h4 style="color: #e67e22; margin-bottom: 10px;">🏛️ Rol en CO•RA:</h4>
+                        <p style="margin-bottom: 10px;">${profile.role}</p>
+                        
+                        <h4 style="color: #e67e22; margin-bottom: 10px;">🤝 Integración:</h4>
+                        <p>${profile.integration}</p>
+                    </div>
+                    
+                    <div style="background: rgba(230, 126, 34, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <strong>Puntuación Social Integral:</strong> ${Math.round(overall)}/100
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="${profile.nextStep}" style="
+                        background: linear-gradient(135deg, ${profile.color}, #f39c12);
+                        color: white;
+                        padding: 20px 40px;
+                        border-radius: 25px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.2rem;
+                        display: inline-block;
+                    ">${profile.buttonText}</a>
+                    
+                    <p style="margin-top: 15px; color: #f39c12; font-size: 0.9rem;">
+                        Tus habilidades sociales determinan tu rol en la comunidad CO•RA
+                    </p>
+                </div>
+            `;
+        }
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

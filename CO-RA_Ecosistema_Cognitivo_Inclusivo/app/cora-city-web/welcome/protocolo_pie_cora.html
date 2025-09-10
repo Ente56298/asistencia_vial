@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo PIE-CO•RA - Evaluación Exhaustiva</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #1e3c72;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #1e3c72;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .module {
+            background: rgba(30, 60, 114, 0.1);
+            border: 2px solid #1e3c72;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        .module.active {
+            display: block;
+            animation: moduleIn 0.8s ease-out;
+        }
+        @keyframes moduleIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .module-title {
+            color: #1e3c72;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .module-letter {
+            background: #1e3c72;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .progress-container {
+            background: rgba(0,0,0,0.6);
+            height: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .timer {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #e74c3c;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .timer-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .likert-scale {
+            display: grid;
+            grid-template-columns: 3fr repeat(5, 1fr);
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+        }
+        .likert-item {
+            font-size: 0.9rem;
+        }
+        .likert-option {
+            text-align: center;
+            cursor: pointer;
+            padding: 8px;
+            border: 2px solid #2a5298;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .likert-option:hover {
+            background: rgba(42, 82, 152, 0.3);
+        }
+        .likert-option.selected {
+            background: rgba(30, 60, 114, 0.5);
+            border-color: #ffffff;
+        }
+        .input-field {
+            width: 100%;
+            min-height: 80px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #2a5298;
+            border-radius: 10px;
+            color: #ffffff;
+            padding: 15px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        .scenario-box {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #2a5298;
+        }
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .task-item {
+            background: rgba(42, 82, 152, 0.2);
+            border: 2px solid #2a5298;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .task-item:hover {
+            background: rgba(30, 60, 114, 0.3);
+        }
+        .task-item.selected {
+            background: rgba(30, 60, 114, 0.5);
+            border-color: #ffffff;
+        }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .value-item {
+            background: rgba(42, 82, 152, 0.2);
+            border: 2px solid #2a5298;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .value-item:hover {
+            background: rgba(30, 60, 114, 0.3);
+        }
+        .value-item.selected {
+            background: rgba(30, 60, 114, 0.5);
+            border-color: #ffffff;
+        }
+        .value-rank {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #e74c3c;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(30, 60, 114, 0.4);
+        }
+        .results-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #1e3c72;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎯 Protocolo PIE-CO•RA</h1>
+            <p style="color: #74b9ff; margin-bottom: 20px;">
+                Protocolo Inicial Exhaustivo - Evaluación completa en 7 módulos (120-150 min)
+            </p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <p id="progressText">Módulo A - Intención vs Necesidad (15 min)</p>
+        </div>
+
+        <!-- Módulo A: Intención vs Necesidad -->
+        <div class="module active" id="moduleA">
+            <h2 class="module-title">
+                <div class="module-letter">A</div>
+                Intención vs Necesidad (15 min)
+            </h2>
+            <div class="timer">
+                <div class="timer-value" id="timerA">15:00</div>
+                <div>Tiempo restante</div>
+            </div>
+            
+            <p style="margin-bottom: 20px; color: #74b9ff;">
+                <strong>Objetivo:</strong> Detectar motivación auténtica mediante escala Likert (1-5)
+            </p>
+
+            <div id="likertQuestions">
+                <div class="likert-scale">
+                    <div class="likert-item">Haría esto aunque nadie lo supiera</div>
+                    <div class="likert-option" onclick="selectLikert(1, 1)">1</div>
+                    <div class="likert-option" onclick="selectLikert(1, 2)">2</div>
+                    <div class="likert-option" onclick="selectLikert(1, 3)">3</div>
+                    <div class="likert-option" onclick="selectLikert(1, 4)">4</div>
+                    <div class="likert-option" onclick="selectLikert(1, 5)">5</div>
+                </div>
+                
+                <div class="likert-scale">
+                    <div class="likert-item">Lo seguiría haciendo si se vuelve más difícil y menos rentable</div>
+                    <div class="likert-option" onclick="selectLikert(2, 1)">1</div>
+                    <div class="likert-option" onclick="selectLikert(2, 2)">2</div>
+                    <div class="likert-option" onclick="selectLikert(2, 3)">3</div>
+                    <div class="likert-option" onclick="selectLikert(2, 4)">4</div>
+                    <div class="likert-option" onclick="selectLikert(2, 5)">5</div>
+                </div>
+                
+                <div class="likert-scale">
+                    <div class="likert-item">Si tuviera otras opciones atractivas, mantendría esta decisión</div>
+                    <div class="likert-option" onclick="selectLikert(3, 1)">1</div>
+                    <div class="likert-option" onclick="selectLikert(3, 2)">2</div>
+                    <div class="likert-option" onclick="selectLikert(3, 3)">3</div>
+                    <div class="likert-option" onclick="selectLikert(3, 4)">4</div>
+                    <div class="likert-option" onclick="selectLikert(3, 5)">5</div>
+                </div>
+                
+                <div class="likert-scale">
+                    <div class="likert-item">Estoy dispuesto a renunciar a comodidad/tiempo por esto</div>
+                    <div class="likert-option" onclick="selectLikert(4, 1)">1</div>
+                    <div class="likert-option" onclick="selectLikert(4, 2)">2</div>
+                    <div class="likert-option" onclick="selectLikert(4, 3)">3</div>
+                    <div class="likert-option" onclick="selectLikert(4, 4)">4</div>
+                    <div class="likert-option" onclick="selectLikert(4, 5)">5</div>
+                </div>
+                
+                <div class="likert-scale">
+                    <div class="likert-item">No necesito aprobación externa para sostenerlo</div>
+                    <div class="likert-option" onclick="selectLikert(5, 1)">1</div>
+                    <div class="likert-option" onclick="selectLikert(5, 2)">2</div>
+                    <div class="likert-option" onclick="selectLikert(5, 3)">3</div>
+                    <div class="likert-option" onclick="selectLikert(5, 4)">4</div>
+                    <div class="likert-option" onclick="selectLikert(5, 5)">5</div>
+                </div>
+                
+                <div class="likert-scale">
+                    <div class="likert-item">Esta acción refleja mis valores centrales</div>
+                    <div class="likert-option" onclick="selectLikert(6, 1)">1</div>
+                    <div class="likert-option" onclick="selectLikert(6, 2)">2</div>
+                    <div class="likert-option" onclick="selectLikert(6, 3)">3</div>
+                    <div class="likert-option" onclick="selectLikert(6, 4)">4</div>
+                    <div class="likert-option" onclick="selectLikert(6, 5)">5</div>
+                </div>
+                
+                <div class="likert-scale">
+                    <div class="likert-item">He actuado coherentemente con esto en los últimos 3 meses</div>
+                    <div class="likert-option" onclick="selectLikert(7, 1)">1</div>
+                    <div class="likert-option" onclick="selectLikert(7, 2)">2</div>
+                    <div class="likert-option" onclick="selectLikert(7, 3)">3</div>
+                    <div class="likert-option" onclick="selectLikert(7, 4)">4</div>
+                    <div class="likert-option" onclick="selectLikert(7, 5)">5</div>
+                </div>
+                
+                <div class="likert-scale">
+                    <div class="likert-item">Tengo métricas claras para evaluar progreso sin incentivos externos</div>
+                    <div class="likert-option" onclick="selectLikert(8, 1)">1</div>
+                    <div class="likert-option" onclick="selectLikert(8, 2)">2</div>
+                    <div class="likert-option" onclick="selectLikert(8, 3)">3</div>
+                    <div class="likert-option" onclick="selectLikert(8, 4)">4</div>
+                    <div class="likert-option" onclick="selectLikert(8, 5)">5</div>
+                </div>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h4 style="color: #1e3c72; margin-bottom: 15px;">Preguntas Abiertas (máx. 120 palabras cada una):</h4>
+                
+                <div style="margin: 20px 0;">
+                    <p style="margin-bottom: 10px;"><strong>¿Qué pasaría si no lo hicieras? ¿Qué perderías realmente?</strong></p>
+                    <textarea id="openA1" class="input-field" placeholder="Respuesta máximo 120 palabras..."></textarea>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <p style="margin-bottom: 10px;"><strong>¿Qué costo aceptarías para sostenerlo durante 6 meses?</strong></p>
+                    <textarea id="openA2" class="input-field" placeholder="Respuesta máximo 120 palabras..."></textarea>
+                </div>
+            </div>
+
+            <button class="continue-btn" onclick="nextModule()">Continuar a Módulo B →</button>
+        </div>
+
+        <!-- Módulo B: Virtudes y Riesgos -->
+        <div class="module" id="moduleB">
+            <h2 class="module-title">
+                <div class="module-letter">B</div>
+                Virtudes y Riesgos (20 min)
+            </h2>
+            <div class="timer">
+                <div class="timer-value" id="timerB">20:00</div>
+                <div>Tiempo restante</div>
+            </div>
+            
+            <p style="margin-bottom: 20px; color: #74b9ff;">
+                <strong>Objetivo:</strong> Mapa de fortalezas/defectos en 4 ejes principales
+            </p>
+
+            <h4 style="color: #1e3c72; margin: 25px 0 15px;">Eje: Disciplina</h4>
+            <div class="likert-scale">
+                <div class="likert-item">Cumplo lo que planifico</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 1, 1)">1</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 1, 2)">2</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 1, 3)">3</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 1, 4)">4</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 1, 5)">5</div>
+            </div>
+            <div class="likert-scale">
+                <div class="likert-item">Sostengo hábitos bajo estrés</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 2, 1)">1</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 2, 2)">2</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 2, 3)">3</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 2, 4)">4</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 2, 5)">5</div>
+            </div>
+            <div class="likert-scale">
+                <div class="likert-item">Entrego a tiempo</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 3, 1)">1</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 3, 2)">2</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 3, 3)">3</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 3, 4)">4</div>
+                <div class="likert-option" onclick="selectAxis('disciplina', 3, 5)">5</div>
+            </div>
+
+            <h4 style="color: #1e3c72; margin: 25px 0 15px;">Eje: Asertividad/Empatía</h4>
+            <div class="likert-scale">
+                <div class="likert-item">Pongo límites con respeto</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 1, 1)">1</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 1, 2)">2</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 1, 3)">3</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 1, 4)">4</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 1, 5)">5</div>
+            </div>
+            <div class="likert-scale">
+                <div class="likert-item">Escucho activamente</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 2, 1)">1</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 2, 2)">2</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 2, 3)">3</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 2, 4)">4</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 2, 5)">5</div>
+            </div>
+            <div class="likert-scale">
+                <div class="likert-item">Pido/recibo feedback</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 3, 1)">1</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 3, 2)">2</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 3, 3)">3</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 3, 4)">4</div>
+                <div class="likert-option" onclick="selectAxis('asertividad', 3, 5)">5</div>
+            </div>
+
+            <button class="continue-btn" onclick="nextModule()">Continuar a Módulo C →</button>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #1e3c72; margin-bottom: 25px;">📊 Informe PIE-CO•RA Completo</h2>
+            <div id="pieResults"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentModule = 'A';
+        let moduleData = {
+            A: { likert: {}, open: {}, score: 0 },
+            B: { axes: { disciplina: [], asertividad: [], integridad: [], resiliencia: [] }, score: 0 }
+        };
+        let timers = {};
+        let timeRemaining = { A: 900, B: 1200 }; // 15 min, 20 min
+
+        function startTimer(module) {
+            timers[module] = setInterval(() => {
+                timeRemaining[module]--;
+                const minutes = Math.floor(timeRemaining[module] / 60);
+                const seconds = timeRemaining[module] % 60;
+                document.getElementById(`timer${module}`).textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeRemaining[module] <= 0) {
+                    clearInterval(timers[module]);
+                    nextModule();
+                }
+            }, 1000);
+        }
+
+        function updateProgress() {
+            const modules = ['A', 'B'];
+            const currentIndex = modules.indexOf(currentModule);
+            const progress = ((currentIndex + 1) / modules.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            const moduleNames = {
+                'A': 'Módulo A - Intención vs Necesidad (15 min)',
+                'B': 'Módulo B - Virtudes y Riesgos (20 min)'
+            };
+            
+            document.getElementById('progressText').textContent = moduleNames[currentModule];
+        }
+
+        function selectLikert(question, value) {
+            // Limpiar selección anterior
+            const questionRow = event.target.parentElement;
+            questionRow.querySelectorAll('.likert-option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Seleccionar nueva opción
+            event.target.classList.add('selected');
+            
+            // Guardar respuesta
+            moduleData.A.likert[question] = value;
+        }
+
+        function selectAxis(axis, question, value) {
+            // Limpiar selección anterior
+            const questionRow = event.target.parentElement;
+            questionRow.querySelectorAll('.likert-option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Seleccionar nueva opción
+            event.target.classList.add('selected');
+            
+            // Guardar respuesta
+            if (!moduleData.B.axes[axis]) moduleData.B.axes[axis] = [];
+            moduleData.B.axes[axis][question - 1] = value;
+        }
+
+        function nextModule() {
+            // Guardar datos del módulo actual
+            if (currentModule === 'A') {
+                moduleData.A.open.question1 = document.getElementById('openA1').value;
+                moduleData.A.open.question2 = document.getElementById('openA2').value;
+                
+                // Calcular puntuación módulo A
+                const likertValues = Object.values(moduleData.A.likert);
+                const likertAvg = likertValues.reduce((a, b) => a + b, 0) / likertValues.length;
+                moduleData.A.score = (likertAvg / 5) * 100;
+                
+                clearInterval(timers.A);
+            } else if (currentModule === 'B') {
+                // Calcular puntuación módulo B
+                let axisScores = [];
+                Object.values(moduleData.B.axes).forEach(axis => {
+                    if (axis.length > 0) {
+                        const axisAvg = axis.reduce((a, b) => a + b, 0) / axis.length;
+                        axisScores.push((axisAvg / 5) * 100);
+                    }
+                });
+                moduleData.B.score = axisScores.reduce((a, b) => a + b, 0) / axisScores.length;
+                
+                clearInterval(timers.B);
+                showResults();
+                return;
+            }
+            
+            // Ocultar módulo actual
+            document.getElementById(`module${currentModule}`).classList.remove('active');
+            
+            // Avanzar al siguiente módulo
+            const modules = ['A', 'B'];
+            const currentIndex = modules.indexOf(currentModule);
+            currentModule = modules[currentIndex + 1];
+            
+            // Mostrar siguiente módulo
+            setTimeout(() => {
+                document.getElementById(`module${currentModule}`).classList.add('active');
+                updateProgress();
+                startTimer(currentModule);
+            }, 500);
+        }
+
+        function showResults() {
+            document.querySelectorAll('.module').forEach(module => module.style.display = 'none');
+            
+            // Calcular índice integral (simplificado para demo)
+            const integralIndex = (moduleData.A.score * 0.5 + moduleData.B.score * 0.5);
+            
+            const results = generatePIEResults(integralIndex);
+            document.getElementById('pieResults').innerHTML = results;
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+
+        function generatePIEResults(index) {
+            let interpretation = '';
+            let color = '';
+            
+            if (index >= 85) {
+                interpretation = 'Intención genuina + alta ejecución';
+                color = '#27ae60';
+            } else if (index >= 70) {
+                interpretation = 'Intención sólida; mejorar ejecución/gestión';
+                color = '#f39c12';
+            } else if (index >= 55) {
+                interpretation = 'Motivación mixta; trabajar disciplina/claridad';
+                color = '#e67e22';
+            } else {
+                interpretation = 'Necesidad circunstancial o desalineación; replanteo';
+                color = '#e74c3c';
+            }
+            
+            return `
+                <div style="background: rgba(30, 60, 114, 0.2); padding: 30px; border-radius: 20px; margin: 20px 0;">
+                    <h3 style="color: ${color}; margin-bottom: 20px; text-align: center;">
+                        Índice Integral PIE-CO•RA: ${Math.round(index)}/100
+                    </h3>
+                    <p style="margin-bottom: 20px; line-height: 1.6; text-align: center;">
+                        <strong>Interpretación:</strong> ${interpretation}
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 25px 0;">
+                        <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="color: #1e3c72; font-weight: bold; margin-bottom: 10px;">Módulo A - Intención</div>
+                            <div style="font-size: 1.5rem; color: white; margin-bottom: 5px;">${Math.round(moduleData.A.score)}</div>
+                            <div style="font-size: 0.9rem; color: #74b9ff;">Motivación auténtica</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; text-align: center;">
+                            <div style="color: #1e3c72; font-weight: bold; margin-bottom: 10px;">Módulo B - Virtudes</div>
+                            <div style="font-size: 1.5rem; color: white; margin-bottom: 5px;">${Math.round(moduleData.B.score)}</div>
+                            <div style="font-size: 0.9rem; color: #74b9ff;">Fortalezas/Defectos</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.8); padding: 25px; border-radius: 15px; margin: 25px 0;">
+                        <h4 style="color: #1e3c72; margin-bottom: 15px; text-align: center;">📋 Resumen Ejecutivo</h4>
+                        <p style="text-align: center; margin-bottom: 15px;">
+                            Evaluación inicial completada. Protocolo PIE-CO•RA identifica nivel de preparación para amplificación cognitiva.
+                        </p>
+                        
+                        <div style="background: rgba(30, 60, 114, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                            <strong>Recomendación:</strong> ${index >= 70 ? 'Proceder con evaluaciones específicas' : 'Desarrollo preparatorio recomendado'}
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="evaluacion_integral_completa.html" style="
+                            background: linear-gradient(135deg, ${color}, #74b9ff);
+                            color: white;
+                            padding: 20px 40px;
+                            border-radius: 25px;
+                            text-decoration: none;
+                            font-weight: bold;
+                            font-size: 1.2rem;
+                            display: inline-block;
+                            margin: 10px;
+                        ">📊 EVALUACIONES ESPECÍFICAS</a>
+                        
+                        <a href="index.html" style="
+                            background: linear-gradient(135deg, #74b9ff, ${color});
+                            color: white;
+                            padding: 20px 40px;
+                            border-radius: 25px;
+                            text-decoration: none;
+                            font-weight: bold;
+                            font-size: 1.2rem;
+                            display: inline-block;
+                            margin: 10px;
+                        ">🏠 VOLVER AL INICIO</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Inicializar
+        updateProgress();
+        startTimer('A');
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

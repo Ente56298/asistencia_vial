@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Integral Completa - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #667eea;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title {
+            color: #667eea;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+        .areas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        .area-card {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .area-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #764ba2;
+        }
+        .area-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .area-title {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .area-description {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #b8c6db;
+        }
+        .area-tests {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .area-tests h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .area-tests ul {
+            margin-left: 15px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .protocol-section {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid #764ba2;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        .start-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .completed {
+            opacity: 0.7;
+            border-color: #2ecc71;
+        }
+        .completed .area-title {
+            color: #2ecc71;
+        }
+        .status-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e74c3c;
+        }
+        .status-indicator.completed {
+            background: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🧭 Evaluación Integral Completa CO•RA</h1>
+            <p style="color: #b8c6db; font-size: 1.2rem; margin-bottom: 20px;">
+                Sistema completo de evaluación del ser humano en 7 dimensiones fundamentales
+            </p>
+            <p style="color: #764ba2; font-size: 1rem;">
+                Protocolo científico basado en tests profesionales validados para determinar tu perfil integral
+            </p>
+        </div>
+
+        <div class="protocol-section">
+            <h2 style="color: #764ba2; margin-bottom: 20px;">🎯 Protocolos de Evaluación Integral</h2>
+            <p style="margin-bottom: 25px; line-height: 1.6;">
+                Tres enfoques complementarios para evaluación completa del ser humano
+            </p>
+            <a href="protocolo_pie_cora.html" class="start-btn">
+                🎯 PIE-CO•RA EXHAUSTIVO
+            </a>
+            <a href="protocolo_integral.html" class="start-btn">
+                🚀 PROTOCOLO 7 FASES
+            </a>
+            <a href="evaluacion_holistico.html" class="start-btn">
+                🌍 EVALUACIÓN HOLÍSTICA
+            </a>
+        </div>
+        
+        <div class="protocol-section">
+            <h2 style="color: #e74c3c; margin-bottom: 20px;">📊 Sistema de Seguimiento y Respuesta</h2>
+            <p style="margin-bottom: 25px; line-height: 1.6;">
+                Monitoreo continuo de bienestar y protocolo SOS para salud mental
+            </p>
+            <a href="dashboard_seguimiento.html" class="start-btn">
+                📊 DASHBOARD SEGUIMIENTO
+            </a>
+            <a href="protocolo_sos.html" class="start-btn" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                🆘 PROTOCOLO SOS
+            </a>
+        </div>
+
+        <h2 style="color: #667eea; text-align: center; margin: 40px 0 30px;">📊 Evaluaciones por Área Específica</h2>
+
+        <div class="areas-grid">
+            <!-- Área Física/Biológica -->
+            <div class="area-card" onclick="window.location.href='evaluacion_salud_integral.html'">
+                <div style="position: relative;">
+                    <div class="status-indicator" id="status-fisica"></div>
+                    <div class="area-icon">🏥</div>
+                    <h3 class="area-title">Física / Biológica</h3>
+                    <p class="area-description">
+                        Evaluación integral de salud física, energía, nutrición y bienestar corporal
+                    </p>
+                    <div class="area-tests">
+                        <h4>Tests incluidos:</h4>
+                        <ul>
+                            <li>Estado de salud general</li>
+                            <li>Nivel energético y vitalidad</li>
+                            <li>Calidad del sueño</li>
+                            <li>Manejo del estrés físico</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área Mental/Cognitiva -->
+            <div class="area-card" onclick="window.location.href='evaluacion_cognitiva.html'">
+                <div style="position: relative;">
+                    <div class="status-indicator" id="status-cognitiva"></div>
+                    <div class="area-icon">🧠</div>
+                    <h3 class="area-title">Mental / Cognitiva</h3>
+                    <p class="area-description">
+                        Evaluación de capacidades intelectuales, creatividad y estilos de pensamiento
+                    </p>
+                    <div class="area-tests">
+                        <h4>Tests incluidos:</h4>
+                        <ul>
+                            <li>Inteligencias Múltiples (Gardner)</li>
+                            <li>Matrices de Raven</li>
+                            <li>Test de Creatividad (Torrance)</li>
+                            <li>Razonamiento abstracto</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área Emocional/Afectiva -->
+            <div class="area-card" onclick="window.location.href='evaluacion_socioemocional.html'">
+                <div style="position: relative;">
+                    <div class="status-indicator" id="status-emocional"></div>
+                    <div class="area-icon">❤️</div>
+                    <h3 class="area-title">Emocional / Afectiva</h3>
+                    <p class="area-description">
+                        Evaluación de inteligencia emocional, regulación y relaciones interpersonales
+                    </p>
+                    <div class="area-tests">
+                        <h4>Tests incluidos:</h4>
+                        <ul>
+                            <li>Inteligencia Emocional (TMMS-24)</li>
+                            <li>Big Five (OCEAN)</li>
+                            <li>Regulación emocional</li>
+                            <li>Autoestima y empatía</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área Social -->
+            <div class="area-card" onclick="window.location.href='evaluacion_social.html'">
+                <div style="position: relative;">
+                    <div class="status-indicator" id="status-social"></div>
+                    <div class="area-icon">👥</div>
+                    <h3 class="area-title">Social / Relacional</h3>
+                    <p class="area-description">
+                        Evaluación de habilidades sociales, trabajo en equipo y liderazgo
+                    </p>
+                    <div class="area-tests">
+                        <h4>Tests incluidos:</h4>
+                        <ul>
+                            <li>Roles de Equipo (Belbin)</li>
+                            <li>Comunicación Asertiva</li>
+                            <li>Liderazgo situacional</li>
+                            <li>Resolución de conflictos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área Espiritual/Trascendental -->
+            <div class="area-card" onclick="window.location.href='evaluacion_espiritual.html'">
+                <div style="position: relative;">
+                    <div class="status-indicator" id="status-espiritual"></div>
+                    <div class="area-icon">🌟</div>
+                    <h3 class="area-title">Espiritual / Trascendental</h3>
+                    <p class="area-description">
+                        Evaluación de sentido de vida, valores, ética y conexión trascendental
+                    </p>
+                    <div class="area-tests">
+                        <h4>Tests incluidos:</h4>
+                        <ul>
+                            <li>Sentido de Vida (PIL)</li>
+                            <li>Valores (Schwartz)</li>
+                            <li>Fortalezas de Carácter (VIA)</li>
+                            <li>Orientación al servicio</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área Vocacional/Profesional -->
+            <div class="area-card" onclick="window.location.href='evaluacion_vocacional.html'">
+                <div style="position: relative;">
+                    <div class="status-indicator" id="status-vocacional"></div>
+                    <div class="area-icon">🎯</div>
+                    <h3 class="area-title">Vocacional / Profesional</h3>
+                    <p class="area-description">
+                        Evaluación de propósito profesional, habilidades y contribución social
+                    </p>
+                    <div class="area-tests">
+                        <h4>Tests incluidos:</h4>
+                        <ul>
+                            <li>Propósito profesional</li>
+                            <li>Inventario de habilidades</li>
+                            <li>Contribución social</li>
+                            <li>Alineación con CO•RA</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área Económica/Material -->
+            <div class="area-card" onclick="window.location.href='evaluacion_economica.html'">
+                <div style="position: relative;">
+                    <div class="status-indicator" id="status-economica"></div>
+                    <div class="area-icon">💰</div>
+                    <h3 class="area-title">Económica / Material</h3>
+                    <p class="area-description">
+                        Evaluación de estabilidad financiera y capacidad de inversión en desarrollo
+                    </p>
+                    <div class="area-tests">
+                        <h4>Tests incluidos:</h4>
+                        <ul>
+                            <li>Estabilidad financiera</li>
+                            <li>Capacidad de inversión</li>
+                            <li>Modelo de acceso CO•RA</li>
+                            <li>Planificación económica</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="protocol-section">
+            <h2 style="color: #764ba2; margin-bottom: 20px;">📈 Resultado Final</h2>
+            <p style="margin-bottom: 25px; line-height: 1.6;">
+                Al completar todas las evaluaciones obtendrás:
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 25px 0;">
+                <div style="background: rgba(46, 204, 113, 0.2); padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #2ecc71; margin-bottom: 10px;">✅ Perfil Integral</h4>
+                    <p style="font-size: 0.9rem;">Visión completa de virtudes y defectos</p>
+                </div>
+                <div style="background: rgba(52, 152, 219, 0.2); padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #3498db; margin-bottom: 10px;">🎯 Plan Personalizado</h4>
+                    <p style="font-size: 0.9rem;">Estrategias específicas de desarrollo</p>
+                </div>
+                <div style="background: rgba(155, 89, 182, 0.2); padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #9b59b6; margin-bottom: 10px;">🚀 Protocolo CO•RA</h4>
+                    <p style="font-size: 0.9rem;">Amplificación cognitiva personalizada</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Verificar estado de evaluaciones completadas
+        function checkCompletedEvaluations() {
+            const areas = ['fisica', 'cognitiva', 'emocional', 'social', 'espiritual', 'vocacional', 'economica'];
+            
+            areas.forEach(area => {
+                const completed = localStorage.getItem(`evaluation_${area}_completed`);
+                const statusElement = document.getElementById(`status-${area}`);
+                const cardElement = statusElement.closest('.area-card');
+                
+                if (completed === 'true') {
+                    statusElement.classList.add('completed');
+                    cardElement.classList.add('completed');
+                }
+            });
+        }
+
+        // Marcar evaluación como completada
+        function markEvaluationCompleted(area) {
+            localStorage.setItem(`evaluation_${area}_completed`, 'true');
+            checkCompletedEvaluations();
+        }
+
+        // Verificar al cargar la página
+        checkCompletedEvaluations();
+
+        // Función para mostrar progreso general
+        function showOverallProgress() {
+            const areas = ['fisica', 'cognitiva', 'emocional', 'social', 'espiritual', 'vocacional', 'economica'];
+            const completed = areas.filter(area => 
+                localStorage.getItem(`evaluation_${area}_completed`) === 'true'
+            ).length;
+            
+            const progress = (completed / areas.length) * 100;
+            
+            if (progress > 0) {
+                const progressDiv = document.createElement('div');
+                progressDiv.innerHTML = `
+                    <div style="background: rgba(102, 126, 234, 0.2); padding: 20px; border-radius: 15px; margin: 20px 0; text-align: center;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📊 Progreso General</h3>
+                        <div style="background: rgba(0,0,0,0.6); height: 20px; border-radius: 10px; overflow: hidden; margin: 15px 0;">
+                            <div style="background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; width: ${progress}%; transition: width 0.5s ease;"></div>
+                        </div>
+                        <p>${completed} de ${areas.length} evaluaciones completadas (${Math.round(progress)}%)</p>
+                    </div>
+                `;
+                document.querySelector('.header').appendChild(progressDiv);
+            }
+        }
+
+        showOverallProgress();
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

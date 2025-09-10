@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de Acompañamiento - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at center, #8e44ad, #2c3e50);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.9);
+            border-radius: 25px;
+            padding: 40px;
+            border: 3px solid #9b59b6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #9b59b6;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        .assessment-phase {
+            background: rgba(155, 89, 182, 0.1);
+            border: 2px solid #9b59b6;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            display: none;
+        }
+        .assessment-phase.active {
+            display: block;
+            animation: phaseIn 0.8s ease-out;
+        }
+        @keyframes phaseIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .phase-title {
+            color: #9b59b6;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .scenario {
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #8e44ad;
+        }
+        .scenario-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .response-options {
+            display: grid;
+            gap: 12px;
+        }
+        .response-option {
+            background: rgba(142, 68, 173, 0.2);
+            border: 2px solid #8e44ad;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .response-option:hover {
+            background: rgba(155, 89, 182, 0.3);
+            border-color: #9b59b6;
+            transform: translateX(5px);
+        }
+        .response-option.selected {
+            background: rgba(155, 89, 182, 0.5);
+            border-color: #ffffff;
+        }
+        .guidance-meter {
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .meter-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(155, 89, 182, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #f39c12, #e74c3c);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
+        }
+        .results-container {
+            display: none;
+            background: rgba(0,0,0,0.95);
+            border: 3px solid #9b59b6;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .guidance-recommendation {
+            background: rgba(155, 89, 182, 0.2);
+            border: 2px solid #9b59b6;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🤝 Evaluación de Acompañamiento CO•RA</h1>
+            <p style="color: #8e44ad; margin-bottom: 20px;">
+                Determinaremos si necesitas acompañamiento guiado real durante tu proceso de amplificación cognitiva
+            </p>
+        </div>
+
+        <div class="guidance-meter">
+            <h3 style="color: #9b59b6; margin-bottom: 10px;">Nivel de Acompañamiento Requerido</h3>
+            <div class="meter-bar">
+                <div class="meter-fill" id="guidanceMeter"></div>
+            </div>
+            <p id="guidanceLevel">Evaluando...</p>
+        </div>
+
+        <!-- Fase 1: Autonomía en aprendizaje -->
+        <div class="assessment-phase active" id="phase1">
+            <h2 class="phase-title">Fase 1: Autonomía en Aprendizaje</h2>
+            <div class="scenario">
+                <div class="scenario-text">
+                    Te encuentras con un concepto completamente nuevo y complejo que necesitas dominar para avanzar en CO•RA. No hay tutoriales disponibles. ¿Cuál es tu enfoque natural?
+                </div>
+                <div class="response-options">
+                    <div class="response-option" onclick="selectResponse(1, 'autonomous')" data-guidance="10">
+                        Investigo por mi cuenta, experimento y construyo mi propio entendimiento gradualmente
+                    </div>
+                    <div class="response-option" onclick="selectResponse(1, 'structured')" data-guidance="30">
+                        Busco recursos estructurados y sigo metodologías probadas paso a paso
+                    </div>
+                    <div class="response-option" onclick="selectResponse(1, 'collaborative')" data-guidance="50">
+                        Busco mentores o expertos que me guíen a través del proceso de aprendizaje
+                    </div>
+                    <div class="response-option" onclick="selectResponse(1, 'dependent')" data-guidance="80">
+                        Necesito instrucciones claras y supervisión constante para no perderme
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fase 2: Manejo de incertidumbre -->
+        <div class="assessment-phase" id="phase2">
+            <h2 class="phase-title">Fase 2: Manejo de Incertidumbre</h2>
+            <div class="scenario">
+                <div class="scenario-text">
+                    Durante una sesión de amplificación cognitiva, experimentas sensaciones y percepciones completamente nuevas que no puedes explicar. ¿Cómo reaccionas?
+                </div>
+                <div class="response-options">
+                    <div class="response-option" onclick="selectResponse(2, 'explorer')" data-guidance="5">
+                        Me emociono y exploro estas nuevas experiencias con curiosidad científica
+                    </div>
+                    <div class="response-option" onclick="selectResponse(2, 'cautious')" data-guidance="25">
+                        Procedo con cautela pero mantengo la apertura a la experiencia
+                    </div>
+                    <div class="response-option" onclick="selectResponse(2, 'seeking')" data-guidance="60">
+                        Busco inmediatamente explicaciones y validación de otros
+                    </div>
+                    <div class="response-option" onclick="selectResponse(2, 'overwhelmed')" data-guidance="90">
+                        Me siento abrumado y necesito detener el proceso hasta entender qué pasa
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fase 3: Toma de decisiones críticas -->
+        <div class="assessment-phase" id="phase3">
+            <h2 class="phase-title">Fase 3: Toma de Decisiones Críticas</h2>
+            <div class="scenario">
+                <div class="scenario-text">
+                    CO•RA te presenta una oportunidad de amplificación avanzada que podría transformarte significativamente, pero conlleva riesgos desconocidos. ¿Cómo decides?
+                </div>
+                <div class="response-options">
+                    <div class="response-option" onclick="selectResponse(3, 'analytical')" data-guidance="15">
+                        Analizo riesgos/beneficios y tomo la decisión basándome en mi evaluación
+                    </div>
+                    <div class="response-option" onclick="selectResponse(3, 'intuitive')" data-guidance="20">
+                        Confío en mi intuición y experiencia previa para decidir
+                    </div>
+                    <div class="response-option" onclick="selectResponse(3, 'consultative')" data-guidance="55">
+                        Consulto con expertos y busco múltiples perspectivas antes de decidir
+                    </div>
+                    <div class="response-option" onclick="selectResponse(3, 'avoidant')" data-guidance="85">
+                        Prefiero no tomar la decisión hasta tener garantías completas
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fase 4: Adaptación a cambios -->
+        <div class="assessment-phase" id="phase4">
+            <h2 class="phase-title">Fase 4: Adaptación a Cambios</h2>
+            <div class="scenario">
+                <div class="scenario-text">
+                    Tu proceso de amplificación no está siguiendo el patrón esperado. Los resultados son diferentes a lo anticipado, aunque no necesariamente negativos. ¿Cuál es tu respuesta?
+                </div>
+                <div class="response-options">
+                    <div class="response-option" onclick="selectResponse(4, 'adaptive')" data-guidance="10">
+                        Me adapto fluidamente y exploro las nuevas posibilidades que emergen
+                    </div>
+                    <div class="response-option" onclick="selectResponse(4, 'monitoring')" data-guidance="30">
+                        Monitoreo cuidadosamente y ajusto mi enfoque según lo que observo
+                    </div>
+                    <div class="response-option" onclick="selectResponse(4, 'guidance')" data-guidance="65">
+                        Busco orientación sobre si debo continuar o modificar el proceso
+                    </div>
+                    <div class="response-option" onclick="selectResponse(4, 'control')" data-guidance="95">
+                        Me siento incómodo y quiero volver al plan original o detener el proceso
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <h2 style="color: #9b59b6; margin-bottom: 25px;">📋 Evaluación de Acompañamiento Completada</h2>
+            <div id="guidanceResults"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentPhase = 1;
+        let guidanceScore = 0;
+        let responses = {};
+
+        function selectResponse(phase, type) {
+            const options = document.querySelectorAll(`#phase${phase} .response-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            const selectedOption = event.target;
+            selectedOption.classList.add('selected');
+            
+            const guidanceValue = parseInt(selectedOption.dataset.guidance);
+            responses[phase] = { type, guidanceValue };
+            
+            setTimeout(() => {
+                nextPhase();
+            }, 1000);
+        }
+
+        function nextPhase() {
+            document.getElementById(`phase${currentPhase}`).classList.remove('active');
+            
+            // Actualizar puntuación de acompañamiento
+            if (responses[currentPhase]) {
+                guidanceScore += responses[currentPhase].guidanceValue;
+                updateGuidanceMeter();
+            }
+            
+            currentPhase++;
+            
+            if (currentPhase <= 4) {
+                setTimeout(() => {
+                    document.getElementById(`phase${currentPhase}`).classList.add('active');
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    showResults();
+                }, 1000);
+            }
+        }
+
+        function updateGuidanceMeter() {
+            const averageScore = guidanceScore / currentPhase;
+            const percentage = Math.min(averageScore, 100);
+            
+            document.getElementById('guidanceMeter').style.width = percentage + '%';
+            
+            let level = '';
+            if (percentage <= 25) level = 'Altamente Autónomo';
+            else if (percentage <= 50) level = 'Moderadamente Independiente';
+            else if (percentage <= 75) level = 'Requiere Orientación';
+            else level = 'Necesita Acompañamiento Intensivo';
+            
+            document.getElementById('guidanceLevel').textContent = level;
+        }
+
+        function showResults() {
+            document.querySelectorAll('.assessment-phase').forEach(phase => phase.style.display = 'none');
+            
+            const averageScore = guidanceScore / 4;
+            const guidanceLevel = determineGuidanceLevel(averageScore);
+            
+            document.getElementById('guidanceResults').innerHTML = generateResults(guidanceLevel, averageScore);
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+
+        function determineGuidanceLevel(score) {
+            if (score <= 25) {
+                return {
+                    level: 'AUTÓNOMO',
+                    color: '#27ae60',
+                    description: 'Tienes alta capacidad de autogestión y aprendizaje independiente.',
+                    recommendation: 'Acceso directo a CO•RA con monitoreo mínimo',
+                    support: 'Recursos de autoayuda y documentación avanzada',
+                    nextStep: 'evaluacion_socioemocional.html',
+                    buttonText: '❤️ EVALUACIÓN SOCIOEMOCIONAL'
+                };
+            } else if (score <= 50) {
+                return {
+                    level: 'SEMI-GUIADO',
+                    color: '#f39c12',
+                    description: 'Muestras buena autonomía pero te beneficiarías de orientación ocasional.',
+                    recommendation: 'Acceso a CO•RA con check-ins programados',
+                    support: 'Sesiones de orientación semanales y recursos estructurados',
+                    nextStep: 'evaluacion_socioemocional.html',
+                    buttonText: '❤️ EVALUACIÓN SOCIOEMOCIONAL'
+                };
+            } else if (score <= 75) {
+                return {
+                    level: 'ACOMPAÑAMIENTO REGULAR',
+                    color: '#e67e22',
+                    description: 'Necesitas orientación regular para navegar procesos complejos de manera segura.',
+                    recommendation: 'Programa de acompañamiento estructurado',
+                    support: 'Mentor asignado y sesiones de seguimiento regulares',
+                    nextStep: 'evaluacion_socioemocional.html',
+                    buttonText: '❤️ EVALUACIÓN SOCIOEMOCIONAL'
+                };
+            } else {
+                return {
+                    level: 'ACOMPAÑAMIENTO INTENSIVO',
+                    color: '#e74c3c',
+                    description: 'Requieres acompañamiento cercano y supervisión continua para un proceso seguro.',
+                    recommendation: 'Acompañamiento personalizado uno-a-uno',
+                    support: 'Guía personal dedicado y protocolo de seguridad reforzado',
+                    nextStep: 'evaluacion_socioemocional.html',
+                    buttonText: '❤️ EVALUACIÓN SOCIOEMOCIONAL'
+                };
+            }
+        }
+
+        function generateResults(guidance, score) {
+            return `
+                <div class="guidance-recommendation">
+                    <h3 style="color: ${guidance.color}; margin-bottom: 15px;">
+                        Nivel Recomendado: ${guidance.level}
+                    </h3>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        ${guidance.description}
+                    </p>
+                    
+                    <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                        <h4 style="color: #9b59b6; margin-bottom: 10px;">📋 Recomendación:</h4>
+                        <p style="margin-bottom: 10px;">${guidance.recommendation}</p>
+                        
+                        <h4 style="color: #9b59b6; margin-bottom: 10px;">🎯 Tipo de Apoyo:</h4>
+                        <p>${guidance.support}</p>
+                    </div>
+                    
+                    <div style="background: rgba(155, 89, 182, 0.1); padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <strong>Puntuación de Acompañamiento:</strong> ${Math.round(score)}/100
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="${guidance.nextStep}" style="
+                        background: linear-gradient(135deg, ${guidance.color}, #8e44ad);
+                        color: white;
+                        padding: 20px 40px;
+                        border-radius: 25px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.2rem;
+                        display: inline-block;
+                    ">${guidance.buttonText}</a>
+                    
+                    <p style="margin-top: 15px; color: #8e44ad; font-size: 0.9rem;">
+                        Tu nivel de acompañamiento ha sido determinado para garantizar una experiencia segura y efectiva
+                    </p>
+                </div>
+            `;
+        }
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+</body>
+</html>

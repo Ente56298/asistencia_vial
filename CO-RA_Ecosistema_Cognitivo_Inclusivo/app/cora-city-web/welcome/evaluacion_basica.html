@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Básica de Autoconocimiento - CO•RA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.8);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid #4A90E2;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #4A90E2;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #ffffff;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        .question-card {
+            background: rgba(74, 144, 226, 0.1);
+            border: 2px solid #4A90E2;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .question-card.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+        .option {
+            background: rgba(74, 144, 226, 0.2);
+            border: 2px solid #4A90E2;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .option:hover {
+            background: rgba(74, 144, 226, 0.4);
+            transform: translateX(5px);
+        }
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: rgba(74, 144, 226, 0.3);
+            border-radius: 3px;
+            margin-bottom: 25px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4A90E2, #ffffff);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .result {
+            display: none;
+            text-align: center;
+            background: rgba(0,0,0,0.9);
+            border: 2px solid #4A90E2;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        .level-indicator {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .level-card {
+            background: rgba(74, 144, 226, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #4A90E2;
+        }
+        .level-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4A90E2;
+        }
+        .recommendation {
+            background: rgba(46, 204, 113, 0.2);
+            border: 2px solid #2ECC71;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .next-btn {
+            background: linear-gradient(135deg, #4A90E2, #357ABD);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        .next-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🧠 Evaluación de Autoconocimiento</h1>
+            <p class="subtitle">CO•RA es inclusivo y está diseñado para todos. Primero necesitamos conocer tu nivel actual de autoconocimiento para ofrecerte la experiencia más adecuada.</p>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="question-card active" data-question="1">
+            <div class="question-text">
+                ¿Con qué frecuencia reflexionas sobre tus propios pensamientos y emociones?
+            </div>
+            <div class="options">
+                <button class="option" data-level="1">Raramente pienso en eso</button>
+                <button class="option" data-level="2">A veces, cuando algo me molesta</button>
+                <button class="option" data-level="3">Regularmente me observo a mí mismo</button>
+                <button class="option" data-level="4">Constantemente analizo mis procesos internos</button>
+            </div>
+        </div>
+
+        <div class="question-card" data-question="2">
+            <div class="question-text">
+                Cuando tomas decisiones importantes, ¿qué proceso sigues?
+            </div>
+            <div class="options">
+                <button class="option" data-level="1">Sigo mi primer impulso</button>
+                <button class="option" data-level="2">Pienso un poco y decido</button>
+                <button class="option" data-level="3">Analizo pros y contras cuidadosamente</button>
+                <button class="option" data-level="4">Examino mis motivaciones profundas y valores</button>
+            </div>
+        </div>
+
+        <div class="question-card" data-question="3">
+            <div class="question-text">
+                ¿Qué tan bien conoces tus fortalezas y debilidades?
+            </div>
+            <div class="options">
+                <button class="option" data-level="1">No he pensado mucho en ello</button>
+                <button class="option" data-level="2">Tengo una idea general</button>
+                <button class="option" data-level="3">Las conozco bastante bien</button>
+                <button class="option" data-level="4">Las comprendo profundamente y trabajo con ellas</button>
+            </div>
+        </div>
+
+        <div class="question-card" data-question="4">
+            <div class="question-text">
+                Cuando experimentas emociones fuertes, ¿cómo reaccionas?
+            </div>
+            <div class="options">
+                <button class="option" data-level="1">Me dejo llevar por la emoción</button>
+                <button class="option" data-level="2">Trato de controlarme</button>
+                <button class="option" data-level="3">Observo la emoción y trato de entenderla</button>
+                <button class="option" data-level="4">Acepto la emoción y exploro su mensaje</button>
+            </div>
+        </div>
+
+        <div class="question-card" data-question="5">
+            <div class="question-text">
+                ¿Cómo describirías tu comprensión de tus propios valores y creencias?
+            </div>
+            <div class="options">
+                <button class="option" data-level="1">Nunca he reflexionado sobre esto</button>
+                <button class="option" data-level="2">Tengo algunas ideas básicas</button>
+                <button class="option" data-level="3">Conozco mis valores principales</button>
+                <button class="option" data-level="4">Comprendo profundamente mi sistema de valores</button>
+            </div>
+        </div>
+
+        <div class="question-card" data-question="6">
+            <div class="question-text">
+                Cuando alguien te critica, ¿cuál es tu reacción típica?
+            </div>
+            <div class="options">
+                <button class="option" data-level="1">Me defiendo o me molesto</button>
+                <button class="option" data-level="2">Trato de no tomármelo personal</button>
+                <button class="option" data-level="3">Evalúo si la crítica tiene validez</button>
+                <button class="option" data-level="4">Uso la crítica como oportunidad de crecimiento</button>
+            </div>
+        </div>
+
+        <div class="question-card" data-question="7">
+            <div class="question-text">
+                ¿Qué tan consciente eres de cómo tus acciones afectan a otros?
+            </div>
+            <div class="options">
+                <button class="option" data-level="1">No suelo pensar en eso</button>
+                <button class="option" data-level="2">A veces me doy cuenta después</button>
+                <button class="option" data-level="3">Generalmente soy consciente del impacto</button>
+                <button class="option" data-level="4">Siempre considero el efecto en otros antes de actuar</button>
+            </div>
+        </div>
+
+        <div class="question-card" data-question="8">
+            <div class="question-text">
+                ¿Cómo manejas los conflictos internos o la confusión sobre ti mismo?
+            </div>
+            <div class="options">
+                <button class="option" data-level="1">Los ignoro hasta que desaparecen</button>
+                <button class="option" data-level="2">Busco distracciones</button>
+                <button class="option" data-level="3">Trato de analizarlos y resolverlos</button>
+                <button class="option" data-level="4">Los abrazo como oportunidades de autodescubrimiento</button>
+            </div>
+        </div>
+
+        <div class="result" id="result">
+            <h2 style="color: #4A90E2; margin-bottom: 20px;">Evaluación Completada</h2>
+            <div id="levelAnalysis"></div>
+            <div class="level-indicator" id="levelIndicator"></div>
+            <div id="recommendation"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        let totalScore = 0;
+        let responses = [];
+        
+        function selectOption(element) {
+            const level = parseInt(element.dataset.level);
+            totalScore += level;
+            responses.push(level);
+            
+            // Marcar selección
+            document.querySelectorAll('.option').forEach(opt => opt.style.background = 'rgba(74, 144, 226, 0.2)');
+            element.style.background = 'rgba(74, 144, 226, 0.6)';
+            
+            setTimeout(() => {
+                nextQuestion();
+            }, 600);
+        }
+        
+        function nextQuestion() {
+            const current = document.querySelector(`[data-question="${currentQuestion}"]`);
+            current.classList.remove('active');
+            
+            currentQuestion++;
+            
+            // Actualizar progreso
+            const progress = ((currentQuestion - 1) / 8) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            if (currentQuestion <= 8) {
+                setTimeout(() => {
+                    const next = document.querySelector(`[data-question="${currentQuestion}"]`);
+                    next.classList.add('active');
+                }, 300);
+            } else {
+                setTimeout(showResult, 500);
+            }
+        }
+        
+        function showResult() {
+            const avgScore = totalScore / 8;
+            let level, description, nextStep;
+            
+            if (avgScore <= 1.5) {
+                level = "EXPLORADOR INICIAL";
+                description = "Estás comenzando tu viaje de autoconocimiento. CO•RA te guiará paso a paso con explicaciones claras y ejercicios básicos.";
+                nextStep = "evaluacion_guiada.html";
+            } else if (avgScore <= 2.5) {
+                level = "BUSCADOR EN DESARROLLO";
+                description = "Tienes una base sólida de autoconocimiento. CO•RA te ofrecerá herramientas intermedias para profundizar tu comprensión.";
+                nextStep = "evaluacion_intermedia.html";
+            } else if (avgScore <= 3.5) {
+                level = "OBSERVADOR CONSCIENTE";
+                description = "Posees un buen nivel de autoconocimiento. Estás listo para explorar aspectos más profundos de la consciencia.";
+                nextStep = "evaluacion_profunda.html";
+            } else {
+                level = "EXPLORADOR AVANZADO";
+                description = "Tienes un autoconocimiento excepcional. Puedes acceder directamente a la evaluación más profunda de CO•RA.";
+                nextStep = "evaluacion_profunda.html";
+            }
+            
+            document.getElementById('levelAnalysis').innerHTML = `
+                <h3 style="color: #2ECC71; margin-bottom: 15px;">${level}</h3>
+                <p style="line-height: 1.6; margin-bottom: 20px;">${description}</p>
+            `;
+            
+            document.getElementById('levelIndicator').innerHTML = `
+                <div class="level-card">
+                    <div>Nivel de Autoconocimiento</div>
+                    <div class="level-value">${Math.round(avgScore * 25)}%</div>
+                </div>
+                <div class="level-card">
+                    <div>Puntuación Total</div>
+                    <div class="level-value">${totalScore}/32</div>
+                </div>
+                <div class="level-card">
+                    <div>Preparación CO•RA</div>
+                    <div class="level-value">${avgScore >= 3 ? 'ALTA' : avgScore >= 2 ? 'MEDIA' : 'BÁSICA'}</div>
+                </div>
+            `;
+            
+            document.getElementById('recommendation').innerHTML = `
+                <div class="recommendation">
+                    <h4 style="color: #2ECC71; margin-bottom: 10px;">🎯 Recomendación Personalizada</h4>
+                    <p>Basándome en tu nivel actual, he preparado una evaluación específica que se adapta a tu comprensión.</p>
+                    <p style="margin-top: 10px; color: #4A90E2;"><strong>CO•RA es inclusivo:</strong> Todos pueden evolucionar, independientemente de su punto de partida.</p>
+                    <a href="${nextStep}" class="next-btn">🚀 CONTINUAR EVALUACIÓN PERSONALIZADA</a>
+                </div>
+            `;
+            
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectOption(this);
+                });
+            });
+        });
+    </script>
+    <script src="token_manager.js"></script>
+    <script src="analytics_engine.js"></script>
+    <script>
+        // Integración con motor de análisis
+        function trackQuestionResponse(questionNum, response) {
+            if (window.coraAnalytics) {
+                window.coraAnalytics.sessionData.interactionData.push({
+                    type: 'question_response',
+                    question: questionNum,
+                    response: response,
+                    timestamp: Date.now(),
+                    responseTime: Date.now() - window.questionStartTime
+                });
+            }
+        }
+        
+        // Marcar inicio de pregunta
+        let questionStartTime = Date.now();
+        
+        // Modificar función selectOption para incluir tracking
+        const originalSelectOption = selectOption;
+        selectOption = function(element) {
+            trackQuestionResponse(currentQuestion, element.dataset.level);
+            return originalSelectOption(element);
+        };
+        
+        // Marcar nuevo tiempo al cambiar pregunta
+        const originalNextQuestion = nextQuestion;
+        nextQuestion = function() {
+            window.questionStartTime = Date.now();
+            return originalNextQuestion();
+        };
+        
+        // Guardar análisis al completar
+        const originalShowResult = showResult;
+        showResult = function() {
+            if (window.coraAnalytics) {
+                const analysis = window.coraAnalytics.saveAnalysisData();
+                console.log('Análisis guardado:', analysis);
+            }
+            return originalShowResult();
+        };
+    </script>
+</body>
+</html>
