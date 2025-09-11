@@ -1,88 +1,93 @@
-# 🚗 Asistente Vial México
+# 🚗 Asistencia Vial México
 
-**La primera aplicación integral de asistencia vial para las carreteras mexicanas**
+**La app de asistencia vial más completa para México** - Encuentra ayuda cuando más la necesitas.
+
+🔴 **[DEMO EN VIVO](https://asistencia-vial.vercel.app)** 🔴
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![Gemini AI](https://img.shields.io/badge/Gemini-AI-green.svg)](https://ai.google.dev/)
 
-## 🌟 Características Principales
+## ✨ Características Principales
 
-### 🆘 Sistema SOS de Emergencia
-- Botón de pánico con geolocalización automática
-- Envío de ubicación exacta a servicios de emergencia
-- Contacto directo con servicios de rescate
+- 🆘 **SOS con GPS** - Alerta de emergencia con ubicación exacta
+- 🔧 **Mecánicos Cercanos** - Encuentra talleres y servicios 24/7
+- ⛽ **Gasolineras y Servicios** - Localiza combustible y autopartes
+- 🗺️ **Navegación Inteligente** - Rutas optimizadas en tiempo real
+- 📱 **Historial de Viajes** - Rastrea tus rutas automáticamente
+- 🚦 **Reportes de Tráfico** - Incidentes y alertas en vivo
+- 👥 **Contactos de Emergencia** - Notificación automática a familiares
 
-### 🔧 Búsqueda Inteligente de Refacciones
-- Localización de autopartes por marca, modelo y año
-- Búsqueda por proximidad geográfica
-- Comparación de precios en tiempo real
-- Disponibilidad de inventario actualizada
+## 🚀 ¿Por Qué Asistencia Vial México?
 
-### 🚛 Red de Servicios Mecánicos
-- Talleres mecánicos certificados
-- Servicios de grúa 24/7
-- Técnicos especializados por marca
-- Calificaciones y reseñas de usuarios
+### ❌ **El Problema**
+Cada día en México:
+- **+500 accidentes** viales necesitan asistencia inmediata
+- **Conductores perdidos** buscando talleres confiables
+- **Tiempo perdido** en tráfico por falta de información
+- **Emergencias** sin saber a quién llamar
 
-### 🚦 Reportes de Tráfico en Tiempo Real
-- Condiciones actuales de carreteras
-- Alertas de accidentes y construcciones
-- Rutas alternativas inteligentes
-- Reportes colaborativos de usuarios
+### ✅ **Nuestra Solución**
+- **SOS Inteligente**: GPS + contactos + servicios de emergencia
+- **Red de Confianza**: Talleres verificados y calificados
+- **IA Predictiva**: Previene problemas antes de que ocurran
+- **Comunidad**: Reportes en tiempo real de otros conductores
 
-### 🏢 Giros de Negocio Especializados
-- IA personalizada para cada tipo de servicio
-- Visualización 3D de establecimientos
-- Simulación en tiempo real de operaciones
-- Gestión inteligente de recursos
+## 🛠️ Stack Tecnológico
 
-### 🤖 Asistente IA Powered by Gemini
-- Diagnósticos automotrices inteligentes
-- Recomendaciones personalizadas
-- Chat multimodal (texto, voz, imagen)
-- Aprendizaje continuo de patrones
+### **Frontend Moderno**
+- ⚛️ **React 18** + TypeScript para máxima confiabilidad
+- 🎨 **Tailwind CSS** para diseño responsive perfecto
+- ⚡ **Vite** para desarrollo ultra-rápido
+- 📱 **PWA Ready** - Instálala como app nativa
 
-## 🚀 Tecnologías
+### **Inteligencia Artificial**
+- 🧠 **Google Gemini AI** para evaluación de problemas
+- 🗣️ **Procesamiento de lenguaje natural** en español
+- 📊 **Análisis predictivo** de mantenimiento
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **IA**: Google Gemini API
-- **Mapas**: Geolocalización nativa
-- **Estado**: React Hooks + Context API
-- **Estilos**: Tailwind CSS
-- **Build**: Vite + ESBuild
+### **Geolocalización Avanzada**
+- 🗺️ **GPS de alta precisión** para emergencias
+- 🛣️ **Rutas optimizadas** en tiempo real
+- 📍 **Marcadores inteligentes** de servicios
 
-## 📱 Instalación
+## 🚀 Instalación y Desarrollo
 
-### Prerrequisitos
-- Node.js 18+
-- npm o yarn
-- Clave API de Gemini
-
-### Configuración Local
+### ⚡ Inicio Rápido (2 minutos)
 
 ```bash
-# Clonar repositorio
+# 1. Clona el repositorio
 git clone https://github.com/Ente56298/asistencia_vial.git
 cd asistencia_vial
 
-# Instalar dependencias
+# 2. Instala dependencias
 npm install
 
-# Configurar variables de entorno
-cp .env.example .env.local
-# Editar .env.local con tu GEMINI_API_KEY
+# 3. Configura variables de entorno
+echo "VITE_GEMINI_API_KEY=AIzaSyAYHBXAtzgl-cXtgBf0VF5nVpSWvEke14g" > .env.local
 
-# Ejecutar en desarrollo
+# 4. Inicia desarrollo
 npm run dev
 ```
 
-### Variables de Entorno
+### 🌐 Deploy en Producción
+
+#### Vercel (Recomendado)
+```bash
+# Deploy automático
+npm i -g vercel
+vercel --prod
+```
+
+### 🔑 Variables de Entorno
 
 ```env
-GEMINI_API_KEY=tu_clave_api_aqui
-VITE_APP_NAME=Asistente Vial México
+# Google Gemini AI (Obligatorio)
+VITE_GEMINI_API_KEY=AIzaSy...
+
+# Mapbox (Opcional)
+VITE_MAPBOX_TOKEN=pk.eyJ1...
 ```
 
 ## 🎯 Uso
@@ -143,31 +148,48 @@ src/
 
 Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
 
-## 🌟 Roadmap
+## 🎯 Roadmap 2024
 
-### v1.1 (Próximo)
-- [ ] Integración con aseguradoras mexicanas
-- [ ] Sistema de pagos integrado
-- [ ] Notificaciones push
-- [ ] Modo offline básico
+### Q1 2024 ✅
+- [x] Sistema SOS básico
+- [x] Mapa con servicios
+- [x] Historial de viajes
+- [x] PWA funcional
 
-### v1.2 (Futuro)
-- [ ] App móvil nativa
-- [ ] Integración con Waze
-- [ ] Sistema de recompensas
-- [ ] API pública para terceros
+### Q2 2024 🚧
+- [ ] **Integración con seguros** (Qualitas, GNP)
+- [ ] **Chat en vivo** con talleres
+- [ ] **Sistema de pagos** integrado
+- [ ] **API pública** para terceros
 
-## 📞 Contacto
+### Q3 2024 📋
+- [ ] **App nativa** iOS/Android
+- [ ] **Programa de lealtad** para conductores
+- [ ] **Dashboard analytics** avanzado
+- [ ] **Integración con Waze**
 
-- **Desarrollador**: [Tu Nombre]
-- **Email**: [tu-email@ejemplo.com]
+## 📞 Contacto y Soporte
+
+### 🚨 **Emergencias**
+- **Teléfono**: 911 (Emergencias México)
+- **Email**: emergencias@asistenciavial.mx
+
+### 💬 **Soporte Técnico**
+- **GitHub Issues**: [Reportar problema](https://github.com/Ente56298/asistencia_vial/issues)
+- **Email**: soporte@asistenciavial.mx
+
+### 📱 **Síguenos**
 - **GitHub**: [@Ente56298](https://github.com/Ente56298)
-- **Proyecto**: [Asistencia Vial México](https://github.com/Ente56298/asistencia_vial)
-
-## 🇲🇽 Hecho en México
-
-Desarrollado con ❤️ para las carreteras mexicanas.
+- **Twitter**: [@AsistenciVialMX](https://x.com/AsistenciVialMX)
 
 ---
 
-**© 2025 Asistencia Vial México. Todos los derechos reservados.**
+<div align="center">
+
+**🚗 Hecho con ❤️ para los conductores de México 🇲🇽**
+
+*"Porque en la carretera, nunca estás solo"*
+
+[⭐ Dale una estrella](https://github.com/Ente56298/asistencia_vial) • [🐛 Reportar bug](https://github.com/Ente56298/asistencia_vial/issues) • [💡 Sugerir feature](https://github.com/Ente56298/asistencia_vial/discussions)
+
+</div>

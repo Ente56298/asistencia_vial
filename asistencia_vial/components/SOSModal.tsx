@@ -2,16 +2,38 @@
 import React, { useState, useEffect } from 'react';
 import { getEmergencyResponse } from '../services/geminiService';
 import SpinnerIcon from './icons/SpinnerIcon';
+import { SOSConfirmation } from './SOSConfirmation';
+import { sendSOSNotification, showNotification } from '../utils/notifications';
 
 interface SOSModalProps {
     onClose: () => void;
 }
 
 const SOSModal: React.FC<SOSModalProps> = ({ onClose }) => {
-    const [status, setStatus] = useState<'counting' | 'sending' | 'confirmed'>('counting');
+    const [status, setStatus] = useState<'counting' | 'confirmation' | 'sending' | 'confirmed'>('counting');
     const [countdown, setCountdown] = useState(3);
     const [responseMessage, setResponseMessage] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const [currentLocation, setCurrentLocation] = useState<{lat: number; lng: number; address?: string} | null>(null);
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setCurrentLocation({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                    address: 'Ubicación actual'
+                });
+            },
+            () => {
+                setCurrentLocation({
+                    lat: 19.4326, 
+                    lng: -99.1332,
+                    address: 'Ciudad de México (ubicación aproximada)'
+                });
+            }
+        );
+    }, []);
 
     useEffect(() => {
         if (status === 'counting') {
@@ -19,26 +41,48 @@ const SOSModal: React.FC<SOSModalProps> = ({ onClose }) => {
                 const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
                 return () => clearTimeout(timer);
             } else {
-                setStatus('sending');
+                setStatus('confirmation');
             }
         }
     }, [status, countdown]);
 
-    useEffect(() => {
-        if (status === 'sending') {
-            const fetchResponse = async () => {
-                try {
-                    const message = await getEmergencyResponse();
-                    setResponseMessage(message);
-                    setStatus('confirmed');
-                } catch (e) {
-                    setError('No se pudo conectar al servicio de emergencia. Intente llamar a las autoridades locales.');
-                    setStatus('confirmed');
-                }
-            };
-            fetchResponse();
+    const handleConfirmSOS = async () => {
+        if (!currentLocation) return;
+        
+        setStatus('sending');
+        const vehicle = JSON.parse(localStorage.getItem('vehicleProfile') || '{}');
+        const emergencyContacts = JSON.parse(localStorage.getItem('emergencyContacts') || '[]');
+        
+        try {
+            const result = await sendSOSNotification(currentLocation, vehicle, emergencyContacts);
+            setResponseMessage(result.message);
+            setStatus('confirmed');
+            
+            if (result.success) {
+                showNotification(result.message, 'success');
+            } else {
+                setError(result.message);
+            }
+        } catch (error) {
+            setError('Error al enviar la alerta SOS');
+            setStatus('confirmed');
         }
-    }, [status]);
+    };
+
+    if (status === 'confirmation' && currentLocation) {
+        const vehicle = JSON.parse(localStorage.getItem('vehicleProfile') || '{}');
+        const emergencyContacts = JSON.parse(localStorage.getItem('emergencyContacts') || '[]');
+        
+        return (
+            <SOSConfirmation
+                location={currentLocation}
+                vehicle={vehicle}
+                emergencyContacts={emergencyContacts}
+                onConfirm={handleConfirmSOS}
+                onCancel={onClose}
+            />
+        );
+    }
 
     const renderContent = () => {
         switch (status) {
@@ -46,7 +90,7 @@ const SOSModal: React.FC<SOSModalProps> = ({ onClose }) => {
                 return (
                     <>
                         <h2 className="text-2xl font-bold mb-4 text-white">Confirmando Alerta SOS</h2>
-                        <p className="text-gray-300 mb-6">Enviando señal de emergencia en...</p>
+                        <p className="text-gray-300 mb-6">Mostrando confirmación en...</p>
                         <div className="text-8xl font-mono font-bold text-red-400">{countdown}</div>
                     </>
                 );
