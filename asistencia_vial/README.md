@@ -11,13 +11,16 @@
 
 ## ✨ Características Principales
 
-- 🆘 **SOS con GPS** - Alerta de emergencia con ubicación exacta
-- 🔧 **Mecánicos Cercanos** - Encuentra talleres y servicios 24/7
-- ⛽ **Gasolineras y Servicios** - Localiza combustible y autopartes
-- 🗺️ **Navegación Inteligente** - Rutas optimizadas en tiempo real
-- 📱 **Historial de Viajes** - Rastrea tus rutas automáticamente
-- 🚦 **Reportes de Tráfico** - Incidentes y alertas en vivo
-- 👥 **Contactos de Emergencia** - Notificación automática a familiares
+- 🆘 **SOS con GPS** - Alerta de emergencia con ubicación exacta y confirmación
+- 🔧 **Mecánicos Cercanos** - Encuentra talleres y servicios 24/7 verificados
+- ⛽ **Gasolineras y Servicios** - Localiza combustible, autopartes y servicios
+- 🗺️ **Navegación Inteligente** - Rutas optimizadas con marcadores dinámicos
+- 📱 **Historial de Viajes** - Rastrea y analiza tus rutas automáticamente
+- 🚦 **Reportes de Tráfico** - Incidentes y alertas comunitarias en tiempo real
+- 👥 **Contactos de Emergencia** - Notificación automática a familiares y seguros
+- 🎓 **Tutorial Interactivo** - Onboarding guiado para nuevos usuarios
+- 🏢 **Gestión de Giros** - Administra y organiza servicios por categorías
+- 👤 **Perfil Completo** - Gestión de vehículos y contactos de emergencia
 
 ## 🚀 ¿Por Qué Asistencia Vial México?
 
@@ -114,14 +117,27 @@ VITE_MAPBOX_TOKEN=pk.eyJ1...
 ```
 src/
 ├── components/          # Componentes React reutilizables
-│   ├── icons/          # Iconografía personalizada
-│   ├── Dashboard.tsx   # Panel principal
-│   ├── Map.tsx         # Componente de mapas
-│   └── ...
+│   ├── icons/          # Iconografía personalizada (20+ iconos)
+│   ├── giro/           # Sistema de gestión de giros
+│   ├── profile/        # Gestión de perfiles y vehículos
+│   ├── Dashboard.tsx   # Panel principal mejorado
+│   ├── Map.tsx         # Mapa interactivo con marcadores
+│   ├── Tutorial.tsx    # Sistema de onboarding
+│   ├── SOSConfirmation.tsx # Confirmación de emergencias
+│   ├── TrafficReportPanel.tsx # Reportes de tráfico
+│   └── TravelHistoryPanel.tsx # Historial de viajes
 ├── services/           # Servicios e integraciones
-│   ├── authService.ts  # Autenticación
-│   └── geminiService.ts # IA Gemini
+│   ├── authService.ts  # Autenticación y sesiones
+│   └── geminiService.ts # IA Gemini para asistencia
+├── hooks/              # Custom React Hooks
+│   ├── useMapMarkers.ts # Gestión de marcadores
+│   ├── useTravelHistory.ts # Historial de viajes
+│   └── useRecentLocations.ts # Ubicaciones recientes
+├── utils/              # Utilidades y helpers
+│   └── notifications.ts # Sistema de notificaciones
 ├── data/               # Datos y configuraciones
+│   ├── partnersData.ts # Datos de socios
+│   └── giroTemplates.ts # Plantillas de giros
 ├── types.ts            # Definiciones TypeScript
 └── App.tsx             # Componente principal
 ```
@@ -148,25 +164,32 @@ src/
 
 Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
 
-## 🎯 Roadmap 2024
+## 🎯 Roadmap 2025
 
-### Q1 2024 ✅
-- [x] Sistema SOS básico
-- [x] Mapa con servicios
-- [x] Historial de viajes
-- [x] PWA funcional
+### Q1 2025 ✅ COMPLETADO
+- [x] Sistema SOS con confirmación avanzada
+- [x] Mapa interactivo con marcadores inteligentes
+- [x] Historial de viajes y ubicaciones recientes
+- [x] PWA funcional con notificaciones
+- [x] Tutorial interactivo para nuevos usuarios
+- [x] Sistema de gestión de giros y servicios
+- [x] Perfiles de usuario y vehículos
+- [x] Reportes de tráfico comunitarios
+- [x] Integración completa con Gemini AI
 
-### Q2 2024 🚧
-- [ ] **Integración con seguros** (Qualitas, GNP)
-- [ ] **Chat en vivo** con talleres
-- [ ] **Sistema de pagos** integrado
-- [ ] **API pública** para terceros
+### Q2 2025 🚧 EN DESARROLLO
+- [ ] **Integración con seguros** (Qualitas, GNP, AXA)
+- [ ] **Chat en vivo** con talleres verificados
+- [ ] **Sistema de pagos** integrado (Stripe, PayPal)
+- [ ] **API pública** para desarrolladores terceros
+- [ ] **Modo offline** con cache inteligente
 
-### Q3 2024 📋
-- [ ] **App nativa** iOS/Android
-- [ ] **Programa de lealtad** para conductores
-- [ ] **Dashboard analytics** avanzado
-- [ ] **Integración con Waze**
+### Q3 2025 📋 PLANIFICADO
+- [ ] **App nativa** iOS/Android con React Native
+- [ ] **Programa de lealtad** y recompensas
+- [ ] **Dashboard analytics** con métricas avanzadas
+- [ ] **Integración con Waze** y Google Maps
+- [ ] **IA predictiva** para mantenimiento vehicular
 
 ## 📞 Contacto y Soporte
 
