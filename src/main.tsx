@@ -284,6 +284,185 @@ function App() {
         </div>
       </section>
 
+      {/* Dashboard Funcional */}
+      <section style={{ padding: '40px 32px', maxWidth: '1600px', margin: '0 auto' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '2fr 1fr',
+          gap: '24px',
+          marginBottom: '32px'
+        }}>
+          {/* Mapa en Vivo */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            padding: '24px',
+            minHeight: '400px'
+          }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>Mapa en Tiempo Real</h2>
+            <div style={{
+              width: '100%',
+              height: '320px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              <div style={{ fontSize: '48px', opacity: 0.3 }}>🗺️</div>
+              {[...Array(6)].map((_, i) => (
+                <div key={i} style={{
+                  position: 'absolute',
+                  width: '8px',
+                  height: '8px',
+                  background: i % 2 === 0 ? '#FF6B6B' : '#00FF88',
+                  borderRadius: '50%',
+                  top: `${20 + Math.random() * 60}%`,
+                  left: `${20 + Math.random() * 60}%`,
+                  animation: `pulse 2s infinite ${i * 0.3}s`
+                }} />))}
+            </div>
+          </div>
+          
+          {/* Panel SOS */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            padding: '24px'
+          }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>Control de Emergencia</h2>
+            
+            <button style={{
+              width: '100%',
+              background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+              border: 'none',
+              color: 'white',
+              padding: '20px',
+              borderRadius: '12px',
+              fontSize: '18px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px'
+            }}>
+              🚨 EMERGENCIA SOS
+            </button>
+            
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '14px', color: '#94A3B8', marginBottom: '12px' }}>Acciones Rápidas</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {['Buscar Mecánico', 'Solicitar Grúa', 'Reporte de Tráfico'].map(action => (
+                  <button key={action} style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    textAlign: 'left'
+                  }}>{action}</button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Actividad Reciente */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '24px'
+        }}>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            padding: '24px'
+          }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>Actividad Reciente</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {[
+                { type: 'SOS', location: 'Ciudad de México', time: '2 min', status: 'activo', color: '#FF6B6B' },
+                { type: 'Grúa', location: 'Guadalajara', time: '15 min', status: 'completado', color: '#00FF88' },
+                { type: 'Mecánico', location: 'Monterrey', time: '32 min', status: 'en progreso', color: '#4ECDC4' }
+              ].map((activity, i) => (
+                <div key={i} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  borderRadius: '8px'
+                }}>
+                  <div style={{
+                    width: '8px',
+                    height: '8px',
+                    background: activity.color,
+                    borderRadius: '50%'
+                  }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '14px', fontWeight: '500', color: 'white' }}>{activity.type}</div>
+                    <div style={{ fontSize: '12px', color: '#94A3B8' }}>{activity.location} • hace {activity.time}</div>
+                  </div>
+                  <div style={{
+                    background: `${activity.color}20`,
+                    color: activity.color,
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    fontSize: '11px',
+                    fontWeight: '600'
+                  }}>{activity.status}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Métricas */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            padding: '24px'
+          }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>Métricas del Sistema</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {[
+                { metric: 'Tiempo de Respuesta', value: '12.5 min', progress: 85, color: '#00FF88' },
+                { metric: 'Satisfacción', value: '4.8/5', progress: 96, color: '#45B7D1' },
+                { metric: 'Disponibilidad', value: '99.2%', progress: 99, color: '#6366F1' }
+              ].map((metric, i) => (
+                <div key={i} style={{
+                  padding: '16px',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  borderRadius: '8px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '500' }}>{metric.metric}</span>
+                    <span style={{ fontSize: '14px', color: metric.color, fontWeight: '600' }}>{metric.value}</span>
+                  </div>
+                  <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{
+                      width: `${metric.progress}%`,
+                      height: '100%',
+                      background: metric.color,
+                      borderRadius: '2px'
+                    }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 1; transform: scale(1); }
