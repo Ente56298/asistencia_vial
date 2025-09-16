@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { User } from '../types';
-import { EmergencyContacts } from './profile/EmergencyContacts';
-import { VehicleProfile } from './profile/VehicleProfile';
 
 interface ProfilePanelProps {
     user: User;
@@ -10,9 +8,6 @@ interface ProfilePanelProps {
 }
 
 const ProfilePanel: React.FC<ProfilePanelProps> = ({ user, onClose, onLogout }) => {
-    const [activeTab, setActiveTab] = useState<'info' | 'vehicle' | 'emergency'>('info');
-    const [emergencyContacts, setEmergencyContacts] = useState([]);
-    const [vehicle, setVehicle] = useState({});
     
     const getSubscriptionPill = () => {
         switch (user.subscriptionStatus) {
@@ -32,56 +27,19 @@ const ProfilePanel: React.FC<ProfilePanelProps> = ({ user, onClose, onLogout }) 
                     <h2 className="text-xl font-bold text-white">Perfil de Usuario</h2>
                     <button onClick={onClose} className="bg-gray-700 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-600 transition-colors" aria-label="Cerrar">&times;</button>
                 </header>
-                <div className="p-4">
-                    <div className="flex space-x-1 mb-4">
-                        <button
-                            onClick={() => setActiveTab('info')}
-                            className={`px-3 py-2 text-sm rounded ${activeTab === 'info' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-                        >
-                            Info
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('vehicle')}
-                            className={`px-3 py-2 text-sm rounded ${activeTab === 'vehicle' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-                        >
-                            Vehículo
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('emergency')}
-                            className={`px-3 py-2 text-sm rounded ${activeTab === 'emergency' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
-                        >
-                            Emergencia
-                        </button>
+                <div className="p-6 space-y-4">
+                    <div>
+                        <label className="text-sm text-gray-400">Nombre</label>
+                        <p className="text-lg text-white">{user.name}</p>
                     </div>
-
-                    {activeTab === 'info' && (
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm text-gray-400">Nombre</label>
-                                <p className="text-lg text-white">{user.name}</p>
-                            </div>
-                            <div>
-                                <label className="text-sm text-gray-400">Correo Electrónico</label>
-                                <p className="text-lg text-white">{user.email}</p>
-                            </div>
-                            <div>
-                                <label className="text-sm text-gray-400">Estado de Suscripción</label>
-                                {getSubscriptionPill()}
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'vehicle' && (
-                        <div className="text-white">
-                            <VehicleProfile onVehicleChange={setVehicle} />
-                        </div>
-                    )}
-
-                    {activeTab === 'emergency' && (
-                        <div className="text-white">
-                            <EmergencyContacts onContactsChange={setEmergencyContacts} />
-                        </div>
-                    )}
+                    <div>
+                        <label className="text-sm text-gray-400">Correo Electrónico</label>
+                        <p className="text-lg text-white">{user.email}</p>
+                    </div>
+                    <div>
+                        <label className="text-sm text-gray-400">Estado de Suscripción</label>
+                        {getSubscriptionPill()}
+                    </div>
                 </div>
                 <footer className="p-4 mt-4 border-t border-gray-700">
                     <button

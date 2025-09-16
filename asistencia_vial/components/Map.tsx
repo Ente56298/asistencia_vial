@@ -1,29 +1,21 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { LocationCoords } from '../types';
-import { useMapMarkers } from '../hooks/useMapMarkers';
-import { useTravelHistory } from '../hooks/useTravelHistory';
-import { useRecentLocations } from '../hooks/useRecentLocations';
 
+// Inform TypeScript about the global mapboxgl object
 declare var mapboxgl: any;
 
 interface MapProps {
     location: LocationCoords | null;
     error: string | null;
-    showRoute?: { start: { lat: number; lng: number }; end: { lat: number; lng: number } };
-    services?: Array<{ id: string; name: string; lat: number; lng: number; type: string; address?: string; phone?: string }>;
 }
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
-const Map: React.FC<MapProps> = ({ location, error, showRoute, services }) => {
+const Map: React.FC<MapProps> = ({ location, error }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const mapRef = useRef<any | null>(null);
     const markerRef = useRef<any | null>(null);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
-    const { markers, addMarker, selectMarker, selectedMarker } = useMapMarkers();
-    const { addRoute, calculateDistance } = useTravelHistory();
-    const { addLocation } = useRecentLocations();
-    const serviceMarkersRef = useRef<any[]>([]);
 
     // Early return with a clear error if the token is missing.
     // This prevents the rest of the component from trying to render an unconfigurable map.
@@ -87,124 +79,6 @@ const Map: React.FC<MapProps> = ({ location, error, showRoute, services }) => {
         });
 
     }, [location, isMapLoaded]);
-
-    useEffect(() => {
-        if (!mapRef.current || !services || !isMapLoaded) return;
-
-        // Clear existing service markers
-        serviceMarkersRef.current.forEach(marker => marker.remove());
-        serviceMarkersRef.current = [];
-
-        // Add new service markers
-        services.forEach(service => {
-            const marker = new mapboxgl.Marker({
-                color: service.type === 'gas' ? '#f59e0b' : service.type === 'mechanic' ? '#ef4444' : '#10b981'
-            })
-            .setLngLat([service.lng, service.lat])
-            .setPopup(new mapboxgl.Popup().setHTML(`
-                <div>
-                    <h3>${service.name}</h3>
-                    ${service.address ? `<p>${service.address}</p>` : ''}
-                    ${service.phone ? `<p>${service.phone}</p>` : ''}
-                    <button onclick="navigateToService('${service.id}')" class="bg-blue-500 text-white px-2 py-1 rounded mt-2">Navegar</button>
-                </div>
-            `))
-            .addTo(mapRef.current);
-
-            serviceMarkersRef.current.push(marker);
-
-            addMarker({
-                lat: service.lat,
-                lng: service.lng,
-                title: service.name,
-                type: service.type as any,
-                details: {
-                    address: service.address,
-                    phone: service.phone
-                }
-            });
-        });
-
-        // Make navigateToService available globally
-        (window as any).navigateToService = (serviceId: string) => {
-            const service = services.find(s => s.id === serviceId);
-            if (service && location) {
-                const distance = calculateDistance(
-                    { lat: location.lat, lng: location.lon },
-                    { lat: service.lat, lng: service.lng }
-                );
-                
-                if (confirm(`¿Deseas navegar a ${service.name}?`)) {
-                    addRoute({
-                        startLocation: {
-                            lat: location.lat,
-                            lng: location.lon,
-                            address: 'Mi ubicación'
-                        },
-                        endLocation: {
-                            lat: service.lat,
-                            lng: service.lng,
-                            address: service.name
-                        },
-                        timestamp: Date.now(),
-                        distance,
-                        duration: Math.round(distance * 2)
-                    });
-
-                    alert(`Navegando a ${service.name}\nDistancia: ${distance.toFixed(1)}km`);
-                }
-            }
-        };
-
-    }, [services, isMapLoaded, location, addMarker, addRoute, calculateDistance]);
-
-    useEffect(() => {
-        if (!mapRef.current || !showRoute || !isMapLoaded) return;
-
-        const routeCoords = [
-            [showRoute.start.lng, showRoute.start.lat],
-            [showRoute.end.lng, showRoute.end.lat]
-        ];
-
-        if (mapRef.current.getSource('route')) {
-            mapRef.current.getSource('route').setData({
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                    type: 'LineString',
-                    coordinates: routeCoords
-                }
-            });
-        } else {
-            mapRef.current.addSource('route', {
-                type: 'geojson',
-                data: {
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: routeCoords
-                    }
-                }
-            });
-
-            mapRef.current.addLayer({
-                id: 'route',
-                type: 'line',
-                source: 'route',
-                layout: {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                paint: {
-                    'line-color': '#3b82f6',
-                    'line-width': 4,
-                    'line-dasharray': [2, 2]
-                }
-            });
-        }
-
-    }, [showRoute, isMapLoaded]);
 
     const renderOverlay = () => {
         if (error) {

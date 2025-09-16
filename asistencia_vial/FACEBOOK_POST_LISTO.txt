@@ -1,0 +1,23 @@
+🚨 CONDUCTORES: ¿Qué harían en esta situación?
+
+Son las 11 PM, van por la autopista México-Guadalajara, su auto se descompone y no hay señal de celular...
+
+❌ Situación real que viven miles de mexicanos cada día
+❌ 17,000 muertes anuales en carreteras
+❌ Promedio de espera: 2.5 horas
+
+✅ NUEVA SOLUCIÓN MEXICANA:
+📱 Asistencia Vial - App 100% gratuita
+🚨 SOS funciona SIN internet (tecnología PWA)
+📍 GPS automático encuentra tu ubicación
+🔧 Red de talleres verificados 24/7
+👨👩👧👦 Notifica automáticamente a tu familia
+
+🇲🇽 Desarrollada por mexicanos que entienden nuestros problemas
+
+📲 Pruébala GRATIS: https://asistencia-vial.vercel.app
+(Se instala como app nativa en tu teléfono)
+
+¿Qué opinan? ¿La probarían?
+
+#SeguridadVial #ConductoresMéxico #TecnologíaMexicana

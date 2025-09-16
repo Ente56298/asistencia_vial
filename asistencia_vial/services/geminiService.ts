@@ -92,7 +92,7 @@ export const getEvaluationResponse = async (history: Content[]): Promise<string>
     try {
          const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: history,
+            contents: history.length > 0 ? history : 'Hola, necesito una evaluación.',
             config: {
                 systemInstruction: `Eres un asistente experto en mecánica automotriz para la app 'Asistente Vial'. Tu objetivo es ayudar a los usuarios varados en carreteras de México a diagnosticar el problema de su vehículo. 
                 1.  Inicia la conversación preguntando cuál es el problema.

@@ -15,6 +15,7 @@ export enum Feature {
     Admin = 'ADMIN',
     Profile = 'PROFILE',
     Subscription = 'SUBSCRIPTION',
+    Functions = 'FUNCTIONS',
 }
 
 export enum AssistanceType {

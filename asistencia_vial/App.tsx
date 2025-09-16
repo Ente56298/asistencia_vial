@@ -16,6 +16,7 @@ import ProfilePanel from './components/ProfilePanel';
 import SubscriptionPanel from './components/SubscriptionPanel';
 import PartnersPanel from './components/PartnersPanel';
 import AdminPanel from './components/AdminPanel';
+import FunctionAccessPanel from './components/FunctionAccessPanel';
 
 const App: React.FC = () => {
     // State management
@@ -145,6 +146,8 @@ const App: React.FC = () => {
                  return <PartnersPanel onClose={closeAllPanels} partners={initialPartners} />;
             case Feature.Admin:
                  return <AdminPanel onClose={closeAllPanels} />;
+            case Feature.Functions:
+                 return <FunctionAccessPanel />;
             default:
                 return null;
         }

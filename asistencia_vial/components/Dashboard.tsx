@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Feature, User } from '../types';
 import WrenchIcon from './icons/WrenchIcon';
 import TrafficIcon from './icons/TrafficIcon';
@@ -9,12 +9,7 @@ import AssistanceIcon from './icons/AssistanceIcon';
 import PartnersIcon from './icons/PartnersIcon';
 import StarIcon from './icons/StarIcon';
 import AdminIcon from './icons/AdminIcon';
-import { Router, useRouter } from './Router';
-import { Tutorial } from './Tutorial';
-import { TravelHistoryPanel } from './TravelHistoryPanel';
-import { useRecentLocations } from '../hooks/useRecentLocations';
-import { useSearchHistory } from '../hooks/useSearchHistory';
-import { requestNotificationPermission } from '../utils/notifications';
+import FunctionAccessPanel from './FunctionAccessPanel';
 
 interface DashboardProps {
     user: User;
@@ -53,30 +48,10 @@ const FeatureButton: React.FC<FeatureButtonProps> = ({ icon, label, onClick, isS
     );
 };
 
-const DashboardContent: React.FC<DashboardProps> = ({ user, onFeatureSelect, onActivateSOS, onSubscriptionPrompt }) => {
-    const { navigate } = useRouter();
-    const { addLocation } = useRecentLocations();
-    const { addSearch } = useSearchHistory();
-    const [showTutorial, setShowTutorial] = useState(false);
-    const [showTravelHistory, setShowTravelHistory] = useState(false);
-
-    useEffect(() => {
-        const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
-        if (!hasSeenTutorial) {
-            setShowTutorial(true);
-        }
-        
-        requestNotificationPermission();
-    }, []);
+const Dashboard: React.FC<DashboardProps> = ({ user, onFeatureSelect, onActivateSOS, onSubscriptionPrompt }) => {
     
     const handleAssistanceClick = () => {
-        navigate('assistance');
         onFeatureSelect(Feature.Assistance);
-    };
-
-    const handleFeatureClick = (feature: Feature, route?: string) => {
-        if (route) navigate(route as any);
-        onFeatureSelect(feature);
     };
 
     return (
@@ -85,22 +60,22 @@ const DashboardContent: React.FC<DashboardProps> = ({ user, onFeatureSelect, onA
                  <FeatureButton 
                     icon={<EvaluationIcon />}
                     label="Asistente Evaluador"
-                    onClick={() => handleFeatureClick(Feature.Evaluation, 'evaluation')}
+                    onClick={() => onFeatureSelect(Feature.Evaluation)}
                 />
                  <FeatureButton 
                     icon={<WrenchIcon />}
                     label="Refacciones"
-                    onClick={() => handleFeatureClick(Feature.Parts)}
+                    onClick={() => onFeatureSelect(Feature.Parts)}
                 />
                  <FeatureButton 
                     icon={<TrafficIcon />}
                     label="Reporte de Tráfico"
-                    onClick={() => handleFeatureClick(Feature.Traffic)}
+                    onClick={() => onFeatureSelect(Feature.Traffic)}
                 />
                  <FeatureButton 
                     icon={<GasStationIcon />}
                     label="Servicios Cercanos"
-                    onClick={() => handleFeatureClick(Feature.Services)}
+                    onClick={() => onFeatureSelect(Feature.Services)}
                 />
                  <FeatureButton 
                     icon={<AssistanceIcon />}
@@ -111,14 +86,14 @@ const DashboardContent: React.FC<DashboardProps> = ({ user, onFeatureSelect, onA
                  <FeatureButton 
                     icon={<PartnersIcon />}
                     label="Convenios"
-                    onClick={() => handleFeatureClick(Feature.Partnerships, 'partners')}
+                    onClick={() => onFeatureSelect(Feature.Partnerships)}
                 />
 
                 {user.subscriptionStatus === 'admin' && (
                     <FeatureButton
                         icon={<AdminIcon />}
                         label="Panel de Admin"
-                        onClick={() => handleFeatureClick(Feature.Admin, 'admin')}
+                        onClick={() => onFeatureSelect(Feature.Admin)}
                         isAdmin
                     />
                 )}
@@ -129,30 +104,15 @@ const DashboardContent: React.FC<DashboardProps> = ({ user, onFeatureSelect, onA
                     onClick={onActivateSOS}
                     isSOS
                 />
-                
+
                 <FeatureButton 
-                    icon={<div className="text-2xl">🗺️</div>}
-                    label="Historial"
-                    onClick={() => setShowTravelHistory(true)}
+                    icon={<div className="text-4xl">⚡</div>}
+                    label="Funciones Avanzadas"
+                    onClick={() => onFeatureSelect(Feature.Functions)}
+                    isPremium={true}
                 />
             </div>
-            
-            {showTutorial && (
-                <Tutorial onComplete={() => setShowTutorial(false)} />
-            )}
-            
-            {showTravelHistory && (
-                <TravelHistoryPanel onClose={() => setShowTravelHistory(false)} />
-            )}
         </div>
-    );
-};
-
-const Dashboard: React.FC<DashboardProps> = (props) => {
-    return (
-        <Router>
-            <DashboardContent {...props} />
-        </Router>
     );
 };
 
