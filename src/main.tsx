@@ -6,300 +6,336 @@ function App() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0F0F23 0%, #1A1A2E 50%, #16213E 100%)',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-      color: '#FFFFFF'
+      background: '#0A0A0A',
+      fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif',
+      color: '#FFFFFF',
+      overflow: 'hidden'
     }}>
-      {/* Navigation */}
+      {/* Navigation - Halo Lab Style */}
       <nav style={{
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 50,
-        background: 'rgba(15, 15, 35, 0.95)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        background: 'rgba(10, 10, 10, 0.8)',
+        backdropFilter: 'blur(40px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '16px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ maxWidth: '1600px', margin: '0 auto', padding: '20px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{
-              width: '48px',
-              height: '48px',
-              background: 'linear-gradient(135deg, #FF6B35, #F7931E)',
-              borderRadius: '12px',
+              width: '32px',
+              height: '32px',
+              background: '#FFFFFF',
+              borderRadius: '6px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '24px',
-              boxShadow: '0 8px 32px rgba(255, 107, 53, 0.3)'
+              fontSize: '16px'
             }}>🚗</div>
-            <div>
-              <h1 style={{ fontSize: '20px', fontWeight: '700', margin: 0, color: '#FFFFFF' }}>Asistencia Vial</h1>
-              <p style={{ fontSize: '12px', margin: 0, color: '#94A3B8' }}>México</p>
-            </div>
+            <span style={{ fontSize: '18px', fontWeight: '600', letterSpacing: '-0.02em' }}>Asistencia Vial</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-            <div style={{ display: 'flex', gap: '24px' }}>
-              {['Servicios', 'Talleres', 'Contacto'].map(item => (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+            <div style={{ display: 'flex', gap: '32px' }}>
+              {['Services', 'About', 'Contact'].map(item => (
                 <a key={item} href="#" style={{
-                  color: '#94A3B8',
+                  color: 'rgba(255, 255, 255, 0.6)',
                   textDecoration: 'none',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  transition: 'color 0.2s'
+                  fontSize: '15px',
+                  fontWeight: '400',
+                  letterSpacing: '-0.01em',
+                  transition: 'color 0.3s ease'
                 }}
                 onMouseOver={(e) => e.target.style.color = '#FFFFFF'}
-                onMouseOut={(e) => e.target.style.color = '#94A3B8'}
+                onMouseOut={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.6)'}
                 >{item}</a>
               ))}
             </div>
             <button style={{
-              background: 'linear-gradient(135deg, #FF6B35, #F7931E)',
+              background: '#FFFFFF',
               border: 'none',
-              color: 'white',
-              padding: '10px 20px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '600',
+              color: '#000000',
+              padding: '12px 24px',
+              borderRadius: '6px',
+              fontSize: '15px',
+              fontWeight: '500',
               cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(255, 107, 53, 0.3)'
-            }}>Iniciar Sesión</button>
+              letterSpacing: '-0.01em',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.9)'
+              e.target.style.transform = 'translateY(-1px)'
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background = '#FFFFFF'
+              e.target.style.transform = 'translateY(0)'
+            }}
+            >Get Started</button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section style={{ paddingTop: '120px', paddingBottom: '80px', textAlign: 'center', position: 'relative' }}>
-        {/* Background Pattern */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(255, 107, 53, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(247, 147, 30, 0.1) 0%, transparent 50%)',
-          pointerEvents: 'none'
-        }} />
-        
-        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px', position: 'relative' }}>
+      {/* Hero Section - Halo Lab Style */}
+      <section style={{ 
+        paddingTop: '160px', 
+        paddingBottom: '120px', 
+        textAlign: 'center', 
+        position: 'relative',
+        background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.02) 0%, transparent 70%)'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px', position: 'relative' }}>
           <div style={{
-            display: 'inline-block',
-            background: 'rgba(255, 107, 53, 0.1)',
-            border: '1px solid rgba(255, 107, 53, 0.2)',
-            borderRadius: '24px',
-            padding: '8px 16px',
-            marginBottom: '32px'
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '20px',
+            padding: '6px 16px',
+            marginBottom: '40px',
+            fontSize: '13px',
+            fontWeight: '500',
+            color: 'rgba(255, 255, 255, 0.8)',
+            letterSpacing: '-0.01em'
           }}>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#FF6B35' }}>🚨 Disponible 24/7 en toda México</span>
+            <div style={{ width: '6px', height: '6px', background: '#00FF88', borderRadius: '50%' }} />
+            Available 24/7 across Mexico
           </div>
           
           <h1 style={{
-            fontSize: '64px',
-            fontWeight: '800',
-            lineHeight: '1.1',
-            marginBottom: '24px',
-            background: 'linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
-          }}>Asistencia Vial<br />del Futuro</h1>
+            fontSize: 'clamp(48px, 8vw, 96px)',
+            fontWeight: '700',
+            lineHeight: '0.95',
+            marginBottom: '32px',
+            letterSpacing: '-0.04em',
+            color: '#FFFFFF'
+          }}>Emergency<br />Roadside<br />Assistance</h1>
           
           <p style={{
-            fontSize: '20px',
+            fontSize: '18px',
             lineHeight: '1.6',
-            color: '#94A3B8',
-            marginBottom: '48px',
-            maxWidth: '600px',
-            margin: '0 auto 48px'
-          }}>Conectamos conductores con talleres verificados usando IA, GPS en tiempo real y una red nacional de servicios de emergencia.</p>
+            color: 'rgba(255, 255, 255, 0.6)',
+            marginBottom: '56px',
+            maxWidth: '520px',
+            margin: '0 auto 56px',
+            letterSpacing: '-0.01em',
+            fontWeight: '400'
+          }}>AI-powered roadside assistance connecting drivers with verified mechanics and emergency services across Mexico.</p>
           
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center' }}>
             <button style={{
-              background: 'linear-gradient(135deg, #FF6B35, #F7931E)',
+              background: '#FFFFFF',
               border: 'none',
-              color: 'white',
+              color: '#000000',
               padding: '16px 32px',
-              borderRadius: '12px',
+              borderRadius: '8px',
               fontSize: '16px',
-              fontWeight: '700',
+              fontWeight: '600',
               cursor: 'pointer',
-              boxShadow: '0 8px 32px rgba(255, 107, 53, 0.4)',
-              transition: 'transform 0.2s, box-shadow 0.2s',
+              letterSpacing: '-0.01em',
+              transition: 'all 0.3s ease',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
             }}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px)'
-              e.target.style.boxShadow = '0 12px 40px rgba(255, 107, 53, 0.5)'
+              e.target.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.2)'
             }}
             onMouseOut={(e) => {
               e.target.style.transform = 'translateY(0)'
-              e.target.style.boxShadow = '0 8px 32px rgba(255, 107, 53, 0.4)'
+              e.target.style.boxShadow = 'none'
             }}
             >
-              🚨 Activar SOS
+              Emergency SOS
+              <span style={{ fontSize: '12px' }}>→</span>
             </button>
             
             <button style={{
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'transparent',
               border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: 'white',
+              color: 'rgba(255, 255, 255, 0.8)',
               padding: '16px 32px',
-              borderRadius: '12px',
+              borderRadius: '8px',
               fontSize: '16px',
-              fontWeight: '600',
+              fontWeight: '500',
               cursor: 'pointer',
-              backdropFilter: 'blur(10px)',
-              transition: 'all 0.2s'
+              letterSpacing: '-0.01em',
+              transition: 'all 0.3s ease'
             }}
             onMouseOver={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.15)'
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.4)'
+              e.target.style.color = '#FFFFFF'
               e.target.style.transform = 'translateY(-2px)'
             }}
             onMouseOut={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)'
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+              e.target.style.color = 'rgba(255, 255, 255, 0.8)'
               e.target.style.transform = 'translateY(0)'
             }}
             >
-              Ver Demo
+              Watch Demo
             </button>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section style={{ padding: '80px 24px', maxWidth: '1400px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+      {/* Services Grid - Halo Lab Style */}
+      <section style={{ padding: '120px 40px', maxWidth: '1600px', margin: '0 auto' }}>
+        <div style={{ marginBottom: '80px' }}>
           <h2 style={{
-            fontSize: '40px',
+            fontSize: 'clamp(32px, 5vw, 48px)',
             fontWeight: '700',
-            marginBottom: '16px',
-            color: '#FFFFFF'
-          }}>Servicios Inteligentes</h2>
-          <p style={{ fontSize: '18px', color: '#94A3B8', maxWidth: '600px', margin: '0 auto' }}>
-            Tecnología de vanguardia para mantener a los conductores seguros en carretera
+            marginBottom: '24px',
+            color: '#FFFFFF',
+            letterSpacing: '-0.03em',
+            lineHeight: '1.1'
+          }}>Our Services</h2>
+          <p style={{ 
+            fontSize: '18px', 
+            color: 'rgba(255, 255, 255, 0.6)', 
+            maxWidth: '480px',
+            letterSpacing: '-0.01em',
+            lineHeight: '1.6'
+          }}>
+            Advanced technology keeping drivers safe on the road
           </p>
         </div>
         
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '24px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+          gap: '1px',
+          background: 'rgba(255, 255, 255, 0.05)',
+          borderRadius: '12px',
+          overflow: 'hidden'
         }}>
           {[
             {
-              icon: '🛠️',
-              title: 'Talleres Verificados',
-              desc: 'Red de 2,500+ talleres certificados con técnicos especializados y garantía de servicio',
-              color: '#10B981',
-              bgColor: 'rgba(16, 185, 129, 0.1)'
+              title: 'Verified Mechanics',
+              desc: 'Network of 2,500+ certified workshops with specialized technicians',
+              number: '01'
             },
             {
-              icon: '📍',
-              title: 'GPS Inteligente',
-              desc: 'Localización precisa con IA que encuentra el servicio más cercano en menos de 30 segundos',
-              color: '#3B82F6',
-              bgColor: 'rgba(59, 130, 246, 0.1)'
+              title: 'Smart GPS',
+              desc: 'AI-powered location services finding nearest help in under 30 seconds',
+              number: '02'
             },
             {
-              icon: '🚛',
-              title: 'Grúas Express',
-              desc: 'Flota de grúas disponible 24/7 con tiempo de respuesta promedio de 15 minutos',
-              color: '#8B5CF6',
-              bgColor: 'rgba(139, 92, 246, 0.1)'
+              title: 'Express Towing',
+              desc: '24/7 towing fleet with average 15-minute response time',
+              number: '03'
             },
             {
-              icon: '⚡',
-              title: 'Respuesta Inmediata',
-              desc: 'Sistema automatizado que conecta tu emergencia con el servicio adecuado al instante',
-              color: '#F59E0B',
-              bgColor: 'rgba(245, 158, 11, 0.1)'
+              title: 'Instant Response',
+              desc: 'Automated system connecting emergencies with appropriate services',
+              number: '04'
             }
-          ].map((feature, i) => (
+          ].map((service, i) => (
             <div key={i} style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '20px',
-              padding: '32px',
-              transition: 'all 0.3s ease',
+              background: '#0A0A0A',
+              padding: '48px 40px',
+              transition: 'all 0.4s ease',
               cursor: 'pointer',
               position: 'relative',
-              overflow: 'hidden'
+              borderRight: i % 2 === 0 ? '1px solid rgba(255, 255, 255, 0.05)' : 'none',
+              borderBottom: i < 2 ? '1px solid rgba(255, 255, 255, 0.05)' : 'none'
             }}
             onMouseOver={(e) => {
-              e.target.style.transform = 'translateY(-8px)'
-              e.target.style.boxShadow = `0 20px 60px ${feature.bgColor}`
-              e.target.style.borderColor = feature.color
+              e.target.style.background = 'rgba(255, 255, 255, 0.02)'
             }}
             onMouseOut={(e) => {
-              e.target.style.transform = 'translateY(0)'
-              e.target.style.boxShadow = 'none'
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+              e.target.style.background = '#0A0A0A'
             }}
             >
               <div style={{
-                width: '64px',
-                height: '64px',
-                background: feature.bgColor,
-                borderRadius: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '28px',
+                fontSize: '14px',
+                color: 'rgba(255, 255, 255, 0.4)',
                 marginBottom: '24px',
-                border: `1px solid ${feature.color}30`
-              }}>
-                {feature.icon}
-              </div>
+                fontWeight: '500',
+                letterSpacing: '0.1em'
+              }}>{service.number}</div>
+              
               <h3 style={{
-                fontSize: '22px',
-                fontWeight: '700',
-                marginBottom: '12px',
-                color: '#FFFFFF'
-              }}>{feature.title}</h3>
+                fontSize: '24px',
+                fontWeight: '600',
+                marginBottom: '16px',
+                color: '#FFFFFF',
+                letterSpacing: '-0.02em'
+              }}>{service.title}</h3>
+              
               <p style={{
                 fontSize: '16px',
                 lineHeight: '1.6',
-                color: '#94A3B8',
-                margin: 0
-              }}>{feature.desc}</p>
+                color: 'rgba(255, 255, 255, 0.6)',
+                margin: 0,
+                letterSpacing: '-0.01em'
+              }}>{service.desc}</p>
+              
+              <div style={{
+                position: 'absolute',
+                bottom: '40px',
+                right: '40px',
+                width: '24px',
+                height: '24px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '12px',
+                color: 'rgba(255, 255, 255, 0.6)',
+                transition: 'all 0.3s ease'
+              }}>→</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section - Halo Lab Style */}
       <section style={{
-        padding: '80px 24px',
-        background: 'rgba(255, 255, 255, 0.02)',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        padding: '120px 40px',
+        borderTop: '1px solid rgba(255, 255, 255, 0.05)'
       }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1600px', margin: '0 auto' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '48px'
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '1px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: '12px',
+            overflow: 'hidden'
           }}>
             {[
-              { number: '2,500+', label: 'Talleres Verificados' },
-              { number: '15min', label: 'Tiempo Respuesta' },
-              { number: '24/7', label: 'Disponibilidad' },
-              { number: '99.9%', label: 'Confiabilidad' }
+              { number: '2,500+', label: 'Verified Mechanics' },
+              { number: '15min', label: 'Response Time' },
+              { number: '24/7', label: 'Availability' },
+              { number: '99.9%', label: 'Reliability' }
             ].map((stat, i) => (
-              <div key={i}>
+              <div key={i} style={{
+                background: '#0A0A0A',
+                padding: '60px 40px',
+                textAlign: 'center',
+                transition: 'background 0.3s ease',
+                cursor: 'pointer'
+              }}
+              onMouseOver={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.02)'}
+              onMouseOut={(e) => e.target.style.background = '#0A0A0A'}
+              >
                 <div style={{
-                  fontSize: '48px',
-                  fontWeight: '800',
-                  color: '#FF6B35',
-                  marginBottom: '8px'
+                  fontSize: 'clamp(32px, 4vw, 48px)',
+                  fontWeight: '700',
+                  color: '#FFFFFF',
+                  marginBottom: '12px',
+                  letterSpacing: '-0.02em'
                 }}>{stat.number}</div>
                 <div style={{
-                  fontSize: '16px',
-                  color: '#94A3B8',
-                  fontWeight: '500'
+                  fontSize: '14px',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  fontWeight: '500',
+                  letterSpacing: '-0.01em'
                 }}>{stat.label}</div>
               </div>
             ))}
@@ -307,44 +343,88 @@ function App() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer - Halo Lab Style */}
       <footer style={{
-        padding: '60px 24px 40px',
-        background: 'rgba(0, 0, 0, 0.2)',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+        padding: '80px 40px 40px',
+        borderTop: '1px solid rgba(255, 255, 255, 0.05)'
       }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ marginBottom: '32px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '16px' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                background: 'linear-gradient(135deg, #FF6B35, #F7931E)',
-                borderRadius: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px'
-              }}>🚗</div>
-              <span style={{ fontSize: '18px', fontWeight: '700', color: '#FFFFFF' }}>Asistencia Vial México</span>
+        <div style={{ maxWidth: '1600px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '60px', flexWrap: 'wrap', gap: '40px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  background: '#FFFFFF',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '16px'
+                }}>🚗</div>
+                <span style={{ fontSize: '18px', fontWeight: '600', letterSpacing: '-0.02em' }}>Asistencia Vial</span>
+              </div>
+              <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '15px', margin: 0, letterSpacing: '-0.01em', maxWidth: '280px' }}>
+                Emergency roadside assistance powered by AI technology across Mexico.
+              </p>
             </div>
-            <p style={{ color: '#64748B', fontSize: '14px', margin: 0 }}>
-              © 2025 Asistencia Vial México. Servicio disponible en toda la República Mexicana.
-            </p>
+            
+            <div style={{ display: 'flex', gap: '80px', flexWrap: 'wrap' }}>
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#FFFFFF', marginBottom: '16px', letterSpacing: '-0.01em' }}>Services</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {['Emergency SOS', 'Towing Service', 'Mechanic Network', 'GPS Tracking'].map(item => (
+                    <a key={item} href="#" style={{
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      textDecoration: 'none',
+                      fontSize: '14px',
+                      letterSpacing: '-0.01em',
+                      transition: 'color 0.3s ease'
+                    }}
+                    onMouseOver={(e) => e.target.style.color = '#FFFFFF'}
+                    onMouseOut={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.6)'}
+                    >{item}</a>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#FFFFFF', marginBottom: '16px', letterSpacing: '-0.01em' }}>Company</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {['About', 'Careers', 'Contact', 'Privacy'].map(item => (
+                    <a key={item} href="#" style={{
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      textDecoration: 'none',
+                      fontSize: '14px',
+                      letterSpacing: '-0.01em',
+                      transition: 'color 0.3s ease'
+                    }}
+                    onMouseOver={(e) => e.target.style.color = '#FFFFFF'}
+                    onMouseOut={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.6)'}
+                    >{item}</a>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
           
           <div style={{
+            paddingTop: '32px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
             display: 'flex',
-            justifyContent: 'center',
-            gap: '32px',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             flexWrap: 'wrap',
-            fontSize: '14px',
-            color: '#64748B'
+            gap: '20px'
           }}>
-            <span>✓ Talleres Certificados</span>
-            <span>✓ Cobertura Nacional</span>
-            <span>✓ Disponible 24/7</span>
-            <span>✓ Respuesta Garantizada</span>
+            <p style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '14px', margin: 0, letterSpacing: '-0.01em' }}>
+              © 2025 Asistencia Vial. Available across Mexico.
+            </p>
+            <div style={{ display: 'flex', gap: '24px', fontSize: '14px', color: 'rgba(255, 255, 255, 0.4)' }}>
+              <span>24/7 Service</span>
+              <span>Verified Network</span>
+              <span>AI-Powered</span>
+            </div>
           </div>
         </div>
       </footer>
