@@ -1,23 +1,23 @@
 # 🚨 Asistencia Vial México
 
-**SOS y asistencia vial en tiempo real para México**
+SOS y asistencia vial en tiempo real para México
 
 ## 🚀 Funcionalidades
 
-- 🚨 **SOS instantáneo** con GPS automático
-- 🔧 **Red de talleres** verificados 24/7
-- 👨👩👧👦 **Notificaciones familiares** automáticas
-- 📱 **PWA** - Funciona sin internet
-- 🗺️ **Mapas en tiempo real**
-- 📋 **Historial de viajes**
+- 🚨 SOS instantáneo con GPS automático
+- 🔧 Red de talleres verificados 24/7
+- 👨👩👧👦 Notificaciones familiares automáticas
+- 📱 PWA - Funciona sin internet
+- 🗺️ Mapas en tiempo real
+- 📋 Historial de viajes
 
 ## 🛠️ Tecnologías
 
-- **React + TypeScript**
-- **Tailwind CSS**
-- **Gemini AI**
-- **Vercel + Postgres**
-- **PWA Technology**
+- React + TypeScript
+- Tailwind CSS
+- Gemini AI
+- Vercel + Postgres
+- PWA Technology
 
 ## 🌐 Enlaces
 
@@ -38,4 +38,4 @@ La app se puede instalar como PWA nativa desde el navegador.
 
 ---
 
-**Desarrollado con intención real de ayudar a conductores mexicanos**
+Desarrollado con intención real de ayudar a conductores mexicanos 🇲🇽
