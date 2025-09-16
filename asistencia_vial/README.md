@@ -1,27 +1,41 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🚨 Asistencia Vial México
 
-# 🚗 Asistente Vial México
+**SOS y asistencia vial en tiempo real para México**
 
-**🚨 ¡PRUEBA LA DEMO EN VIVO!** → [asistencia-vial-mexico.vercel.app](https://asistencia-vial-mexico.vercel.app)
+## 🚀 Funcionalidades
 
-**La primera aplicación integral de asistencia vial para México con inteligencia artificial**
+- 🚨 **SOS instantáneo** con GPS automático
+- 🔧 **Red de talleres** verificados 24/7
+- 👨👩👧👦 **Notificaciones familiares** automáticas
+- 📱 **PWA** - Funciona sin internet
+- 🗺️ **Mapas en tiempo real**
+- 📋 **Historial de viajes**
 
-## 🎮 **¿Por qué es diferente?**
-- **Gamificación única**: Gana XP por ayudar a otros conductores
-- **Plus Codes precisión**: Ubicaciones exactas de 30cm
-- **IA contextual**: Gemini AI especializada en México
-- **Mapas offline**: Descarga áreas completas
-- **Comunidad real**: Rankings y desafíos sociales
+## 🛠️ Tecnologías
 
-## Run Locally
+- **React + TypeScript**
+- **Tailwind CSS**
+- **Gemini AI**
+- **Vercel + Postgres**
+- **PWA Technology**
 
-**Prerequisites:**  Node.js
+## 🌐 Enlaces
 
+- **App en vivo**: https://asistencia-vial.vercel.app
+- **GitHub**: https://github.com/Ente56298/asistencia_vial
+- **Twitter**: @AsistenciVialMX
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🚀 Desarrollo
+
+```bash
+npm install
+npm run dev
+```
+
+## 📱 Instalación
+
+La app se puede instalar como PWA nativa desde el navegador.
+
+---
+
+**Desarrollado con intención real de ayudar a conductores mexicanos**
