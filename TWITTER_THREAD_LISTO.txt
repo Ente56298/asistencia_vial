@@ -1,0 +1,45 @@
+🧵 THREAD: Cómo una app mexicana puede salvarte la vida
+
+1/8 🚨 DATO BRUTAL: Cada 3 horas muere 1 persona en accidentes viales en México
+📊 17,000 muertes anuales
+💔 50,000 familias destruidas
+
+2/8 ❓ ¿Qué haces cuando tu auto se descompone en carretera?
+⏰ Promedio de espera: 2.5 horas
+📞 85% no sabe a quién llamar
+😰 60% se siente inseguro
+
+3/8 💡 @AsistenciVialMX cambia todo:
+🚨 SOS en 3 segundos
+📍 GPS automático
+🔧 Taller más cercano
+👨👩👧👦 Notifica a familia
+
+4/8 🆓 COMPLETAMENTE GRATIS:
+✅ Funciona sin internet (PWA)
+✅ Talleres verificados 24/7
+✅ Historial de viajes
+✅ Contactos emergencia
+
+5/8 🇲🇽 HECHO EN MÉXICO:
+👨💻 Por mexicanos, para mexicanos
+🛣️ Conoce nuestras carreteras
+🚗 Entiende nuestros problemas
+
+6/8 📱 TECNOLOGÍA AVANZADA:
+🤖 IA integrada (Gemini)
+⚡ React + TypeScript
+🌐 PWA (instalable)
+☁️ Deploy automático
+
+7/8 📊 YA FUNCIONA:
+🔗 https://asistencia-vial.vercel.app
+⭐ Pruébalo AHORA
+📲 Se instala como app nativa
+
+8/8 🎯 TU TURNO:
+🔄 RT si crees en la innovación mexicana
+💬 Comenta tu experiencia vial
+📱 Descarga y comparte con familia
+
+#SeguridadVial #TechMexicano #InnovaciónMX #EmergenciasViales
