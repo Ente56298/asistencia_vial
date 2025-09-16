@@ -328,12 +328,13 @@ function App() {
       </section>
       
       {/* Main Dashboard Grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '2fr 1fr',
-            gap: '24px',
-            marginBottom: '32px'
-          }}>
+      <main style={{ padding: '0 32px', maxWidth: '1600px', margin: '0 auto' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '2fr 1fr',
+          gap: '24px',
+          marginBottom: '32px'
+        }}>
             
             {/* Live Map */}
             <div style={{
