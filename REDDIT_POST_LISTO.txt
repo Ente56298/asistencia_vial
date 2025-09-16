@@ -1,0 +1,26 @@
+TÍTULO: App mexicana que puede salvarte la vida en carretera - Asistencia Vial
+
+CONTENIDO:
+
+Raza, quiero compartirles algo que me parece muy importante.
+
+Hace poco me enteré de las estadísticas de accidentes viales en México y están cabronas:
+- 17,000 muertes al año
+- 1 persona cada 3 horas
+- 85% no sabe a quién llamar en emergencias
+
+Un desarrollador mexicano creó una app que ataca este problema:
+https://asistencia-vial.vercel.app
+
+Lo que me gustó:
+✅ Es gratis (no hay truco)
+✅ Funciona sin internet (PWA)
+✅ SOS con GPS automático
+✅ Red de talleres verificados
+✅ Notifica a tu familia automáticamente
+
+La probé y está muy bien hecha. Tecnología nivel internacional pero pensada para México.
+
+¿Qué opinan? ¿Conocen algo similar?
+
+No soy el desarrollador, solo me pareció útil compartirlo.
