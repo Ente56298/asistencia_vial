@@ -1,0 +1,14 @@
+{
+  "fecha_escaneo": "2025-01-11",
+  "unidades_disponibles": [
+    "A:", "C:", "D:", "F:", "H:", "I:", "J:", "K:", "L:", "M:", "N:", "O:", "P:"
+  ],
+  "unidades_principales": {
+    "A:": "Unidad principal de trabajo - CO•RA y proyectos",
+    "C:": "Sistema Windows",
+    "D:": "Datos adicionales",
+    "F:": "NUEVO_COMIENZO - Proyectos actuales"
+  },
+  "total_unidades": 13,
+  "estado": "Escaneo completado"
+}
