@@ -1,33 +1,323 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Asistencia Vial México - Ayuda en Carretera 24/7</title>
-    <meta name="description"
-        content="La primera aplicación integral de asistencia vial para las carreteras mexicanas" />
-</head>
+    <title>Asistente Vial México</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            background-color: #111827;
+        }
+        .mapboxgl-marker {
+            cursor: pointer;
+        }
+        
+        /* Custom User Location Marker - Enhanced */
+        .user-location-marker {
+            position: relative;
+            width: 24px; /* Slightly larger */
+            height: 24px;
+            border-radius: 50%;
+            background-color: #3b82f6; /* Bright Blue */
+            border: 3px solid white; /* Thicker border */
+            box-shadow: 0 0 15px rgba(59, 130, 246, 1); /* Stronger glow */
+            cursor: pointer;
+        }
 
-<body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-<!-- WUUNU SNIPPET - DON'T CHANGE THIS (START) -->
-<script type="module">
-  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV === true) {
-    if (!document.getElementById('wuunu-widget-script')) {
-      window.__WUUNU_WS__ = "http://127.0.0.1:61869/";
-      const s = document.createElement('script');
-      s.id = 'wuunu-widget-script';
-      s.src = "https://cdn.jsdelivr.net/npm/@wuunu/widget@0.1?cacheParam=601";
-      s.defer = true;
-      s.crossOrigin = 'anonymous';
-      document.head.appendChild(s);
-    }
+        .user-location-marker::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 24px; /* Match size */
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.4);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            animation: pulse 2s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* Custom Service Location Marker - Enhanced */
+        .service-location-marker {
+            position: relative;
+            width: 28px; /* Larger for visibility and icon space */
+            height: 28px;
+            border-radius: 50%;
+            background-color: #f59e0b; /* Amber */
+            border: 3px solid white;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.9);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, z-index 0.3s ease, opacity 0.3s ease; /* Added opacity transition */
+        }
+
+        /* Add an icon inside the service marker */
+        .service-location-marker::before {
+            content: '';
+            width: 14px;
+            height: 14px;
+            background-color: white;
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z'/%3E%3C/svg%3E");
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+
+        /* Style for the selected service marker */
+        .service-location-marker--selected {
+            transform: scale(1.4);
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 193, 7, 1); /* Brighter, larger amber glow */
+        }
+
+        /* Style for the unselected service marker when another is active */
+        .service-location-marker--unselected {
+            transform: scale(0.85); /* Slightly smaller */
+            opacity: 0.5; /* Dimmed */
+            z-index: 1; /* Ensure they are below the selected one */
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(3.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Custom Mapbox Popup Styling */
+        .mapboxgl-popup-content {
+            background-color: rgba(17, 24, 39, 0.9); /* bg-gray-900 with opacity */
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(55, 65, 81, 0.5); /* border-gray-700 */
+            color: #f9fafb; /* text-gray-50 */
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .mapboxgl-popup-close-button {
+            color: #d1d5db; /* text-gray-300 */
+            font-size: 20px;
+            padding: 0 6px;
+        }
+        .mapboxgl-popup-close-button:hover {
+            background-color: rgba(55, 65, 81, 0.5); /* bg-gray-700 */
+        }
+
+        .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+        .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
+        .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
+            border-bottom-color: rgba(17, 24, 39, 0.9);
+        }
+        .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+        .mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+        .mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
+            border-top-color: rgba(17, 24, 39, 0.9);
+        }
+        .mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+            border-right-color: rgba(17, 24, 39, 0.9);
+        }
+        .mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+            border-left-color: rgba(17, 24, 39, 0.9);
+        }
+
+        /* Ripple (Press) Effect */
+        .ripple-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple-effect .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4); /* A light ripple for dark buttons */
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none; /* So it doesn't interfere with clicks */
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+
+        /* Notification Animation */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        .animate-fade-in-down {
+            animation: fadeInDown 0.5s ease-out forwards;
+        }
+
+        /* Simple Fade In for SOS Tips */
+        @keyframes simpleFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-simple-fade-in {
+            animation: simpleFadeIn 0.5s ease-out forwards;
+        }
+
+        /* SOS Banner Animation */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -100%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        .animate-slide-in-down {
+            animation: slideInDown 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .sos-status-banner {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            width: 90%;
+            max-width: 600px;
+            background-color: rgba(220, 38, 38, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(239, 68, 68, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sos-status-banner .sos-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            animation: pulse-sos-icon 2s infinite;
+        }
+
+        @keyframes pulse-sos-icon {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        /* New Notification Icon Animation */
+        @keyframes pulse-notification-icon {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.25);
+                opacity: 0.75;
+            }
+        }
+        .animate-pulse-notification-icon {
+            animation: pulse-notification-icon 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+
+        /* Heatmap Animation */
+        @keyframes softPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: var(--heatmap-opacity, 0.6);
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: calc(var(--heatmap-opacity, 0.6) * 0.7);
+            }
+        }
+        .animate-soft-pulse {
+            animation: softPulse 3s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        /* SOS FAB Animation */
+        @keyframes sos-pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 15px rgba(220, 38, 38, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+            }
+        }
+        .animate-sos-pulse {
+            animation: sos-pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        
+        /* Custom Assistance Vehicle Marker */
+        .assistance-vehicle-marker {
+            width: 40px;
+            height: 40px;
+            background-color: #2563eb; /* blue-600 */
+            border-radius: 50%;
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.2s ease-out; /* For smooth movement */
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.19.0"
   }
+}
 </script>
-<!-- WUUNU SNIPPET - DON'T CHANGE THIS (END) -->
+</head>
+<body>
+<div id="root"></div>
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js'></script>
+<script type="module" src="/index.tsx"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                })
+                .catch(error => {
+                    console.log('ServiceWorker registration failed: ', error);
+                });
+        });
+    }
+</script>
 </body>
-
 </html>

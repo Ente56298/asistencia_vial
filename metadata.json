@@ -1,0 +1,7 @@
+{
+  "name": "Asistente Vial México",
+  "description": "Una aplicación digital para mejorar la movilidad y seguridad vial en México. Ofrece información en tiempo real sobre tráfico, servicios, incidentes y rutas alternativas, integrando geolocalización, un asistente de IA conversacional y participación ciudadana para transformar la experiencia en carretera.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
