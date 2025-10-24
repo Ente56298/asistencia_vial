@@ -18,6 +18,27 @@ interface MapProps {
     selectedService: Service | null;
 }
 
+const getServiceMarkerClass = (serviceType: string): string => {
+    const type = serviceType.toLowerCase();
+    if (type.includes('gasolinera')) {
+        return 'service-marker--gasolinera';
+    }
+    if (type.includes('taller')) {
+        return 'service-marker--taller';
+    }
+    if (type.includes('hospital') || type.includes('médico')) {
+        return 'service-marker--hospital';
+    }
+    if (type.includes('restaurante') || type.includes('comida')) {
+        return 'service-marker--restaurante';
+    }
+    if (type.includes('hotel') || type.includes('alojamiento')) {
+        return 'service-marker--hotel';
+    }
+    return ''; // Default marker class
+};
+
+
 const Map: React.FC<MapProps> = ({ center, zoom, userLocation, serviceLocations, onServiceClick, onMapClick, routeStops, routeGeometry, showHeatmap, showServices, selectedService }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const mapInstanceRef = useRef<any | null>(null);
@@ -137,7 +158,8 @@ const Map: React.FC<MapProps> = ({ center, zoom, userLocation, serviceLocations,
             serviceLocations.forEach(service => {
                 if (service.latitud && service.longitud) {
                     const el = document.createElement('div');
-                    el.className = 'service-location-marker';
+                    const customClass = getServiceMarkerClass(service.tipo);
+                    el.className = `service-location-marker ${customClass}`;
                     (el as any)._serviceData = service;
                     
                     el.addEventListener('click', (e) => {
