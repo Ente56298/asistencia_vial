@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { User, Feature, AssistanceType, LocationCoords, Service, AppNotification } from '../types';
 import Header from './Header';
@@ -32,6 +33,7 @@ import NotificationBanner from './NotificationBanner';
 import { getProactiveAlert } from '../services/geminiService';
 import MapLayerControl from './MapLayerControl';
 import AssistanceMonitoringPanel from './AssistanceMonitoringPanel';
+import CrosshairIcon from './icons/CrosshairIcon';
 
 interface DashboardProps {
     user: User;
@@ -102,6 +104,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     const [bannerAlert, setBannerAlert] = useState<{type: 'traffic' | 'weather', message: string} | null>(null);
     const [routeGeometry, setRouteGeometry] = useState<any | null>(null);
     const [routeSummary, setRouteSummary] = useState<{ duration: number; distance: number } | null>(null);
+    const [recenterMapTrigger, setRecenterMapTrigger] = useState(0);
     
     // State for proactive notifications
     const [notifications, setNotifications] = useState<AppNotification[]>([]);
@@ -301,6 +304,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                         showHeatmap={showHeatmap}
                         showServices={showServices}
                         selectedService={selectedService}
+                        recenterTrigger={recenterMapTrigger}
                     />
                 </div>
             )}
@@ -403,6 +407,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                 aria-label="Controlar capas del mapa"
             >
                 <LayersIcon />
+            </button>
+            <button
+                onClick={() => setRecenterMapTrigger(prev => prev + 1)}
+                onMouseDown={handleMouseDown}
+                className="fixed top-40 right-6 z-30 w-12 h-12 bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-full flex items-center justify-center text-white shadow-lg transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-amber-500 ripple-effect"
+                aria-label="Mostrar mi ubicación"
+            >
+                <CrosshairIcon />
             </button>
              <button
                 onClick={() => setIsSosModalOpen(true)}

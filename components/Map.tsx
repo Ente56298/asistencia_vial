@@ -16,6 +16,7 @@ interface MapProps {
     showHeatmap: boolean;
     showServices: boolean;
     selectedService: Service | null;
+    recenterTrigger: number;
 }
 
 const getServiceMarkerClass = (serviceType: string): string => {
@@ -23,10 +24,10 @@ const getServiceMarkerClass = (serviceType: string): string => {
     if (type.includes('gasolinera')) {
         return 'service-marker--gasolinera';
     }
-    if (type.includes('taller')) {
+    if (type.includes('taller') || type.includes('mecánico')) {
         return 'service-marker--taller';
     }
-    if (type.includes('hospital') || type.includes('médico')) {
+    if (type.includes('hospital') || type.includes('médico') || type.includes('clínica')) {
         return 'service-marker--hospital';
     }
     if (type.includes('restaurante') || type.includes('comida')) {
@@ -35,11 +36,14 @@ const getServiceMarkerClass = (serviceType: string): string => {
     if (type.includes('hotel') || type.includes('alojamiento')) {
         return 'service-marker--hotel';
     }
+    if (type.includes('estacionamiento') || type.includes('parking')) {
+        return 'service-marker--estacionamiento';
+    }
     return ''; // Default marker class
 };
 
 
-const Map: React.FC<MapProps> = ({ center, zoom, userLocation, serviceLocations, onServiceClick, onMapClick, routeStops, routeGeometry, showHeatmap, showServices, selectedService }) => {
+const Map: React.FC<MapProps> = ({ center, zoom, userLocation, serviceLocations, onServiceClick, onMapClick, routeStops, routeGeometry, showHeatmap, showServices, selectedService, recenterTrigger }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const mapInstanceRef = useRef<any | null>(null);
     const userMarkerRef = useRef<any | null>(null);
@@ -239,6 +243,19 @@ const Map: React.FC<MapProps> = ({ center, zoom, userLocation, serviceLocations,
             if (hasSource) map.removeSource(sourceId);
         }
     }, [mapLoaded, routeGeometry]);
+    
+    // Effect to recenter map on user location
+    useEffect(() => {
+        if (recenterTrigger > 0 && mapInstanceRef.current && userLocation) {
+            mapInstanceRef.current.flyTo({
+                center: [userLocation.lon, userLocation.lat],
+                zoom: 14,
+                speed: 1.5,
+                curve: 1,
+                essential: true,
+            });
+        }
+    }, [recenterTrigger, userLocation]);
 
     return <div ref={mapContainerRef} className="w-full h-full" />;
 };
