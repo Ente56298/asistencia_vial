@@ -1,19 +1,9 @@
-# Asistente Vial México
-
-**Su copiloto inteligente en el camino.**
-
-[![Project Status: Concept](https://img.shields.io/badge/status-conceptual_demo-brightgreen.svg)](https://shields.io/)
-[![Technology: React](https://img.shields.io/badge/tech-React-61DAFB.svg?logo=react)](https://reactjs.org/)
-[![Technology: Gemini API](https://img.shields.io/badge/AI-Google_Gemini-4285F4.svg?logo=google)](https://ai.google.dev/)
-[![PWA Ready](https://img.shields.io/badge/PWA-Ready-5A0FC8.svg)](https://web.dev/progressive-web-apps/)
-
----
+# 🚗 Asistente Vial México
 
 ## 📖 Descripción
+Asistente Vial México es una aplicación web progresiva (PWA) de concepto, diseñada para mejorar radicalmente la movilidad y la seguridad de los conductores en México. Esta herramienta digital funciona como un copiloto inteligente, proporcionando información crucial en tiempo real, un avanzado asistente de IA conversacional y un conjunto de utilidades para transformar la experiencia en carretera.
 
-**Asistente Vial México** es una aplicación web progresiva (PWA) de concepto, diseñada para mejorar radicalmente la movilidad y la seguridad de los conductores en México. Esta herramienta digital funciona como un copiloto inteligente, proporcionando información crucial en tiempo real, un avanzado asistente de IA conversacional y un conjunto de utilidades para transformar la experiencia en carretera.
-
-La aplicación integra geolocalización en tiempo real con un mapa interactivo, un potente asistente de IA impulsado por la **API de Google Gemini** para responder consultas complejas, y notificaciones proactivas que alertan a los usuarios sobre incidentes críticos en su ruta. Además, cuenta con un completo panel de administración para la gestión de usuarios, convenios y otros datos de la aplicación.
+La aplicación integra geolocalización en tiempo real con un mapa interactivo, un potente asistente de IA impulsado por la API de Google Gemini para responder consultas complejas, y notificaciones proactivas que alertan a los usuarios sobre incidentes críticos en su ruta. Además, cuenta con un completo panel de administración para la gestión de usuarios, convenios y otros datos de la aplicación.
 
 ## ✨ Características Principales
 
@@ -36,17 +26,16 @@ La aplicación integra geolocalización en tiempo real con un mapa interactivo, 
 - **Notificaciones Proactivas en Ruta**: Alerta automáticamente al usuario sobre cierres de carreteras u otros incidentes críticos en su ruta activa.
 
 ### ⚙️ Panel de Administración Completo
-- **Gestión de Usuarios**: Visualiza y modifica los niveles de suscripción de los usuarios (`free`, `premium`).
+- **Gestión de Usuarios**: Visualiza y modifica los niveles de suscripción de los usuarios (free, premium).
 - **Gestión de Convenios y Socios**: Administra la lista de socios comerciales, sus descuentos y detalles.
 - **Gestión de Entidades y Áreas Públicas**: Mantiene un registro de relaciones con entidades gubernamentales y puntos de interés.
 
-### 🔌 PWA y Capacidades Técnicas
+## 🔌 PWA y Capacidades Técnicas
 - **Soporte Offline**: Gracias a un Service Worker, la aplicación funciona con conectividad limitada, utilizando estrategias de caché para los mapas y las respuestas de la API.
-- **Autenticación y Roles**: Sistema de registro e inicio de sesión con roles de usuario (`free`, `premium`, `admin`).
+- **Autenticación y Roles**: Sistema de registro e inicio de sesión con roles de usuario (free, premium, admin).
 - **Interfaz Responsiva**: Diseño moderno y adaptable a dispositivos móviles y de escritorio usando Tailwind CSS.
 
 ## 🛠️ Stack Tecnológico
-
 - **Frontend**: React.js, TypeScript
 - **Estilos**: Tailwind CSS
 - **Mapas y Geolocalización**: Mapbox GL JS
@@ -55,57 +44,83 @@ La aplicación integra geolocalización en tiempo real con un mapa interactivo, 
 
 ## 🚀 Instalación y Configuración Local
 
-Para ejecutar este proyecto localmente, sigue estos pasos:
+### Prerrequisitos
+- Node.js (versión 16 o superior)
+- npm o yarn
+- Claves de API válidas para Google Gemini y Mapbox
 
-1.  **Clona el repositorio** (si aplica):
-    ```bash
-    git clone https://github.com/tu-usuario/asistente-vial-mexico.git
-    cd asistente-vial-mexico
-    ```
+### Pasos de Instalación
 
-2.  **Crea un archivo `.env`** en la raíz del proyecto, copiando el contenido de `.env.example`.
+1. **Clona el repositorio**:
+   ```bash
+   git clone https://github.com/tu-usuario/asistente-vial-mexico.git
+   cd asistente-vial-mexico
+   ```
 
-3.  **Añade tus claves de API** al archivo `.env`. Estas son cruciales para el funcionamiento de la aplicación:
-    ```env
-    # Clave de API para Google Gemini
-    # Obtén la tuya en Google AI Studio
-    API_KEY="TU_API_KEY_DE_GEMINI_AQUI"
-
-    # Token de acceso para Mapbox
-    # Obtén el tuyo en la web de Mapbox
-    MAPBOX_TOKEN="TU_TOKEN_DE_MAPBOX_AQUI"
-    ```
-
-4. **Instala las dependencias y ejecuta la aplicación**:
-   (Asumiendo un entorno de desarrollo estándar de Node.js)
+2. **Instala las dependencias**:
    ```bash
    npm install
+   ```
+
+3. **Configura las variables de entorno**:
+   Crea un archivo `.env` en la raíz del proyecto con el siguiente contenido:
+   ```env
+   # Clave de API para Google Gemini
+   # Obtén la tuya en Google AI Studio
+   API_KEY="TU_API_KEY_DE_GEMINI_AQUI"
+
+   # Token de acceso para Mapbox
+   # Obtén el tuyo en la web de Mapbox
+   MAPBOX_TOKEN="TU_TOKEN_DE_MAPBOX_AQUI"
+   ```
+
+4. **Ejecuta la aplicación en modo desarrollo**:
+   ```bash
    npm start
    ```
+
+5. **Accede a la aplicación**:
+   Abre tu navegador y ve a `http://localhost:3000`
 
 ## 💻 Uso de la Aplicación (Cuentas de Demo)
 
 La aplicación está preconfigurada con tres cuentas de demostración para probar las diferentes funcionalidades:
 
--   **Usuario Gratuito**: `free@test.com`
--   **Usuario Premium**: `premium@test.com` (desbloquea asistencias especiales)
--   **Administrador**: `admin@test.com` (otorga acceso al panel de administración)
+- **Usuario Gratuito**: `free@test.com`
+- **Usuario Premium**: `premium@test.com` (desbloquea asistencias especiales)
+- **Administrador**: `admin@test.com` (otorga acceso al panel de administración)
 
-*Nota: La contraseña no se valida en esta versión de demostración.*
+**Nota**: La contraseña no se valida en esta versión de demostración.
 
 ## 🏛️ Arquitectura y Estructura del Proyecto
 
 La aplicación sigue una arquitectura moderna de componentes, separando las responsabilidades para mejorar la mantenibilidad.
 
 - **`src/components`**: Contiene todos los componentes de React, organizados por funcionalidad (paneles, iconos, elementos de UI).
-- **`src/services`**: Centraliza la lógica de negocio y las llamadas a APIs externas (`geminiService.ts`, `mapService.ts`, `authService.ts`). Esto desacopla la UI de las fuentes de datos.
+- **`src/services`**: Centraliza la lógica de negocio y las llamadas a APIs externas (geminiService.ts, mapService.ts, authService.ts). Esto desacopla la UI de las fuentes de datos.
 - **`src/types.ts`**: Define todas las interfaces y tipos de TypeScript utilizados en la aplicación, garantizando la consistencia de los datos.
 - **`public/sw.js`**: Implementa el Service Worker que gestiona las estrategias de caché y la funcionalidad offline.
 
 ## 📈 Roadmap Futuro
 
--   **Backend Real**: Reemplazar los servicios simulados (`authService`) con una solución de backend robusta como Firebase o Supabase.
--   **Notificaciones Push**: Integrar notificaciones push nativas para alertas críticas.
--   **Historial y Favoritos**: Guardar historial de rutas y permitir a los usuarios guardar rutas favoritas.
--   **Gamificación**: Introducir logros por reportar incidentes o completar rutas.
--   **Despliegue en Tiendas**: Empaquetar la PWA para su distribución en Google Play Store y Apple App Store.
+- **Backend Real**: Reemplazar los servicios simulados (authService) con una solución de backend robusta como Firebase o Supabase.
+- **Notificaciones Push**: Integrar notificaciones push nativas para alertas críticas.
+- **Historial y Favoritos**: Guardar historial de rutas y permitir a los usuarios guardar rutas favoritas.
+- **Gamificación**: Introducir logros por reportar incidentes o completar rutas.
+- **Despliegue en Tiendas**: Empaquetar la PWA para su distribución en Google Play Store y Apple App Store.
+
+## 🤝 Contribución
+
+Las contribuciones son bienvenidas. Por favor, lee las guías de contribución antes de enviar un pull request.
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## 📞 Contacto
+
+Para preguntas o soporte, contacta al equipo de desarrollo.
+
+---
+
+**Desarrollado con ❤️ para mejorar la movilidad y seguridad en México**
